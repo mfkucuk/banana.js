@@ -1,0 +1,17 @@
+#gl-canvas 
+{
+    z-index: 0;
+}
+
+#canvas-overlay 
+{
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    z-index: 1;
+}
+
+p 
+{
+    user-select: none;
+}
