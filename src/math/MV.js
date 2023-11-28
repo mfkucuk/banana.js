@@ -9,19 +9,19 @@
 //  Helper functions
 //
 
-export function Utils()
+export function MV()
 {
 
 }
 
-Utils._argumentsToArray = function( args )
+MV._argumentsToArray = function( args )
 {
     return [].concat.apply( [], Array.prototype.slice.apply(args) );
 }
 
 //----------------------------------------------------------------------------
 
-Utils.radians = function( degrees ) {
+MV.radians = function( degrees ) {
     return degrees * Math.PI / 180.0;
 }
 
@@ -30,9 +30,9 @@ Utils.radians = function( degrees ) {
 //  Vector Constructors
 //
 
-Utils.vec2 = function ()
+MV.vec2 = function ()
 {
-    var result = Utils._argumentsToArray( arguments );
+    var result = MV._argumentsToArray( arguments );
 
     switch ( result.length ) {
     case 0: result.push( 0.0 );
@@ -42,9 +42,9 @@ Utils.vec2 = function ()
     return result.splice( 0, 2 );
 }
 
-Utils.vec3 = function()
+MV.vec3 = function()
 {
-    var result = Utils._argumentsToArray( arguments );
+    var result = MV._argumentsToArray( arguments );
 
     switch ( result.length ) {
     case 0: result.push( 0.0 );
@@ -55,9 +55,9 @@ Utils.vec3 = function()
     return result.splice( 0, 3 );
 }
 
-Utils.vec4 = function()
+MV.vec4 = function()
 {
-    var result = Utils._argumentsToArray( arguments );
+    var result = MV._argumentsToArray( arguments );
 
     switch ( result.length ) {
     case 0: result.push( 0.0 );
@@ -74,9 +74,9 @@ Utils.vec4 = function()
 //  Matrix Constructors
 //
 
-Utils.mat2 = function()
+MV.mat2 = function()
 {
-    var v = Utils._argumentsToArray( arguments );
+    var v = MV._argumentsToArray( arguments );
 
     var m = [];
     switch ( v.length ) {
@@ -84,8 +84,8 @@ Utils.mat2 = function()
         v[0] = 1;
     case 1:
         m = [
-            Utils.vec2( v[0],  0.0 ),
-            Utils.vec2(  0.0, v[0] )
+            MV.vec2( v[0],  0.0 ),
+            MV.vec2(  0.0, v[0] )
         ];
         break;
 
@@ -102,9 +102,9 @@ Utils.mat2 = function()
 
 //----------------------------------------------------------------------------
 
-Utils.mat3 = function()
+MV.mat3 = function()
 {
-    var v = Utils._argumentsToArray( arguments );
+    var v = MV._argumentsToArray( arguments );
 
     var m = [];
     switch ( v.length ) {
@@ -112,9 +112,9 @@ Utils.mat3 = function()
         v[0] = 1;
     case 1:
         m = [
-            Utils.vec3( v[0],  0.0,  0.0 ),
-            Utils.vec3(  0.0, v[0],  0.0 ),
-            Utils.vec3(  0.0,  0.0, v[0] )
+            MV.vec3( v[0],  0.0,  0.0 ),
+            MV.vec3(  0.0, v[0],  0.0 ),
+            MV.vec3(  0.0,  0.0, v[0] )
         ];
         break;
 
@@ -132,9 +132,9 @@ Utils.mat3 = function()
 
 //----------------------------------------------------------------------------
 
-Utils.mat4 = function()
+MV.mat4 = function()
 {
-    var v = Utils._argumentsToArray( arguments );
+    var v = MV._argumentsToArray( arguments );
 
     var m = [];
     switch ( v.length ) {
@@ -142,18 +142,18 @@ Utils.mat4 = function()
         v[0] = 1;
     case 1:
         m = [
-            Utils.vec4( v[0], 0.0,  0.0,   0.0 ),
-            Utils.vec4( 0.0,  v[0], 0.0,   0.0 ),
-            Utils.vec4( 0.0,  0.0,  v[0],  0.0 ),
-            Utils.vec4( 0.0,  0.0,  0.0,  v[0] )
+            MV.vec4( v[0], 0.0,  0.0,   0.0 ),
+            MV.vec4( 0.0,  v[0], 0.0,   0.0 ),
+            MV.vec4( 0.0,  0.0,  v[0],  0.0 ),
+            MV.vec4( 0.0,  0.0,  0.0,  v[0] )
         ];
         break;
 
     default:
-        m.push( vec4(v) );  v.splice( 0, 4 );
-        m.push( vec4(v) );  v.splice( 0, 4 );
-        m.push( vec4(v) );  v.splice( 0, 4 );
-        m.push( vec4(v) );
+        m.push( MV.vec4(v) );  v.splice( 0, 4 );
+        m.push( MV.vec4(v) );  v.splice( 0, 4 );
+        m.push( MV.vec4(v) );  v.splice( 0, 4 );
+        m.push( MV.vec4(v) );
         break;
     }
 
@@ -167,7 +167,7 @@ Utils.mat4 = function()
 //  Generic Mathematical Operations for Vectors and Matrices
 //
 
-Utils.equal = function( u, v )
+MV.equal = function( u, v )
 {
     if ( u.length != v.length ) { return false; }
    
@@ -193,7 +193,7 @@ Utils.equal = function( u, v )
 
 //----------------------------------------------------------------------------
 
-Utils.add = function( u, v )
+MV.add = function( u, v )
 {
     var result = [];
 
@@ -234,7 +234,7 @@ Utils.add = function( u, v )
 
 //----------------------------------------------------------------------------
 
-Utils.subtract = function( u, v )
+MV.subtract = function( u, v )
 {
     var result = [];
 
@@ -277,7 +277,7 @@ Utils.subtract = function( u, v )
 
 //----------------------------------------------------------------------------
 
-Utils.mult = function( u, v )
+MV.mult = function( u, v )
 {
     var result = [];
 
@@ -326,7 +326,7 @@ Utils.mult = function( u, v )
 //  Basic Transformation Matrix Generators
 //
 
-Utils.translate = function( x, y, z )
+MV.translate = function( x, y, z )
 {
     if ( Array.isArray(x) && x.length == 3 ) {
         z = x[2];
@@ -334,7 +334,7 @@ Utils.translate = function( x, y, z )
         x = x[0];
     }
 
-    var result = Utils.mat4();
+    var result = MV.mat4();
     result[0][3] = x;
     result[1][3] = y;
     result[2][3] = z;
@@ -344,27 +344,27 @@ Utils.translate = function( x, y, z )
 
 //----------------------------------------------------------------------------
 
-Utils.rotate = function( angle, axis )
+MV.rotate = function( angle, axis )
 {
     if ( !Array.isArray(axis) ) {
         axis = [ arguments[1], arguments[2], arguments[3] ];
     }
 
-    var v = Utils.normalize( axis );
+    var v = MV.normalize( axis );
 
     var x = v[0];
     var y = v[1];
     var z = v[2];
 
-    var c = Math.cos( radians(angle) );
+    var c = Math.cos( MV.radians(angle) );
     var omc = 1.0 - c;
-    var s = Math.sin( radians(angle) );
+    var s = Math.sin( MV.radians(angle) );
 
-    var result = Utils.mat4(
-        vec4( x*x*omc + c,   x*y*omc - z*s, x*z*omc + y*s, 0.0 ),
-        vec4( x*y*omc + z*s, y*y*omc + c,   y*z*omc - x*s, 0.0 ),
-        vec4( x*z*omc - y*s, y*z*omc + x*s, z*z*omc + c,   0.0 ),
-        vec4()
+    var result = MV.mat4(
+        MV.vec4( x*x*omc + c,   x*y*omc - z*s, x*z*omc + y*s, 0.0 ),
+        MV.vec4( x*y*omc + z*s, y*y*omc + c,   y*z*omc - x*s, 0.0 ),
+        MV.vec4( x*z*omc - y*s, y*z*omc + x*s, z*z*omc + c,   0.0 ),
+        MV.vec4()
     );
 
     return result;
@@ -372,7 +372,7 @@ Utils.rotate = function( angle, axis )
 
 //----------------------------------------------------------------------------
 
-Utils.scale = function( x, y, z )
+MV.scale = function( x, y, z )
 {
     if ( Array.isArray(x) && x.length == 3 ) {
         z = x[2];
@@ -380,7 +380,7 @@ Utils.scale = function( x, y, z )
         x = x[0];
     }
 
-    var result = Utils.mat4();
+    var result = MV.mat4();
     result[0][0] = x;
     result[1][1] = y;
     result[2][2] = z;
@@ -393,7 +393,7 @@ Utils.scale = function( x, y, z )
 //  ModelView Matrix Generators
 //
 
-Utils.lookAt = function( eye, at, up )
+MV.lookAt = function( eye, at, up )
 {
     if ( !Array.isArray(eye) || eye.length != 3) {
         throw "lookAt(): first parameter [eye] must be an a vec3";
@@ -407,21 +407,21 @@ Utils.lookAt = function( eye, at, up )
         throw "lookAt(): first parameter [up] must be an a vec3";
     }
 
-    if ( Utils.equal(eye, at) ) {
-        return Utils.mat4();
+    if ( MV.equal(eye, at) ) {
+        return MV.mat4();
     }
 
-    var v = Utils.normalize( Utils.subtract(at, eye) );  // view direction vector
-    var n = Utils.normalize( Utils.cross(v, up) );       // perpendicular vector
-    var u = Utils.normalize( Utils.cross(n, v) );        // "new" up vector
+    var v = MV.normalize( MV.subtract(at, eye) );  // view direction vector
+    var n = MV.normalize( MV.cross(v, up) );       // perpendicular vector
+    var u = MV.normalize( MV.cross(n, v) );        // "new" up vector
 
     v = negate( v );
 
-    var result = Utils.mat4(
-        Utils.vec4( n, -Utils.dot(n, eye) ),
-        Utils.vec4( u, -Utils.dot(u, eye) ),
-        Utils.vec4( v, -Utils.dot(v, eye) ),
-        Utils.vec4()
+    var result = MV.mat4(
+        MV.vec4( n, -MV.dot(n, eye) ),
+        MV.vec4( u, -MV.dot(u, eye) ),
+        MV.vec4( v, -MV.dot(v, eye) ),
+        MV.vec4()
     );
 
     return result;
@@ -432,7 +432,7 @@ Utils.lookAt = function( eye, at, up )
 //  Projection Matrix Generators
 //
 
-Utils.ortho = function( left, right, bottom, top, near, far )
+MV.ortho = function( left, right, bottom, top, near, far )
 {
     if ( left == right ) { throw "ortho(): left and right are equal"; }
     if ( bottom == top ) { throw "ortho(): bottom and top are equal"; }
@@ -442,7 +442,7 @@ Utils.ortho = function( left, right, bottom, top, near, far )
     var h = top - bottom;
     var d = far - near;
 
-    var result = Utils.mat4();
+    var result = MV.mat4();
     result[0][0] = 2.0 / w;
     result[1][1] = 2.0 / h;
     result[2][2] = -2.0 / d;
@@ -455,12 +455,12 @@ Utils.ortho = function( left, right, bottom, top, near, far )
 
 //----------------------------------------------------------------------------
 
-Utils.perspective = function( fovy, aspect, near, far )
+MV.perspective = function( fovy, aspect, near, far )
 {
-    var f = 1.0 / Math.tan( Utils.radians(fovy) / 2 );
+    var f = 1.0 / Math.tan( MV.radians(fovy) / 2 );
     var d = far - near;
 
-    var result = Utils.mat4();
+    var result = MV.mat4();
     result[0][0] = f / aspect;
     result[1][1] = f;
     result[2][2] = -(near + far) / d;
@@ -476,7 +476,7 @@ Utils.perspective = function( fovy, aspect, near, far )
 //  Matrix Functions
 //
 
-Utils.transpose = function( m )
+MV.transpose = function( m )
 {
     if ( !m.matrix ) {
         return "transpose(): trying to transpose a non-matrix";
@@ -500,7 +500,7 @@ Utils.transpose = function( m )
 //  Vector Functions
 //
 
-Utils.dot = function( u, v )
+MV.dot = function( u, v )
 {
     if ( u.length != v.length ) {
         throw "dot(): vectors are not the same dimension";
@@ -516,7 +516,7 @@ Utils.dot = function( u, v )
 
 //----------------------------------------------------------------------------
 
-Utils.negate = function( u )
+MV.negate = function( u )
 {
     var result = [];
     for ( var i = 0; i < u.length; ++i ) {
@@ -528,7 +528,7 @@ Utils.negate = function( u )
 
 //----------------------------------------------------------------------------
 
-Utils.cross = function( u, v )
+MV.cross = function( u, v )
 {
     if ( !Array.isArray(u) || u.length < 3 ) {
         throw "cross(): first argument is not a vector of at least 3";
@@ -549,20 +549,20 @@ Utils.cross = function( u, v )
 
 //----------------------------------------------------------------------------
 
-Utils.vectorLength = function( u )
+MV.vectorLength = function( u )
 {
-    return Math.sqrt( dot(u, u) );
+    return Math.sqrt( MV.dot(u, u) );
 }
 
 //----------------------------------------------------------------------------
 
-Utils.normalize = function( u, excludeLastComponent )
+MV.normalize = function( u, excludeLastComponent )
 { 
     if ( excludeLastComponent ) {
         var last = u.pop();
     }
     
-    var len = length( u );
+    var len = MV.vectorLength( u );
 
     if ( !isFinite(len) ) {
         throw "normalize: vector " + u + " has zero length";
@@ -581,7 +581,7 @@ Utils.normalize = function( u, excludeLastComponent )
 
 //----------------------------------------------------------------------------
 
-Utils.mix = function( u, v, s )
+MV.mix = function( u, v, s )
 {
     if ( typeof s !== "number" ) {
         throw "mix: the last paramter " + s + " must be a number";
@@ -599,12 +599,62 @@ Utils.mix = function( u, v, s )
     return result;
 }
 
+MV.inverse = function(matrix) {
+    let result = MV.mat4(); // Assuming mat4() creates a 4x4 identity matrix
+    let tmp = MV.mat4(); // Temporary matrix for intermediate calculations
+
+    // Copy the original matrix to avoid modifying it
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            tmp[i][j] = matrix[i][j];
+        }
+    }
+
+    // Gauss-Jordan elimination with partial pivoting
+    for (let i = 0; i < 4; i++) {
+        // Pivoting
+        for (let j = i + 1; j < 4; j++) {
+            if (Math.abs(tmp[j][i]) > Math.abs(tmp[i][i])) {
+                for (let k = 0; k < 4; k++) {
+                    let temp = tmp[i][k];
+                    tmp[i][k] = tmp[j][k];
+                    tmp[j][k] = temp;
+
+                    temp = result[i][k];
+                    result[i][k] = result[j][k];
+                    result[j][k] = temp;
+                }
+            }
+        }
+
+        // Make the diagonal contain all 1's
+        let pivot = tmp[i][i];
+        for (let k = 0; k < 4; k++) {
+            tmp[i][k] /= pivot;
+            result[i][k] /= pivot;
+        }
+
+        // Make the other rows contain all 0's
+        for (let j = 0; j < 4; j++) {
+            if (j !== i) {
+                let factor = tmp[j][i];
+                for (let k = 0; k < 4; k++) {
+                    tmp[j][k] -= factor * tmp[i][k];
+                    result[j][k] -= factor * result[i][k];
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
 //----------------------------------------------------------------------------
 //
 // Vector and Matrix functions
 //
 
-Utils.scale = function( s, u )
+MV.scale2 = function( s, u )
 {
     if ( !Array.isArray(u) ) {
         throw "scale: second parameter " + u + " is not a vector";
@@ -623,10 +673,10 @@ Utils.scale = function( s, u )
 //
 //
 
-Utils.flatten = function( v, flag=false )
+MV.flatten = function( v, flag=false )
 {
     if ( v.matrix === true ) {
-        v = Utils.transpose( v );
+        v = MV.transpose( v );
     }
 
     var n = v.length;
@@ -671,12 +721,12 @@ Utils.flatten = function( v, flag=false )
 
 //----------------------------------------------------------------------------
 
-Utils.sizeof = {
-    'vec2' : new Float32Array( Utils.flatten(Utils.vec2()) ).byteLength,
-    'vec3' : new Float32Array( Utils.flatten(Utils.vec3()) ).byteLength,
-    'vec4' : new Float32Array( Utils.flatten(Utils.vec4()) ).byteLength,
-    'mat2' : new Float32Array( Utils.flatten(Utils.mat2()) ).byteLength,
-    'mat3' : new Float32Array( Utils.flatten(Utils.mat3()) ).byteLength,
-    'mat4' : new Float32Array( Utils.flatten(Utils.mat4()) ).byteLength,
+MV.sizeof = {
+    'vec2' : new Float32Array( MV.flatten(MV.vec2()) ).byteLength,
+    'vec3' : new Float32Array( MV.flatten(MV.vec3()) ).byteLength,
+    'vec4' : new Float32Array( MV.flatten(MV.vec4()) ).byteLength,
+    'mat2' : new Float32Array( MV.flatten(MV.mat2()) ).byteLength,
+    'mat3' : new Float32Array( MV.flatten(MV.mat3()) ).byteLength,
+    'mat4' : new Float32Array( MV.flatten(MV.mat4()) ).byteLength,
     'gl.FLOAT': 4
 };

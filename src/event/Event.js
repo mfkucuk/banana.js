@@ -19,7 +19,9 @@ export class Event
         MouseButtonClickedEvent: 30,
         MouseButtonReleasedEvent: 31,
         KeyboardButtonPressedEvent: 40,
-        KeyboardButtonReleasedEvent: 41
+        KeyboardButtonReleasedEvent: 41,
+        WindowResizedEvent: 50,
+        WindowClosedEvenet: 51
     }
 
     constructor() 
@@ -27,22 +29,22 @@ export class Event
         this.m_Handled = false;
     }
 
-    GetCategoryFlags = function() 
+    GetCategoryFlags() 
     {
         return EventCategory.None;
     }
 
-    GetEventType = function()
+    GetEventType()
     {
         return EventType.None;
     }
     
-    GetEventName = function() 
+    GetEventName() 
     {
         return '';
     }
 
-    IsInCategory = function(category) 
+    IsInCategory(category) 
     {
         return GetCategoryFlags() & category;
     }
@@ -55,7 +57,7 @@ export class EventDispatcher
         this.m_Event = event;
     }
 
-    Dispatch = function(dispatchFn, eventType) 
+    Dispatch(dispatchFn, eventType) 
     {
         if (this.m_Event.GetEventType() == eventType) 
         {

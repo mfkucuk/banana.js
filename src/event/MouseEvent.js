@@ -9,12 +9,12 @@ export class MouseEvent extends Event
         this.m_MousePositionY = mousePositionY;
     }
 
-    GetCategoryFlags = function()
+    GetCategoryFlags()
     {
         return Event.EventCategory.Mouse;
     }
 
-    toString = function() 
+    toString() 
     {
         return `${this.GetEventName()}: Pos=(${this.m_MousePositionX}, ${this.m_MousePositionY})`;
     }
@@ -22,12 +22,12 @@ export class MouseEvent extends Event
 
 export class MouseMovedEvent extends MouseEvent 
 {
-    GetEventType = function() 
+    GetEventType() 
     {
         return Event.EventType.MouseMovedEvent;
     }
 
-    GetEventName = function() 
+    GetEventName() 
     {
         return 'mousemove';
     }
@@ -42,22 +42,27 @@ export class MouseScrolledEvent extends Event
         this.m_OffsetY = offsetY;
     }
 
-    GetCategoryFlags = function()
+    GetCategoryFlags()
     {
         return Event.EventCategory.Mouse;
     }
 
-    GetEventType = function() 
+    GetEventType() 
     {
-        return Event.EventType.MouseScrollEvent;
+        return Event.EventType.MouseScrolledEvent;
     }
 
-    GetEventName = function() 
+    GetEventName() 
     {
         return 'wheel';
     }
 
-    toString = function() 
+    GetOffsetY() 
+    {
+        return this.m_OffsetY;
+    }
+
+    toString() 
     {
         return `${this.GetEventName()}: Offset=(${this.m_OffsetX}, ${this.m_OffsetY})`;
     }
@@ -71,12 +76,12 @@ class MouseButtonEvent extends MouseEvent
         this.m_Button = button;
     }
 
-    GetCategoryFlags = function() 
+    GetCategoryFlags() 
     {
         return Event.EventCategory.Mouse & EventCategory.MouseButtonEvent;
     }
 
-    toString = function() 
+    toString() 
     {
         return `${this.GetEventName()}: Button=${this.m_Button}, Pos=(${this.m_MousePositionX}, ${this.m_MousePositionY})`;
     }
@@ -85,12 +90,12 @@ class MouseButtonEvent extends MouseEvent
 
 export class MouseButtonClickedEvent extends MouseButtonEvent 
 {
-    GetEventType = function() 
+    GetEventType() 
     {
         return Event.EventType.MouseButtonClickedEvent;
     }
 
-    GetEventName = function() 
+    GetEventName() 
     {
         return 'mousedown';
     }
@@ -98,12 +103,12 @@ export class MouseButtonClickedEvent extends MouseButtonEvent
 
 export class MouseButtonReleasedEvent extends MouseButtonEvent 
 {
-    GetEventType = function() 
+    GetEventType() 
     {
         return Event.EventType.MouseButtonReleasedEvent;
     }
 
-    GetEventName = function() 
+    GetEventName() 
     {
         return 'mouseup';
     }

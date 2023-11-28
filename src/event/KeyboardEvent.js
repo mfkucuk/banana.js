@@ -8,17 +8,17 @@ export class KeyboardEvent extends Event
         this.m_Key = key;
     }
 
-    GetCategoryFlags = function()
+    GetCategoryFlags()
     {
         return Event.EventCategory.Keyboard;
     }
 
-    GetKey = function() 
+    GetKey() 
     {
         return this.m_Key;
     }
 
-    toString = function() 
+    toString() 
     {
         return `${this.GetEventName()}: Key=${this.GetKey()}`;
     }
@@ -26,12 +26,12 @@ export class KeyboardEvent extends Event
 
 export class KeyboardButtonPressedEvent extends KeyboardEvent 
 {
-    GetEventType = function() 
+    GetEventType() 
     {
         return Event.EventType.KeyboardButtonPressedEvent;
     }
 
-    GetEventName = function() 
+    GetEventName() 
     {
         return 'keydown';
     }
@@ -39,12 +39,12 @@ export class KeyboardButtonPressedEvent extends KeyboardEvent
 
 export class KeyboardButtonReleasedEvent extends KeyboardEvent 
 {
-    GetEventType = function() 
+    GetEventType() 
     {
         return Event.EventType.KeyboardButtonReleasedEvent;
     }
 
-    GetEventName = function() 
+    GetEventName() 
     {
         return 'keyup';
     }

@@ -1,45 +1,61 @@
 import { Event } from "./Event.js";
 
-export class ApplicationEvent extends Event 
+class ApplicationEvent extends Event 
 {
-    GetCategoryFlags = function()
+    GetCategoryFlags()
     {
         return this.EventCategory.Application;
     }
 }
 
-class WindowResizeEvent extends ApplicationEvent 
+export class WindowResizedEvent extends ApplicationEvent 
 {
     constructor(width, height) 
     {
+        super();
         this.m_Width = width;
         this.m_Height = height;
     }
 
-    GetEventType = function() 
+    GetEventType() 
     {
-        return Event.EventType.WindowResizeEvent;
+        return Event.EventType.WindowResizedEvent;
     }
 
-    toString = function() 
+    GetEventName() 
     {
+        return 'resize';
+    }
 
+    GetWidth() 
+    {
+        return this.m_Width;
+    }
+
+    GetHeight() 
+    {
+        return this.m_Height;
+    }
+
+    toString() 
+    {
+        return `${this.GetEventName()}: [${this.m_Width}, ${this.m_Height}]`
     }
 }
 
-class WindowCloseEvent extends ApplicationEvent 
+export class WindowClosedEvent extends ApplicationEvent 
 {
-    GetEventType = function() 
+    GetEventType() 
     {
-
+        return Event.EventType.WindowClosedEvent;
     }
 
-    GetEventName = function() 
+    GetEventName() 
     {
         return 'close';
     }
 
-    toString = function() 
+    toString() 
     {
         return `${this.GetEventName()}`;
     }

@@ -7,22 +7,22 @@ export class GUILayer extends Layer
         super('GUILayer');
     }
 
-    OnAttach = function() 
+    OnAttach() 
     {
         
     }
 
-    OnDetach = function() 
+    OnDetach() 
     {
 
     }
 
-    OnUpdate = function() 
+    OnUpdate() 
     {
         
     }
 
-    OnEvent = function(event) 
+    OnEvent(event) 
     {
 
     }

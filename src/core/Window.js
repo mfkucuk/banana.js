@@ -1,9 +1,10 @@
-import { WebGLUtils } from '../Common/webgl-utils.js'
+import { WebGLContext } from '../render/WebGLContext.js' 
 import { Log } from './Log.js'
+import { Input } from './Input.js'
 import * as mouse from '../event/MouseEvent.js'
 import * as keyboard from '../event/KeyboardEvent.js'
+import * as application from '../event/ApplicationEvent.js'
 
-export let gl;
 export let canvas;
 
 export class Window 
@@ -31,14 +32,15 @@ export class Window
 
         Log.Core_Info(`Creating window ${this.m_Title}, ${this.m_Width}x${this.m_Height}`);
 
-        gl = WebGLUtils.setupWebGL( canvas );
-        if ( !gl ) { Log.Core_Error('WebGL isn\'t available'); }
+        this.m_Context = new WebGLContext(canvas);
 
         canvas.addEventListener('mousedown', (event) => 
         {
             let mouseButtonClickedEvent = new mouse.MouseButtonClickedEvent(event.x, event.y, event.button);
 
             this.m_EventCallbackFn(mouseButtonClickedEvent);
+
+            Input.s_ButtonStates[`button${event.button}`] = true;
         });
 
         canvas.addEventListener('mouseup', (event) => 
@@ -46,7 +48,15 @@ export class Window
             let mouseButtonReleasedEvent = new mouse.MouseButtonReleasedEvent(event.x, event.y, event.button);
 
             this.m_EventCallbackFn(mouseButtonReleasedEvent);
+
+            Input.s_ButtonStates[`button${event.button}`] = false;
         });
+
+        canvas.addEventListener('mousemove', (event) => {
+
+            Input.mousePosition[0] = event.x;
+            Input.mousePosition[1] = event.y;
+        })
 
         canvas.addEventListener('wheel', (event) => 
         {
@@ -60,6 +70,8 @@ export class Window
             let keyboardButtonPressedEvent = new keyboard.KeyboardButtonPressedEvent(event.key);
 
             this.m_EventCallbackFn(keyboardButtonPressedEvent);
+
+            Input.s_KeyStates[event.key] = true;
         })
 
         canvas.addEventListener('keyup', (event) => 
@@ -67,21 +79,45 @@ export class Window
             let keyboardButtonReleasedEvent = new keyboard.KeyboardButtonReleasedEvent(event.key);
 
             this.m_EventCallbackFn(keyboardButtonReleasedEvent);
+
+            Input.s_KeyStates[event.key] = false;
+        })
+
+        window.addEventListener('resize', (event) => 
+        {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let windowResizedEvent = new application.WindowResizedEvent(canvas.width, canvas.height);
+
+            this.m_EventCallbackFn(windowResizedEvent);
+        })
+
+        window.addEventListener('close', (event) => 
+        {
+            let windowClosedEvent = new application.WindowClosedEvent();
+
+            this.m_EventCallbackFn(windowClosedEvent);
         })
     }
 
-    GetWidth = function() 
+    GetWidth() 
     {
         return m_Width;
     }
 
-    GetHeight = function() 
+    GetHeight() 
     {
         return m_Height;
     }
 
-    SetEventCallback = function(callbackFn) 
+    SetEventCallback(callbackFn) 
     {
         this.m_EventCallbackFn = callbackFn;
+    }
+
+    SetTitle(title) 
+    {
+        document.getElementById('title').innerText = title;
     }
 }

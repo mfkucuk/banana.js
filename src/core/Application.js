@@ -1,8 +1,12 @@
 import { Log } from "./Log.js"
 import { Window } from "./Window.js"
 import { Event, EventDispatcher } from "../event/Event.js"
-import { Layer } from "./Layer.js"
+import { Input } from "./Input.js"
 import { LayerStack } from "./LayerStack.js"
+import { Renderer } from "../render/Renderer.js"
+import { RenderCommand } from "../render/RenderCommand.js"
+import { Profiler } from "./Profiler.js"
+
 
 export class Application
 {
@@ -10,41 +14,56 @@ export class Application
     {
         this.OnEvent = this.OnEvent.bind(this);
         this.OnTick = this.OnTick.bind(this);
+        this.OnWindowClosed = this.OnWindowClosed.bind(this);
+        this.OnWindowResized = this.OnWindowResized.bind(this);
 
         this.m_Window = new Window('Engine', 600, 600);
         this.m_Window.SetEventCallback(this.OnEvent);
 
         this.m_LayerStack = new LayerStack();
+
+        this.m_LastFrameTime = 0;
         
         requestAnimationFrame(this.OnTick);
     }
 
-    Run = function() 
+    Run() 
+    {
+        
+    }
+
+    OnUpdate(deltaTime)
     {
 
     }
 
-    Update = function()
+    OnTick() 
     {
+        let currentFrameTime = Date.now();
+        let deltaTimeMilliseconds = currentFrameTime - this.m_LastFrameTime;
+        let deltaTimeSeconds = deltaTimeMilliseconds / 1000;
+        this.m_LastFrameTime = currentFrameTime;
 
-    }
+        //Log.Core_Info(`Delta time: ${deltaTimeSeconds}s (${deltaTimeMilliseconds}ms)`);
+        //Log.Core_Info(`FPS: ${1 / deltaTimeSeconds}`);
 
-    OnTick = function() 
-    {
-        this.Update();
+        this.OnUpdate(deltaTimeSeconds);
 
         this.m_LayerStack.GetLayers().forEach(layer => 
         {
-            layer.OnUpdate();
+            layer.OnUpdate(deltaTimeSeconds);
         });
 
         requestAnimationFrame(this.OnTick);
     }
 
 
-    OnEvent = function(event) 
+    OnEvent(event) 
     {
         let dispatcher = new EventDispatcher(event);
+
+        dispatcher.Dispatch(this.OnWindowClosed, Event.EventType.WindowClosedEvenet);
+        dispatcher.Dispatch(this.OnWindowResized, Event.EventType.WindowResizedEvent);
 
         for (let i = 0; i < this.m_LayerStack.GetLayers().length; i++) 
         {
@@ -55,15 +74,36 @@ export class Application
         Log.Core_Info(event);
     }
 
-    PushLayer = function(layer) 
+    OnWindowClosed(event) 
+    {
+        return true;
+    }
+
+    OnWindowResized(event) 
+    {
+        RenderCommand.SetViewport(event.GetWidth(), event.GetHeight());
+
+        return true;
+    }
+
+    PushLayer(layer) 
     {
         this.m_LayerStack.PushLayer(layer);
         layer.OnAttach();
+    
+        Log.Core_Info(`${layer.GetDebugName()} is attached`);
     }
 
-    PushOverlay = function(overlay) 
+    PushOverlay(overlay) 
     {
         this.m_LayerStack.PushOverlay(overlay);
         overlay.OnAttach();
+
+        Log.Core_Info(`${layer.GetDebugName()} is attached`);
+    }
+
+    SetTitle(title) 
+    {
+        this.m_Window.SetTitle(title);
     }
 }

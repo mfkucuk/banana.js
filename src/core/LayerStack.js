@@ -8,18 +8,18 @@ export class LayerStack
         this.m_LastLayerIndex = 0;
     }
 
-    PushLayer = function(layer) 
+    PushLayer(layer) 
     {
-        this.m_Layers.splice(m_LastLayerIndex, 0, layer);
+        this.m_Layers.splice(this.m_LastLayerIndex, 0, layer);
         this.m_LastLayerIndex++;
     }
 
-    PushOverlay = function(overlay)
+    PushOverlay(overlay)
     {
         this.m_Layers.push(overlay);
     }
 
-    PopLayer = function(layer) 
+    PopLayer(layer) 
     {
         let index = this.m_Layers.indexOf(layer);
 
@@ -33,7 +33,7 @@ export class LayerStack
         this.m_LastLayerIndex--;
     }
 
-    PopOverlay = function(overlay) 
+    PopOverlay(overlay) 
     {
         let index = this.m_Layers.indexOf(overlay);
 
@@ -46,7 +46,7 @@ export class LayerStack
         this.m_Layers.splice(index, 1);
     }
 
-    GetLayers = function() 
+    GetLayers() 
     {
         return this.m_Layers;
     }

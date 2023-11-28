@@ -5,12 +5,12 @@ export class Layer
         this.m_DebugName = name;
     }
 
-    OnAttach = function() {}
-    OnDetach = function() {}
-    OnUpdate = function() {}
-    OnEvent = function(event) {}
+    OnAttach() {}
+    OnDetach() {}
+    OnUpdate(deltaTime) {}
+    OnEvent(event) {}
 
-    GetDebugName = function() 
+    GetDebugName() 
     {
         return this.m_DebugName;
     }

@@ -1,6 +1,7 @@
 #gl-canvas 
 {
     z-index: 0;
+    display: block;
 }
 
 #canvas-overlay 
@@ -14,4 +15,10 @@
 p 
 {
     user-select: none;
+}
+
+html, body 
+{
+    margin: 0;
+    padding: 0;
 }
