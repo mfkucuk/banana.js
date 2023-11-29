@@ -8,11 +8,9 @@ export class Transform2D
         this.m_Rotation = 0;
         this.m_Scale = MV.vec3(1, 1, 1);
         this.m_Pivot = MV.vec3(0, 0, 0);
-        this.m_TransformMatrix;
+        this.m_TransformMatrix = MV.mat4();
         
         this.m_IsWorld = isWorld;
-
-        this.UpdateTransform();
     }
 
     Get() 
@@ -27,24 +25,6 @@ export class Transform2D
         this.m_TransformMatrix = copy;
     }
 
-    UpdateTransform() 
-    {
-        if (this.m_IsWorld) 
-        {
-            return;
-        }
-
-        this.m_TransformMatrix = MV.translate(this.m_Position);
-  
-        //this.m_TransformMatrix = MV.mult(this.m_TransformMatrix, MV.translate(MV.negate(this.m_Pivot)));
-        
-        this.m_TransformMatrix = MV.mult(this.m_TransformMatrix, MV.rotate(this.m_Rotation, [0, 0, 1]));
-
-        //this.m_TransformMatrix = MV.mult(this.m_TransformMatrix, MV.translate(this.m_Pivot));
-        
-        this.m_TransformMatrix = MV.mult(this.m_TransformMatrix, MV.scale(this.m_Scale));
-    }
-
     GetPosition() 
     {
         return this.m_Position;
@@ -55,8 +35,6 @@ export class Transform2D
         this.m_Position[0] = x;
         this.m_Position[1] = y;
         this.m_Position[2] = z;
-
-        this.UpdateTransform();
     }
 
     GetRotation() 
@@ -67,8 +45,6 @@ export class Transform2D
     SetRotation(angle) 
     {
         this.m_Rotation = angle;
-
-        this.UpdateTransform();
     }
 
     GetScale() 
@@ -81,8 +57,6 @@ export class Transform2D
         this.m_Scale[0] = x;
         this.m_Scale[1] = y;
         this.m_Scale[2] = z;
-
-        this.UpdateTransform();
     }
 
     SetPivot(x, y, z) 

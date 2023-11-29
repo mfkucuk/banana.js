@@ -386,6 +386,20 @@ MV.rotate = function( angle, axis )
     return result;
 }
 
+MV.rotateZ = function(angle) {
+    var c = Math.cos(MV.radians(angle));
+    var s = Math.sin(MV.radians(angle));
+
+    var result = MV.mat4(
+        MV.vec4(c, -s, 0.0, 0.0),
+        MV.vec4(s, c,  0.0, 0.0),
+        MV.vec4(0.0, 0.0, 1.0, 0.0),
+        MV.vec4(0.0, 0.0, 0.0, 1.0)
+    );
+
+    return result;
+};
+
 //----------------------------------------------------------------------------
 
 MV.scale = function( x, y, z )
