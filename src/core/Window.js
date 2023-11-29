@@ -40,7 +40,7 @@ export class Window
 
             this.m_EventCallbackFn(mouseButtonClickedEvent);
 
-            Input.s_ButtonStates[`button${event.button}`] = true;
+            Input.s_ButtonStates[`${event.button}`] = true;
         });
 
         canvas.addEventListener('mouseup', (event) => 
@@ -49,8 +49,15 @@ export class Window
 
             this.m_EventCallbackFn(mouseButtonReleasedEvent);
 
-            Input.s_ButtonStates[`button${event.button}`] = false;
+            Input.s_ButtonStates[`${event.button}`] = false;
         });
+
+        canvas.addEventListener('mouseleave', (event) => 
+        {
+            Object.keys(Input.s_ButtonStates).forEach(button => {
+                Input.s_ButtonStates[`${button}`] = false;
+            });
+        })
 
         canvas.addEventListener('mousemove', (event) => {
 

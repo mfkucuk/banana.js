@@ -14,7 +14,7 @@ export class Input
 
     static IsMouseButtonPressed(button) 
     {
-        let key = `button${button}`;
+        let key = `${button}`;
         
         if (Input.s_ButtonStates[key] == 'undefined') 
         {
