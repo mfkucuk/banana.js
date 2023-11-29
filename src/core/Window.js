@@ -93,7 +93,7 @@ export class Window
             this.m_EventCallbackFn(windowResizedEvent);
         })
 
-        window.addEventListener('close', (event) => 
+        window.addEventListener('beforeunload', (event) => 
         {
             let windowClosedEvent = new application.WindowClosedEvent();
 

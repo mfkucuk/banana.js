@@ -15,7 +15,7 @@ export class Profiler
 
     static ProfileScope(scopeName) 
     {
-        new Timer(scopeName);
+        return new Timer(scopeName);
     }
 }
 
@@ -31,7 +31,7 @@ class Timer
     }
 
     // stops timer
-    Stop() 
+    ScopeEnd() 
     {
         const stopTime = performance.now(); 
 

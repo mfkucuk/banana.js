@@ -66,9 +66,9 @@ export class SolarSystem extends banana.Layer
         
         banana.Renderer2D.BeginScene(this.m_CameraController.GetCamera());
         
-        banana.Renderer2D.DrawTexturedRotatedQuad(this.m_Earth.GetWorldTransform(), this.m_EarthTexture);
-        banana.Renderer2D.DrawTexturedRotatedQuad(this.m_Moon.GetWorldTransform(), this.m_MoonTexture);
-        banana.Renderer2D.DrawTexturedRotatedQuad(this.m_Sun.GetWorldTransform(), this.m_SunTexture);
+        banana.Renderer2D.DrawTexturedQuad(this.m_Earth.GetWorldTransform(), this.m_EarthTexture);
+        banana.Renderer2D.DrawTexturedQuad(this.m_Moon.GetWorldTransform(), this.m_MoonTexture);
+        banana.Renderer2D.DrawTexturedQuad(this.m_Sun.GetWorldTransform(), this.m_SunTexture);
         
         banana.Renderer2D.EndScene();
     }

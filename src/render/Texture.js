@@ -1,4 +1,5 @@
 import { Log } from "../core/Log.js"
+import { Renderer2D } from "./Renderer2D.js";
 import { gl } from "./WebGLContext.js"
 
 export class Texture 
@@ -11,7 +12,6 @@ export class Texture
         // Fill the texture with a 1x1 blue pixel.
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
             new Uint8Array([0, 0, 0, 255]));
-
             
         if (typeof src == 'undefined') 
         {
@@ -43,7 +43,7 @@ export class Texture
     }
 
     LoadImage() 
-    {
+    {     
         this.Bind();
         
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -54,13 +54,13 @@ export class Texture
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.m_Image);
         // gl.generateMipmap(gl.TEXTURE_2D);
 
-        this.Unbind();
-
         Log.Core_Info(`Loaded texture with:
                     Width: ${this.m_Image.width}px
                     Height: ${this.m_Image.height}px
                     Source: ${this.m_Image.src}`);
 
         this.m_Image.removeEventListener('load', this.LoadImage);
+        
+        this.Unbind();
     }
 }

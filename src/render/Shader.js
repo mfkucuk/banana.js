@@ -69,6 +69,13 @@ export class Shader
         gl.uniform1i(uniformLocation, value);
     }
 
+    SetUniform1iv(uniformName, value) 
+    {
+        const uniformLocation = this.GetUniformLocation(uniformName);
+
+        gl.uniform1iv(uniformLocation, value);
+    }
+
     SetCamera(camera) 
     {
         this.SetUniformMatrix4fv("u_ViewProjectionMatrix", camera.GetViewProjectionMatrix());

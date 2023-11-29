@@ -13,8 +13,9 @@ function main()
 
     Log.Info('Game started');
 
-
+    Profiler.BeginProfile('Application Runtime', 'Runtime.json');
     sandboxApp.Run();
+
 }
 
 window.onload = main;

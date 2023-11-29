@@ -21,7 +21,7 @@ export class Event
         KeyboardButtonPressedEvent: 40,
         KeyboardButtonReleasedEvent: 41,
         WindowResizedEvent: 50,
-        WindowClosedEvenet: 51
+        WindowClosedEvent: 51
     }
 
     constructor() 

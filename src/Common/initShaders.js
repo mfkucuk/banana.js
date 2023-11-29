@@ -107,7 +107,7 @@ export function initShadersFromFiles(gl, shaderSrc) {
     gl.linkProgram(program);
 
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        alert("Could not initialise shaders");
+        alert(gl.getProgramInfoLog(program));
         return null;
     }
 

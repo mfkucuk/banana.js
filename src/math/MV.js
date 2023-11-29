@@ -308,6 +308,22 @@ MV.mult = function( u, v )
 
         return result;
     }
+    else if (u.matrix && !v.matrix) 
+    {
+        if (u.length !== 4 || v.length !== 4) {
+            throw "mult(): invalid matrix and vector dimensions for matrix-vector multiplication";
+        }
+
+        for (var i = 0; i < 4; ++i) {
+            var sum = 0.0;
+            for (var k = 0; k < 4; ++k) {
+                sum += u[i][k] * v[k];
+            }
+            result.push(sum);
+        }
+
+        return result;
+    }
     else {
         if ( u.length != v.length ) {
             throw "mult(): vectors are not the same dimension";
@@ -679,15 +695,18 @@ MV.flatten = function( v, flag=false )
         v = MV.transpose( v );
     }
 
-    var n = v.length;
+    var n = 0;
     var elemsAreArrays = false;
 
-    if ( Array.isArray(v[0]) ) {
-        elemsAreArrays = true;
-        n = 0;
-        for (var i = 0; i < v.length; i++) 
+    for (var i = 0; i < v.length; i++) 
+    {
+        if (Array.isArray(v[i])) 
         {
             n += v[i].length;
+        }
+        else 
+        {
+            n++;
         }
     }
 
@@ -695,26 +714,27 @@ MV.flatten = function( v, flag=false )
 
     if (flag)
     {
-        flatArray = new Uint8Array( n );
+        flatArray = new Uint16Array( n );
     }
     else 
     {
         flatArray = new Float32Array( n );
     }
 
-    if ( elemsAreArrays ) {
-        var idx = 0;
-        for ( var i = 0; i < v.length; ++i ) {
+    var idx = 0;
+    for ( var i = 0; i < v.length; ++i ) {
+
+        if (Array.isArray(v[i])) 
+        {
             for ( var j = 0; j < v[i].length; ++j ) {
                 flatArray[idx++] = v[i][j];
             }
         }
-    }
-    else {
-        for ( var i = 0; i < v.length; ++i ) {
-            flatArray[i] = v[i];
+        else 
+        {
+            flatArray[idx++] = v[i];
         }
-    }
+    }    
 
     return flatArray;
 }

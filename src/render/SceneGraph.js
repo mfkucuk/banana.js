@@ -6,7 +6,7 @@ export class SceneGraphNode
     constructor() 
     {
         this.m_LocalTransform = new Transform2D();
-        this.m_WorldTransform = new Transform2D();
+        this.m_WorldTransform = new Transform2D(true);
 
         this.m_Children = [];
         this.m_Parent;

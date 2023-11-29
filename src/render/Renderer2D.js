@@ -6,44 +6,74 @@ import { Shader } from "./Shader.js"
 import { Texture } from "./Texture.js"
 import { gl } from "./WebGLContext.js"
 
-let PrimitiveData = 
+let Render2DData = 
 {
     MaxQuads: 10000,
     MaxVertices: 40000,
     MaxIndices: 60000, 
 
-    DefaultQuadSize: 100,
+    QuadVertexPositions: [
+        MV.vec4(-50, -50, 0, 1),
+        MV.vec4(50, -50, 0, 1),
+        MV.vec4(-50, 50, 0, 1),
+        MV.vec4(50, 50, 0, 1)
+    ],
 
     QuadVertexCount: 0,
-    QuadIndexCount: 0
+    QuadIndexCount: 0,
+
+    MaxTextureSlots: 16,
+    TextureSlotIndex: 1,
+    TextureSlots: [],
 };
 
 function QuadVertex() 
 {
     this.Position;
     this.TexCoord;
+    this.TexIndex;
     this.Color;
 
     this.Flat = function() 
     {
-        return [this.Position, this.TexCoord, this.Color];
+        return [this.Position, this.TexCoord, this.TexIndex, this.Color];
     }
 }
 
 export class Renderer2D 
 {
     static Black_Texture;
+    static Stats = {
+        BatchCount: 0,
+        QuadCount: 0,
+
+        GetTotalTriangleCount : function() 
+        {
+            return this.QuadCount * 2;
+        },
+
+        GetTotalVertexCount : function() 
+        {
+            return this.QuadCount * 4;
+        },
+
+        GetTotalIndexCount : function() 
+        {
+            return this.QuadCount * 6;
+        }
+    }
+    
 
     static Init() 
     {
         Renderer2D.Black_Texture = new Texture();
 
-        PrimitiveData.BasicShader = new Shader('/sandbox/assets/shader/basic.glsl');
+        Render2DData.BasicShader = new Shader('/sandbox/assets/shader/basic.glsl');
 
-        let quadIndices = [];
+        let quadIndices = []
 
         let offset = 0;
-        for (let i = 0; i < PrimitiveData.MaxIndices; i += 6) 
+        for (let i = 0; i < Render2DData.MaxIndices; i += 6) 
         {
             quadIndices[i + 0] = offset + 0;
             quadIndices[i + 1] = offset + 1;
@@ -56,111 +86,176 @@ export class Renderer2D
             offset += 4;
         }
 
-        PrimitiveData.QuadVertexBuffer = new VertexBuffer();
-        PrimitiveData.QuadIndexBuffer = new IndexBuffer(quadIndices);
+        Render2DData.QuadVertexBuffer = new VertexBuffer();
+        Render2DData.QuadIndexBuffer = new IndexBuffer(quadIndices);
 
-        const aPosition = PrimitiveData.BasicShader.GetAttributeLocation('a_Position');
-        const aTexCoord = PrimitiveData.BasicShader.GetAttributeLocation('a_TexCoord');
-        const aColor = PrimitiveData.BasicShader.GetAttributeLocation('a_Color');
+        const aPosition = Render2DData.BasicShader.GetAttributeLocation('a_Position');
+        const aTexCoord = Render2DData.BasicShader.GetAttributeLocation('a_TexCoord');
+        const aTexIndex = Render2DData.BasicShader.GetAttributeLocation('a_TexIndex');
+        const aColor = Render2DData.BasicShader.GetAttributeLocation('a_Color');
 
-        PrimitiveData.QuadVertexBuffer.PushAttribute(aPosition, 3);
-        PrimitiveData.QuadVertexBuffer.PushAttribute(aTexCoord, 2);
-        PrimitiveData.QuadVertexBuffer.PushAttribute(aColor, 4);
-        PrimitiveData.QuadVertexBuffer.LinkAttributes();
+        Render2DData.QuadVertexBuffer.PushAttribute(aPosition, 4);
+        Render2DData.QuadVertexBuffer.PushAttribute(aTexCoord, 2);
+        Render2DData.QuadVertexBuffer.PushAttribute(aTexIndex, 1);
+        Render2DData.QuadVertexBuffer.PushAttribute(aColor, 4);
+        Render2DData.QuadVertexBuffer.LinkAttributes();
+
+        let samplers = [];
+        for (let i = 0; i < Render2DData.MaxTextureSlots; i++) 
+        {
+            samplers[i] = i;
+        }
+
+        Render2DData.BasicShader.SetUniform1iv('u_Textures', samplers);
+
+        Render2DData.TextureSlots[0] = Renderer2D.Black_Texture;
     }
 
     static BeginScene(ortographicCamera) 
     {
-        PrimitiveData.QuadIndexCount = 0;
-        PrimitiveData.QuadVertexCount = 0;
+        Renderer2D.NewBatch();
         
-        PrimitiveData.BasicShader.Bind();
-        PrimitiveData.BasicShader.SetCamera(ortographicCamera);
+        Render2DData.BasicShader.Bind();
+        Render2DData.BasicShader.SetCamera(ortographicCamera);
     }
 
     static EndScene() 
-    {
-        PrimitiveData.QuadVertexBuffer.Bind();
-        PrimitiveData.QuadIndexBuffer.Bind();
-
+    {        
         Renderer2D.Flush();
     }
 
     static Flush() 
     {
-        gl.drawElements(gl.TRIANGLES, PrimitiveData.QuadIndexCount, gl.UNSIGNED_BYTE, 0);
+        Render2DData.QuadVertexBuffer.Bind();
+        Render2DData.QuadIndexBuffer.Bind();
+
+        for (let i = 0; i < Render2DData.TextureSlotIndex; i++) 
+        {
+            Render2DData.TextureSlots[i].Bind(i);
+        }
+
+        gl.drawElements(gl.TRIANGLES, Render2DData.QuadIndexCount, gl.UNSIGNED_SHORT, 0);
+        Renderer2D.Stats.BatchCount++;
+    }
+
+    static NewBatch() 
+    {
+        Render2DData.QuadIndexCount = 0;
+        Render2DData.QuadVertexCount = 0;
+        Render2DData.TextureSlotIndex = 1;
     }
 
     static DrawColoredQuad(transform, color)  
     {
+        if (Render2DData.QuadIndexCount >= Render2DData.MaxIndices) 
+        {
+            Renderer2D.Flush();
+            Renderer2D.NewBatch();
+        }
+
         let v1 = new QuadVertex();
-        v1.Position = MV.vec3(transform.GetPosition()[0], transform.GetPosition()[1], transform.GetPosition()[2]);
+        v1.Position = MV.mult(transform.Get(), Render2DData.QuadVertexPositions[0]);
         v1.TexCoord = MV.vec2(0, 0);
+        v1.TexIndex = 0;
         v1.Color = color;
-        PrimitiveData.QuadVertexBuffer.AddVertex(PrimitiveData.QuadVertexCount, v1.Flat());
-        PrimitiveData.QuadVertexCount++;
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        Render2DData.QuadVertexCount++;
 
         let v2 = new QuadVertex();
-        v2.Position = MV.vec3(transform.GetPosition()[0] + PrimitiveData.DefaultQuadSize * transform.GetScale()[0], transform.GetPosition()[1], transform.GetPosition()[2]);
+        v2.Position = MV.mult(transform.Get(), Render2DData.QuadVertexPositions[1]);
         v2.TexCoord = MV.vec2(1, 0);
+        v2.TexIndex = 0;
         v2.Color = color;
-        PrimitiveData.QuadVertexBuffer.AddVertex(PrimitiveData.QuadVertexCount, v2.Flat());
-        PrimitiveData.QuadVertexCount++;
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v2.Flat());
+        Render2DData.QuadVertexCount++;
 
         let v3 = new QuadVertex();
-        v3.Position = MV.vec3(transform.GetPosition()[0], transform.GetPosition()[1] + PrimitiveData.DefaultQuadSize * transform.GetScale()[1], transform.GetPosition()[2]);
+        v3.Position = MV.mult(transform.Get(), Render2DData.QuadVertexPositions[2]);
         v3.TexCoord = MV.vec2(0, 1);
+        v3.TexIndex = 0;
         v3.Color = color;
-        PrimitiveData.QuadVertexBuffer.AddVertex(PrimitiveData.QuadVertexCount, v3.Flat());
-        PrimitiveData.QuadVertexCount++;
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v3.Flat());
+        Render2DData.QuadVertexCount++;
 
         let v4 = new QuadVertex();
-        v4.Position = MV.vec3(transform.GetPosition()[0] + PrimitiveData.DefaultQuadSize * transform.GetScale()[0], transform.GetPosition()[1] + PrimitiveData.DefaultQuadSize * transform.GetScale()[1], transform.GetPosition()[2]);
+        v4.Position = MV.mult(transform.Get(), Render2DData.QuadVertexPositions[3]);
         v4.TexCoord = MV.vec2(1, 1);
+        v4.TexIndex = 0;
         v4.Color = color;
-        PrimitiveData.QuadVertexBuffer.AddVertex(PrimitiveData.QuadVertexCount, v4.Flat());
-        PrimitiveData.QuadVertexCount++;
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v4.Flat());
+        Render2DData.QuadVertexCount++;
         
-        PrimitiveData.QuadIndexCount += 6;
+        Render2DData.QuadIndexCount += 6;
+
+        Renderer2D.Stats.QuadCount++;
     }
 
     static DrawTexturedQuad(transform, texture) 
     {
-        PrimitiveData.QuadVertexBuffer.Bind();
-        PrimitiveData.QuadIndexBuffer.Bind();
-        texture.Bind(0);
+        if (Render2DData.QuadIndexCount >= Render2DData.MaxIndices) 
+        {
+            Renderer2D.Flush();
+            Renderer2D.NewBatch();
+        }
 
-        PrimitiveData.BasicShader.SetUniformMatrix4fv('u_Transform', transform.Get());
-        PrimitiveData.BasicShader.SetUniform4f('u_Color', Color.TRANSPARENT);
-        PrimitiveData.BasicShader.UseTexture(0);
+        let useTextureSlot = -1;
 
-        gl.drawElements(gl.TRIANGLES, PrimitiveData.QuadIndexBuffer.GetCount(), gl.UNSIGNED_BYTE, 0);
+        for (let i = 0; i < Render2DData.TextureSlotIndex; i++) 
+        {
+            if (Render2DData.TextureSlots[i] == texture) 
+            {
+                useTextureSlot = i;
+                break;
+            }
+        }
+
+        if (useTextureSlot == -1) 
+        {
+            useTextureSlot = Render2DData.TextureSlotIndex;
+            Render2DData.TextureSlots[Render2DData.TextureSlotIndex++] = texture;
+        }
+
+        let v1 = new QuadVertex();
+        v1.Position = MV.mult(transform.Get(), Render2DData.QuadVertexPositions[0]);
+        v1.TexCoord = MV.vec2(0, 0);
+        v1.TexIndex = useTextureSlot;
+        v1.Color = Color.TRANSPARENT;
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        Render2DData.QuadVertexCount++;
+
+        let v2 = new QuadVertex();
+        v2.Position = MV.mult(transform.Get(), Render2DData.QuadVertexPositions[1]);
+        v2.TexCoord = MV.vec2(1, 0);
+        v2.TexIndex = useTextureSlot;
+        v2.Color = Color.TRANSPARENT;
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v2.Flat());
+        Render2DData.QuadVertexCount++;
+
+        let v3 = new QuadVertex();
+        v3.Position = MV.mult(transform.Get(), Render2DData.QuadVertexPositions[2]);
+        v3.TexCoord = MV.vec2(0, 1);
+        v3.TexIndex = useTextureSlot;
+        v3.Color = Color.TRANSPARENT;
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v3.Flat());
+        Render2DData.QuadVertexCount++;
+
+        let v4 = new QuadVertex();
+        v4.Position = MV.mult(transform.Get(), Render2DData.QuadVertexPositions[3]);
+        v4.TexCoord = MV.vec2(1, 1);
+        v4.TexIndex = useTextureSlot;
+        v4.Color = Color.TRANSPARENT;
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v4.Flat());
+        Render2DData.QuadVertexCount++;
+
+        Render2DData.QuadIndexCount += 6;
+
+        Renderer2D.Stats.QuadCount++;
     }
 
-    static DrawColoredRotatedQuad(transform, color)  
+    // following functions only exist within the engine, once the game is built they shouldn't be called
+    static ResetStats() 
     {
-        PrimitiveData.QuadVertexBuffer.Bind();
-        PrimitiveData.QuadIndexBuffer.Bind();
-        Renderer2D.Black_Texture.Bind(0);
-
-        PrimitiveData.BasicShader.SetUniformMatrix4fv('u_Transform', transform.Get());
-        PrimitiveData.BasicShader.SetUniform4f('u_Color', color);
-        PrimitiveData.BasicShader.UseTexture(0);
-
-        gl.drawElements(gl.TRIANGLES, PrimitiveData.QuadIndexBuffer.GetCount(), gl.UNSIGNED_BYTE, 0);
+        Renderer2D.Stats.BatchCount = 0;
+        Renderer2D.Stats.QuadCount = 0;
     }
-
-    static DrawTexturedRotatedQuad(transform, texture) 
-    {
-        PrimitiveData.QuadVertexBuffer.Bind();
-        PrimitiveData.QuadIndexBuffer.Bind();
-        texture.Bind(0);
-
-        PrimitiveData.BasicShader.SetUniformMatrix4fv('u_Transform', transform.Get());
-        PrimitiveData.BasicShader.SetUniform4f('u_Color', Color.TRANSPARENT);
-        PrimitiveData.BasicShader.UseTexture(0);
-
-        gl.drawElements(gl.TRIANGLES, PrimitiveData.QuadIndexBuffer.GetCount(), gl.UNSIGNED_BYTE, 0);
-    }
-
 }

@@ -26,7 +26,7 @@ export class Renderer
         shader.SetCamera(Renderer.s_SceneData.camera);
         shader.SetUniformMatrix4fv('u_Transform', transform);
         
-        gl.drawElements(gl.TRIANGLES, ib.GetCount(), gl.UNSIGNED_BYTE, 0);
+        gl.drawElements(gl.TRIANGLES, ib.GetCount(), gl.UNSIGNED_SHORT, 0);
 
         vb.Unbind();
         ib.Unbind();

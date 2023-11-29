@@ -47,7 +47,6 @@ export class VertexBuffer
 
     SetData() 
     {
-
     }
 
     AddVertex(index, vertex)

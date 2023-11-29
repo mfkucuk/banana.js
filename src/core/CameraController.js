@@ -36,8 +36,8 @@ export class OrthographicCameraController
         if (Input.IsMouseButtonPressed(MouseButton.MOUSE_MIDDLE)) 
         {
             let direction = MV.vec2();
-            direction[0] = (this.m_PreviousMousePosition[0] - Input.mousePosition[0]) * this.m_CameraPanSpeed * deltaTime * this.m_ZoomLevel;
-            direction[1] = (this.m_PreviousMousePosition[1] - Input.mousePosition[1]) * this.m_CameraPanSpeed * deltaTime * this.m_ZoomLevel;
+            direction[0] = (this.m_PreviousMousePosition[0] - Input.mousePosition[0]) * this.m_ZoomLevel;
+            direction[1] = (this.m_PreviousMousePosition[1] - Input.mousePosition[1]) * this.m_ZoomLevel;
 
             this.m_Camera.SetPosition(this.m_Camera.GetPosition()[0] + direction[0], this.m_Camera.GetPosition()[1] + direction[1], 0.0);
             

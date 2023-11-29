@@ -17,19 +17,19 @@ export class Application
         this.OnWindowClosed = this.OnWindowClosed.bind(this);
         this.OnWindowResized = this.OnWindowResized.bind(this);
 
+        this.m_IsRunning = true;
+
         this.m_Window = new Window('Engine', 600, 600);
         this.m_Window.SetEventCallback(this.OnEvent);
 
         this.m_LayerStack = new LayerStack();
 
         this.m_LastFrameTime = 0;
-        
-        requestAnimationFrame(this.OnTick);
     }
 
     Run() 
     {
-        
+        this.OnTick();
     }
 
     OnUpdate(deltaTime)
@@ -45,7 +45,7 @@ export class Application
         this.m_LastFrameTime = currentFrameTime;
 
         //Log.Core_Info(`Delta time: ${deltaTimeSeconds}s (${deltaTimeMilliseconds}ms)`);
-        //Log.Core_Info(`FPS: ${1 / deltaTimeSeconds}`);
+        Log.Core_Info(`FPS: ${1 / deltaTimeSeconds}`);
 
         this.OnUpdate(deltaTimeSeconds);
 
@@ -53,7 +53,7 @@ export class Application
         {
             layer.OnUpdate(deltaTimeSeconds);
         });
-
+        
         requestAnimationFrame(this.OnTick);
     }
 
@@ -62,7 +62,7 @@ export class Application
     {
         let dispatcher = new EventDispatcher(event);
 
-        dispatcher.Dispatch(this.OnWindowClosed, Event.EventType.WindowClosedEvenet);
+        dispatcher.Dispatch(this.OnWindowClosed, Event.EventType.WindowClosedEvent);
         dispatcher.Dispatch(this.OnWindowResized, Event.EventType.WindowResizedEvent);
 
         for (let i = 0; i < this.m_LayerStack.GetLayers().length; i++) 
@@ -76,6 +76,8 @@ export class Application
 
     OnWindowClosed(event) 
     {
+        //Profiler.EndProfile();
+        
         return true;
     }
 

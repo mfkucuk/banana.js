@@ -79,12 +79,14 @@ class ExampleLayer extends banana.Layer
 
 class Sandbox extends banana.Application
 {
+    constructor() 
+    {
+        super();
 
-    Run() 
-    { 
         this.SetTitle('Sandbox2D');
 
         this.PushLayer(new Sandbox2D());   
+        //this.PushLayer(new SolarSystem());   
     }
 }
 
