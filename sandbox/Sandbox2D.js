@@ -45,7 +45,15 @@ export class Sandbox2D extends banana.Layer
             {
                 this.m_Transforms[i].push(new banana.Transform2D());
                 this.m_Transforms[i][j].SetPosition(i*30-290, j*30-290, 0);
-                this.m_Transforms[i][j].SetScale(0.2, 0.2, 1);
+
+                if ((i+j) % 2 == 0) 
+                {
+                    this.m_Transforms[i][j].SetScale(0.2, 0.2, 1);
+                }
+                else 
+                {
+                    this.m_Transforms[i][j].SetScale(0.4, 0.4, 1);
+                }
             }
         }
     }
@@ -64,7 +72,15 @@ export class Sandbox2D extends banana.Layer
         {
             for (let j = 0; j < this.m_Height; j++) 
             {
-                banana.Renderer2D.DrawTexturedQuad(this.m_Transforms[i][j], this.m_EarthTexture);
+                if ((i + j) % 2 == 0) 
+                {
+                    banana.Renderer2D.DrawTexturedQuad(this.m_Transforms[i][j], this.m_MoonTexture);
+                    
+                }
+                else 
+                {
+                    banana.Renderer2D.DrawTexturedQuad(this.m_Transforms[i][j], this.m_EarthTexture);
+                }
 
                 this.m_Transforms[i][j].SetRotation(this.m_Angle);
             }

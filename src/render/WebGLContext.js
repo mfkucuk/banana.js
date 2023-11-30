@@ -1,4 +1,3 @@
-import { WebGLUtils } from '../Common/webgl-utils.js'
 import { Log } from "../core/Log.js"
 
 export let gl;

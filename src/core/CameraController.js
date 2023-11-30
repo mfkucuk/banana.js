@@ -4,6 +4,7 @@ import { MouseButton } from "./MouseButtonCode.js"
 import * as weml from '../ext/weml.js/weml.js'
 import { Event, EventDispatcher } from "../event/Event.js"
 import { canvas } from "./Window.js"
+import { KeyCode } from "./KeyCode.js"
 
 export class OrthographicCameraController 
 {
@@ -14,6 +15,7 @@ export class OrthographicCameraController
         this.OnWindowResized = this.OnWindowResized.bind(this);
 
         this.m_CameraPanSpeed = 60;
+        this.m_CameraAngle = 0;
         this.m_ZoomLevel = 1.0
         this.m_PreviousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
 
@@ -42,6 +44,17 @@ export class OrthographicCameraController
             this.m_Camera.SetPosition(this.m_Camera.GetPosition()[0] + direction[0], this.m_Camera.GetPosition()[1] + direction[1], 0.0);
             
             this.m_PreviousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
+        }
+
+        if (Input.IsKeyPressed(KeyCode.Q)) 
+        {
+            this.m_CameraAngle--;
+            this.m_Camera.SetRotation(this.m_CameraAngle);
+        }
+        if (Input.IsKeyPressed(KeyCode.E)) 
+        {
+            this.m_CameraAngle++;
+            this.m_Camera.SetRotation(this.m_CameraAngle);
         }
     }
 

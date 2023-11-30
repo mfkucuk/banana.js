@@ -6,26 +6,26 @@ import { Texture } from "./Texture.js"
 import { gl } from "./WebGLContext.js"
 import * as weml from '../ext/weml.js/weml.js'
 
-let Render2DData = 
+function Render2DData()
 {
-    MaxQuads: 200,
-    MaxVertices: 800,
-    MaxIndices: 1200, 
-
-    QuadVertexPositions: [
-        weml.Vec4(-50, -50, 0, 1),
-        weml.Vec4(50, -50, 0, 1),
-        weml.Vec4(-50, 50, 0, 1),
-        weml.Vec4(50, 50, 0, 1)
-    ],
-
-    QuadVertexCount: 0,
-    QuadIndexCount: 0,
-
-    MaxTextureSlots: 16,
-    TextureSlotIndex: 1,
-    TextureSlots: [],
 };
+Render2DData.MaxQuads = 200;
+Render2DData.MaxVertices = Render2DData.MaxQuads * 4;
+Render2DData.MaxIndices = Render2DData.MaxQuads * 6; 
+
+Render2DData.QuadVertexPositions= [
+    weml.Vec4(-50, -50, 0, 1),
+    weml.Vec4(50, -50, 0, 1),
+    weml.Vec4(-50, 50, 0, 1),
+    weml.Vec4(50, 50, 0, 1)
+];
+
+Render2DData.QuadVertexCount = 0;
+Render2DData.QuadIndexCount = 0;
+
+Render2DData.MaxTextureSlots = 16;
+Render2DData.TextureSlotIndex = 1;
+Render2DData.TextureSlots = [];
 
 function QuadVertex() 
 {
@@ -34,10 +34,13 @@ function QuadVertex()
     this.TexCoord; // 2
     this.TexIndex; // 1
     this.Color;    // 4
+    this.Translation; // 3
+    this.Rotation; // 1
+    this.Scaling; // 3
 
     this.Flat = function() 
     {
-        let flatArray = new Float32Array( QuadVertex.VertexSize );
+        let flatArray = [];
 
         flatArray[0] = this.Position[0];
         flatArray[1] = this.Position[1];
@@ -54,13 +57,22 @@ function QuadVertex()
         flatArray[9] = this.Color[2];
         flatArray[10] = this.Color[3];
 
-        return flatArray;
+        flatArray[11] = this.Translation[0];
+        flatArray[12] = this.Translation[1];
+        flatArray[13] = this.Translation[2];
 
+        flatArray[14] = this.Rotation;
+
+        flatArray[15] = this.Scaling[0];
+        flatArray[16] = this.Scaling[1];
+        flatArray[17] = this.Scaling[2];
+
+        return flatArray;
     }
 
 }
 
-QuadVertex.VertexSize = 11;
+QuadVertex.VertexSize = 18;
 
 export class Renderer2D 
 {
@@ -181,8 +193,7 @@ export class Renderer2D
         }
 
         let v1 = new QuadVertex();
-        v1.Position = Render2DData.QuadVertexPositions[0].clone();
-        v1.Position.mulMatrix(transform.Get());
+        v1.Position = Render2DData.QuadVertexPositions[0];
         v1.TexCoord = weml.Vec2(0, 0);
         v1.TexIndex = 0;
         v1.Color = color;
@@ -192,40 +203,34 @@ export class Renderer2D
         Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
-        let v2 = new QuadVertex();
-        v2.Position = Render2DData.QuadVertexPositions[1].clone();
-        v2.Position.mulMatrix(transform.Get());
-        v2.TexCoord = weml.Vec2(1, 0);
-        v2.TexIndex = 0;
-        v2.Color = color;
-        v2.Translation = transform.GetPosition();
-        v2.Rotation = transform.GetRotation();
-        v2.Scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v2.Flat());
+        v1.Position = Render2DData.QuadVertexPositions[1];
+        v1.TexCoord = weml.Vec2(1, 0);
+        v1.TexIndex = 0;
+        v1.Color = color;
+        v1.Translation = transform.GetPosition();
+        v1.Rotation = transform.GetRotation();
+        v1.Scaling = transform.GetScale();
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
-        let v3 = new QuadVertex();
-        v3.Position = Render2DData.QuadVertexPositions[2].clone();
-        v3.Position.mulMatrix(transform.Get());
-        v3.TexCoord = weml.Vec2(0, 1);
-        v3.TexIndex = 0;
-        v3.Color = color;
-        v3.Translation = transform.GetPosition();
-        v3.Rotation = transform.GetRotation();
-        v3.Scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v3.Flat());
+        v1.Position = Render2DData.QuadVertexPositions[2];
+        v1.TexCoord = weml.Vec2(0, 1);
+        v1.TexIndex = 0;
+        v1.Color = color;
+        v1.Translation = transform.GetPosition();
+        v1.Rotation = transform.GetRotation();
+        v1.Scaling = transform.GetScale();
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
-        let v4 = new QuadVertex();
-        v4.Position = Render2DData.QuadVertexPositions[3].clone();
-        v4.Position.mulMatrix(transform.Get());
-        v4.TexCoord = weml.Vec2(1, 1);
-        v4.TexIndex = 0;
-        v4.Color = color;
-        v4.Translation = transform.GetPosition();
-        v4.Rotation = transform.GetRotation();
-        v4.Scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v4.Flat());
+        v1.Position = Render2DData.QuadVertexPositions[3];
+        v1.TexCoord = weml.Vec2(1, 1);
+        v1.TexIndex = 0;
+        v1.Color = color;
+        v1.Translation = transform.GetPosition();
+        v1.Rotation = transform.GetRotation();
+        v1.Scaling = transform.GetScale();
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
         
         Render2DData.QuadIndexCount += 6;
@@ -265,8 +270,7 @@ export class Renderer2D
         }
 
         let v1 = new QuadVertex();
-        v1.Position = Render2DData.QuadVertexPositions[0].clone();
-        v1.Position.mulMatrix(transform.Get());
+        v1.Position = Render2DData.QuadVertexPositions[0];
         v1.TexCoord = weml.Vec2(0, 0);
         v1.TexIndex = useTextureSlot;
         v1.Color = Color.TRANSPARENT;
@@ -276,40 +280,34 @@ export class Renderer2D
         Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
-        let v2 = new QuadVertex();
-        v2.Position = Render2DData.QuadVertexPositions[1].clone();
-        v2.Position.mulMatrix(transform.Get());
-        v2.TexCoord = weml.Vec2(1, 0);
-        v2.TexIndex = useTextureSlot;
-        v2.Color = Color.TRANSPARENT;
-        v2.Translation = transform.GetPosition();
-        v2.Rotation = transform.GetRotation();
-        v2.Scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v2.Flat());
+        v1.Position = Render2DData.QuadVertexPositions[1];
+        v1.TexCoord = weml.Vec2(1, 0);
+        v1.TexIndex = useTextureSlot;
+        v1.Color = Color.TRANSPARENT;
+        v1.Translation = transform.GetPosition();
+        v1.Rotation = transform.GetRotation();
+        v1.Scaling = transform.GetScale();
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
-        let v3 = new QuadVertex();
-        v3.Position = Render2DData.QuadVertexPositions[2].clone();
-        v3.Position.mulMatrix(transform.Get());
-        v3.TexCoord = weml.Vec2(0, 1);
-        v3.TexIndex = useTextureSlot;
-        v3.Color = Color.TRANSPARENT;
-        v3.Translation = transform.GetPosition();
-        v3.Rotation = transform.GetRotation();
-        v3.Scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v3.Flat());
+        v1.Position = Render2DData.QuadVertexPositions[2];
+        v1.TexCoord = weml.Vec2(0, 1);
+        v1.TexIndex = useTextureSlot;
+        v1.Color = Color.TRANSPARENT;
+        v1.Translation = transform.GetPosition();
+        v1.Rotation = transform.GetRotation();
+        v1.Scaling = transform.GetScale();
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
-        let v4 = new QuadVertex();
-        v4.Position = Render2DData.QuadVertexPositions[3].clone();
-        v4.Position.mulMatrix(transform.Get());
-        v4.TexCoord = weml.Vec2(1, 1);
-        v4.TexIndex = useTextureSlot;
-        v4.Color = Color.TRANSPARENT;
-        v4.Translation = transform.GetPosition();
-        v4.Rotation = transform.GetRotation();
-        v4.Scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v4.Flat());
+        v1.Position = Render2DData.QuadVertexPositions[3];
+        v1.TexCoord = weml.Vec2(1, 1);
+        v1.TexIndex = useTextureSlot;
+        v1.Color = Color.TRANSPARENT;
+        v1.Translation = transform.GetPosition();
+        v1.Rotation = transform.GetRotation();
+        v1.Scaling = transform.GetScale();
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
         Render2DData.QuadIndexCount += 6;
