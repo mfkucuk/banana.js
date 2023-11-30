@@ -64,7 +64,7 @@ export class Sandbox2D extends banana.Layer
         {
             for (let j = 0; j < this.m_Height; j++) 
             {
-                banana.Renderer2D.DrawColoredQuad(this.m_Transforms[i][j], banana.Color.PURPLE);
+                banana.Renderer2D.DrawTexturedQuad(this.m_Transforms[i][j], this.m_EarthTexture);
 
                 this.m_Transforms[i][j].SetRotation(this.m_Angle);
             }
@@ -72,19 +72,21 @@ export class Sandbox2D extends banana.Layer
 
         banana.Renderer2D.EndScene();
 
-        banana.Renderer2D.BeginScene(this.m_CameraController.GetCamera());
+        // banana.Log.Core_Info(banana.Renderer2D.Stats.BatchCount);
 
-        banana.Renderer2D.DrawColoredQuad(this.m_BlueTransform, banana.Color.BLUE);
-        banana.Renderer2D.DrawColoredQuad(this.m_RedTransform, banana.Color.RED);
+        // banana.Renderer2D.BeginScene(this.m_CameraController.GetCamera());
 
-        banana.Renderer2D.EndScene();
+        // banana.Renderer2D.DrawColoredQuad(this.m_BlueTransform, banana.Color.BLUE);
+        // banana.Renderer2D.DrawColoredQuad(this.m_RedTransform, banana.Color.RED);
 
-        this.m_Angle += 1;
-        this.m_BlueTransform.SetRotation(this.m_Angle);
-        this.m_RedTransform.SetRotation(-this.m_Angle);
-        this.m_EarthTransform.SetRotation(this.m_Angle);
-        this.m_MoonTransform.SetRotation(-this.m_Angle);
 
+        // banana.Renderer2D.EndScene();
+
+        // this.m_BlueTransform.SetRotation(this.m_Angle);
+        // this.m_RedTransform.SetRotation(-this.m_Angle);
+        // this.m_EarthTransform.SetRotation(this.m_Angle);
+        // this.m_MoonTransform.SetRotation(-this.m_Angle);
+        this.m_Angle++;
     }
 
     OnEvent(event) 
