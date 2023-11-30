@@ -1,4 +1,5 @@
-import * as banana from "../banana.js"
+import * as banana from '../banana.js'
+import * as weml from '../src/ext/weml.js/weml.js'
 
 export class Sandbox2D extends banana.Layer 
 {
@@ -78,7 +79,7 @@ export class Sandbox2D extends banana.Layer
 
         banana.Renderer2D.EndScene();
 
-        this.m_Angle++;
+        this.m_Angle += 1;
         this.m_BlueTransform.SetRotation(this.m_Angle);
         this.m_RedTransform.SetRotation(-this.m_Angle);
         this.m_EarthTransform.SetRotation(this.m_Angle);

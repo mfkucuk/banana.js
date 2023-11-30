@@ -1,4 +1,3 @@
-import { MV } from "../math/MV.js";
 import { gl } from "./WebGLContext.js"
 
 function VertexAttribute(location, count, normalized) 
@@ -15,9 +14,9 @@ export class VertexBuffer
     {
         this.m_BufferId = gl.createBuffer();
         
-        if (typeof data == 'undefined') 
+        if (!Array.isArray(data)) 
         {
-            this.m_Data = [];
+            this.m_Data = new Float32Array( data );
             this.m_Usage = gl.DYNAMIC_DRAW;
         }
         else 
@@ -37,7 +36,7 @@ export class VertexBuffer
     Bind()
     {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.m_BufferId);
-        gl.bufferData(gl.ARRAY_BUFFER, MV.flatten(this.m_Data), this.m_Usage);
+        gl.bufferData(gl.ARRAY_BUFFER, this.m_Data, this.m_Usage);
     }
 
     Unbind() 
@@ -51,11 +50,6 @@ export class VertexBuffer
 
     AddVertex(index, vertex)
     {
-        if (vertex.length != this.GetAttributeCount()) 
-        {
-            return;
-        }
-
         for (let i = 0; i < vertex.length; i++) 
         {
             this.m_Data[index * vertex.length + i] = vertex[i];
@@ -66,7 +60,7 @@ export class VertexBuffer
     {
         this.m_Attributes.push(new VertexAttribute(attribLocation, count, normalized));
 
-        this.m_Stride += MV.sizeof['gl.FLOAT'] * count;
+        this.m_Stride += 4 * count;
     }
 
     LinkAttributes() 
@@ -76,7 +70,7 @@ export class VertexBuffer
             gl.enableVertexAttribArray(attribute.location);
             gl.vertexAttribPointer(attribute.location, attribute.count, gl.FLOAT, attribute.normalized, this.m_Stride, this.m_Offset);
 
-            this.m_Offset += MV.sizeof['gl.FLOAT'] * attribute.count;
+            this.m_Offset += 4 * attribute.count;
         });
     }
 
@@ -99,7 +93,7 @@ export class IndexBuffer
     Bind() 
     {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.m_BufferId);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, MV.flatten(this.m_Data, true), gl.STATIC_DRAW);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.m_Data, gl.STATIC_DRAW);
     }
 
     Unbind() 
@@ -114,6 +108,6 @@ export class IndexBuffer
 
     GetCount() 
     {
-        return this.m_Data.length * 3;
+        return this.m_Data.length;
     }
 }

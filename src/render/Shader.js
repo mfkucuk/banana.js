@@ -1,6 +1,5 @@
 import { initShadersFromHTML, initShadersFromFiles } from "../Common/initShaders.js"
 import { gl } from "./WebGLContext.js"
-import { MV } from "../math/MV.js"
 import { Log } from "../core/Log.js"
 
 // export const ShaderSource = 
@@ -52,7 +51,7 @@ export class Shader
     {
         const uniformLocation = this.GetUniformLocation(uniformName);
 
-        gl.uniformMatrix4fv(uniformLocation, transpose, MV.flatten(value));
+        gl.uniformMatrix4fv(uniformLocation, transpose, value);
     }
 
     SetUniform4f(uniformName, value) 

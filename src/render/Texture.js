@@ -1,5 +1,4 @@
 import { Log } from "../core/Log.js"
-import { Renderer2D } from "./Renderer2D.js";
 import { gl } from "./WebGLContext.js"
 
 export class Texture 

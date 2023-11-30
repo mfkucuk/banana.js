@@ -1,4 +1,4 @@
-import { MV } from "../math/MV.js";
+import * as weml from '../ext/weml.js/weml.js'
 import { Transform2D } from "./Transform.js"
 
 export class SceneGraphNode 

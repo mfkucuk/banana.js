@@ -1,7 +1,7 @@
 import { Input } from "./Input.js"
 import { OrthographicCamera } from "../render/Camera.js"
 import { MouseButton } from "./MouseButtonCode.js"
-import { MV } from "../math/MV.js"
+import * as weml from '../ext/weml.js/weml.js'
 import { Event, EventDispatcher } from "../event/Event.js"
 import { canvas } from "./Window.js"
 
@@ -15,7 +15,7 @@ export class OrthographicCameraController
 
         this.m_CameraPanSpeed = 60;
         this.m_ZoomLevel = 1.0
-        this.m_PreviousMousePosition = MV.vec2(Input.mousePosition[0], Input.mousePosition[1]);
+        this.m_PreviousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
 
         this.m_Camera = new OrthographicCamera(
             -canvas.width / 2 * this.m_ZoomLevel, 
@@ -35,13 +35,13 @@ export class OrthographicCameraController
     {
         if (Input.IsMouseButtonPressed(MouseButton.MOUSE_MIDDLE)) 
         {
-            let direction = MV.vec2();
+            let direction = weml.Vec2();
             direction[0] = (this.m_PreviousMousePosition[0] - Input.mousePosition[0]) * this.m_ZoomLevel;
             direction[1] = (this.m_PreviousMousePosition[1] - Input.mousePosition[1]) * this.m_ZoomLevel;
 
             this.m_Camera.SetPosition(this.m_Camera.GetPosition()[0] + direction[0], this.m_Camera.GetPosition()[1] + direction[1], 0.0);
             
-            this.m_PreviousMousePosition = MV.vec2(Input.mousePosition[0], Input.mousePosition[1]);
+            this.m_PreviousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
         }
     }
 
@@ -88,7 +88,7 @@ export class OrthographicCameraController
 
     OnMouseButtonClicked(event) 
     {
-        this.m_PreviousMousePosition = MV.vec2(Input.mousePosition[0], Input.mousePosition[1]);
+        this.m_PreviousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
 
         return true;
     }

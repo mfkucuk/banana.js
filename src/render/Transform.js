@@ -1,14 +1,14 @@
-import { MV } from "../math/MV.js"
+import * as weml from '../ext/weml.js/weml.js'
 
 export class Transform2D
 {
     constructor(isWorld = false) 
     {
-        this.m_Position = MV.vec3(0, 0, 0);
+        this.m_Position = weml.Vec3(0, 0, 0);
         this.m_Rotation = 0;
-        this.m_Scale = MV.vec3(1, 1, 1);
-        this.m_Pivot = MV.vec3(0, 0, 0);
-        this.m_TransformMatrix;
+        this.m_Scale = weml.Vec3(1, 1, 1);
+        this.m_Pivot = weml.Vec3(0, 0, 0);
+        this.m_TransformMatrix = weml.Mat4();
         
         this.m_IsWorld = isWorld;
 
@@ -22,9 +22,7 @@ export class Transform2D
 
     Copy(matrix) 
     {
-        let copy = MV.mat4();
-        copy = MV.mult(copy, matrix);
-        this.m_TransformMatrix = copy;
+        this.m_TransformMatrix = matrix.clone();
     }
 
     UpdateTransform() 
@@ -34,15 +32,15 @@ export class Transform2D
             return;
         }
 
-        this.m_TransformMatrix = MV.translate(this.m_Position);
+        this.m_TransformMatrix.setTranslationVec3(this.m_Position);
   
         //this.m_TransformMatrix = MV.mult(this.m_TransformMatrix, MV.translate(MV.negate(this.m_Pivot)));
         
-        this.m_TransformMatrix = MV.mult(this.m_TransformMatrix, MV.rotate(this.m_Rotation, [0, 0, 1]));
+        this.m_TransformMatrix.applyRotationZ(this.m_Rotation);
 
         //this.m_TransformMatrix = MV.mult(this.m_TransformMatrix, MV.translate(this.m_Pivot));
         
-        this.m_TransformMatrix = MV.mult(this.m_TransformMatrix, MV.scale(this.m_Scale));
+        this.m_TransformMatrix.applyScaleVec3(this.m_Scale);
     }
 
     GetPosition() 

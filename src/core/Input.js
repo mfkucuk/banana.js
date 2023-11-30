@@ -1,4 +1,4 @@
-import { MV } from "../math/MV.js"
+import * as weml from '../ext/weml.js/weml.js'
 
 export class Input 
 {
@@ -24,7 +24,7 @@ export class Input
         return Input.s_ButtonStates[key];
     }
 
-    static mousePosition = MV.vec2(0, 0);
+    static mousePosition = weml.Vec2(0, 0);
 
     static s_KeyStates = {};
     static s_ButtonStates = {};
