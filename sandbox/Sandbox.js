@@ -85,8 +85,8 @@ class Sandbox extends banana.Application
 
         this.SetTitle('Sandbox2D');
 
-        this.PushLayer(new Sandbox2D());   
-        //this.PushLayer(new SolarSystem());   
+        //this.PushLayer(new Sandbox2D());   
+        this.PushLayer(new SolarSystem());   
     }
 }
 

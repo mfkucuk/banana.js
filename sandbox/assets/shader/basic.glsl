@@ -4,6 +4,8 @@ in vec4 a_Position;
 in vec2 a_TexCoord;
 in float a_TexIndex;
 in vec4 a_Color;
+in vec3 a_Translation, a_Scaling;
+in float a_Rotation;
 
 out vec2 v_TexCoord;
 out float v_TexIndex;
@@ -11,12 +13,44 @@ out vec4 v_Color;
 
 uniform mat4 u_ViewProjectionMatrix;
 
+mat4 translate(vec3 t) {
+    mat4 result = mat4(1.0);
+    result[3] = vec4(t, 1.0);
+    return result;
+}
+
+mat4 rotateZ(float angle) {
+    float c = cos(radians(angle));
+    float s = sin(radians(angle));
+
+    return mat4(
+        vec4(c, -s, 0.0, 0.0),
+        vec4(s, c,  0.0, 0.0),
+        vec4(0.0, 0.0, 1.0, 0.0),
+        vec4(0.0, 0.0, 0.0, 1.0)
+    );
+}
+
+mat4 scale(vec3 s) {
+    mat4 result = mat4(1.0);
+    result[0][0] = s.x;
+    result[1][1] = s.y;
+    result[2][2] = s.z;
+    return result;
+}
+
+
 void main()
 {
     v_TexCoord = a_TexCoord;
     v_TexIndex = a_TexIndex;
     v_Color = a_Color;
-    gl_Position = u_ViewProjectionMatrix * a_Position; 
+
+    mat4 translationMatrix = translate(a_Translation);
+    mat4 rotationMatrix = rotateZ(a_Rotation);
+    mat4 scalingMatrix = scale(a_Scaling);
+
+    gl_Position = u_ViewProjectionMatrix * translationMatrix * rotationMatrix * scalingMatrix * a_Position; 
 }
 
 $#version 300 es
@@ -56,6 +90,4 @@ void main()
       }
 
     fragColor = l_Texture + v_Color;
-
-    //gl_FragColor = v_Color + vec4(v_TexCoord, v_TexIndex, v_TexIndex);
 }
