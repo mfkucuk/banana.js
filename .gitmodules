@@ -1,3 +1,0 @@
-[submodule "src/ext/weml.js"]
-	path = src/ext/weml.js
-	url = https://github.com/coffeenotfound/weml.js
