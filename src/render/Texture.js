@@ -6,7 +6,7 @@ export class Texture
     constructor(src) 
     {
         this.m_TextureId = gl.createTexture();
-        this.m_OnTextureLoad = function() {}
+        this.m_OnTextureLoadFn = function() {}
         this.Bind();
         
 
@@ -51,7 +51,7 @@ export class Texture
         this.Bind();
 
         this.m_Width = this.m_Image.width;
-        this.m_Height = this.m_Height.height;
+        this.m_Height = this.m_Image.height;
         
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
@@ -69,7 +69,7 @@ export class Texture
         this.m_Image.removeEventListener('load', this.OnLoad);
         
         this.Unbind();
-        this.m_OnTextureLoad();
+        this.m_OnTextureLoadFn();
     }
 
     GetWidth() 

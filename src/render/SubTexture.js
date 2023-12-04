@@ -1,11 +1,29 @@
 import * as weml from '../ext/weml.js/weml.js'
 import { Renderer2D } from './Renderer2D.js'
 
+const defaultTexCoords = [weml.Vec2(0, 0), weml.Vec2(1, 0), weml.Vec2(0, 1), weml.Vec2(1, 1)];
+
 export class SubTexture 
 {
-    constructor(spriteSheet, min, max) 
+    constructor(spriteSheet, coords, spriteSize) 
     {
         this.m_SpriteSheet = spriteSheet;
+        this.m_SpriteSheetCoords = coords;
+        this.m_SpriteSize = spriteSize;
+
+        this.OnTextureLoad = this.OnTextureLoad.bind(this);
+
+        spriteSheet.m_OnTextureLoadFn = this.OnTextureLoad;
+    }
+
+    OnTextureLoad() 
+    {
+        const min = weml.Vec2(this.m_SpriteSheetCoords[0] * this.m_SpriteSize[0] / this.m_SpriteSheet.GetWidth(),
+                              this.m_SpriteSheetCoords[1] * this.m_SpriteSize[1] / this.m_SpriteSheet.GetHeight());
+    
+        const max = weml.Vec2((this.m_SpriteSheetCoords[0] + 1) * this.m_SpriteSize[0] / this.m_SpriteSheet.GetWidth(),
+                              (this.m_SpriteSheetCoords[1] + 1) * this.m_SpriteSize[1] / this.m_SpriteSheet.GetHeight());
+
         this.m_TexCoords = [
             weml.Vec2(min[0], min[1]),
             weml.Vec2(max[0], min[1]),
@@ -14,25 +32,11 @@ export class SubTexture
         ];
     }
 
-    static CreateFromCoords(spriteSheet, coords, spriteSize) 
-    {
-        spriteSheet.m_OnTextureLoad = function() 
-        {
-            const min = weml.Vec2(coords[0] * spriteSize[0] / spriteSheet.GetWidth(),
-                                  coords[1] * spriteSize[1] / spriteSheet.GetHeight());
-    
-            const max = weml.Vec2((coords[0] + 1) * spriteSize[0] / spriteSheet.GetWidth(),
-                                  (coords[1] + 1) * spriteSize[1] / spriteSheet.GetHeight());
-    
-            return new SubTexture(spriteSheet, min, max);
-        }
-    }
-
     GetTexCoords() 
     {
         if (typeof this.m_TexCoords == 'undefined') 
         {
-            return [weml.Vec2(0, 0), weml.Vec2(1, 0), weml.Vec2(0, 1), weml.Vec2(1, 1)]
+            return defaultTexCoords
         }
 
         return this.m_TexCoords;

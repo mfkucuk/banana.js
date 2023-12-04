@@ -13,7 +13,8 @@ export class SpriteSheetExample extends banana.Layer
 
         this.m_Transform = new banana.Transform2D();
         this.m_SpriteSheet = new banana.Texture('/sandbox/assets/tex/NpcGuest.png');
-        this.m_PurpleGirl = banana.SubTexture.CreateFromCoords(this.m_SpriteSheet, weml.Vec2(8, 0), weml.Vec2(16, 16));
+
+        this.m_PurpleGirl = new banana.SubTexture(this.m_SpriteSheet, weml.Vec2(8, 0), weml.Vec2(16, 16));
     }
 
     OnAttach() 
