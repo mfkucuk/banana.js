@@ -1,45 +1,37 @@
 <!DOCTYPE html>
-  <html>
+<html>
     <head>
-      <title id="title">WebGL Engine</title>
-      <script id="vertex-shader" type="x-shader/x-vertex">
-      attribute vec4 a_Position;
-      attribute vec2 a_TexCoord;
+        <title>banana.js</title>
 
-      uniform mat4 u_ViewProjectionMatrix;
-      uniform mat4 u_Transform;
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+        <link rel="manifest" href="/favicon/site.webmanifest">
+    </head>
+    <body>
+        <button id="run">Run</button>
 
-      varying vec2 v_TexCoord;
+        <div>
+            <h3>App Statistics</h3>
+    
+            <p id="fps"></p>
+        </div>
+        <div>
+            <h3>Renderer 2D Statistics</h3>
 
-      void main()
-      {
-          v_TexCoord = a_TexCoord;
-          gl_Position = u_ViewProjectionMatrix * u_Transform * a_Position; 
-      }
-      </script>
+            <p id="batch"></p>
+            <p id="vertices"></p>
+        </div>
+        <script>
+            document.getElementById('run').addEventListener('click', () => {
+                window.open("/sandbox/game.html", "", `width=100,height=100`);
+            });
 
-      <script id="fragment-shader" type="x-shader/x-fragment">
-      precision mediump float;
-
-      varying vec2 v_TexCoord;
-
-      uniform sampler2D u_Texture;
-
-      void main()
-      {
-          gl_FragColor = texture2D(u_Texture, v_TexCoord);
-      }
-      </script>
-
-      <link href="./src/overlay/canvas.css" type="text/css" rel="stylesheet">
-      
-      <script type="module" src="banana.js"></script>
-      <script type="module" src="/sandbox/Sandbox.js"></script>
-  </head>
-
-  <body>
-    <canvas id="gl-canvas" width="600" height="600" tabindex="1">
-      Oops ... your browser doesn't support the HTML5 canvas element
-    </canvas>
-  </body>
+            window.addEventListener('message', (event) => {
+                document.getElementById('fps').innerText = `FPS: ${event.data.fps}`;
+                document.getElementById('batch').innerText = `Batch: ${event.data.batch}`;
+                document.getElementById('vertices').innerText = `Vertices: ${event.data.vertices}`;
+            });
+        </script>
+    </body>
 </html>

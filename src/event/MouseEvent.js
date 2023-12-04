@@ -1,6 +1,6 @@
 import { Event } from "./Event.js";
 
-export class MouseEvent extends Event 
+class MouseEvent extends Event 
 {
     constructor(mousePositionX, mousePositionY) 
     {

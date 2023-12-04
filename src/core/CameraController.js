@@ -5,6 +5,7 @@ import * as weml from '../ext/weml.js/weml.js'
 import { Event, EventDispatcher } from "../event/Event.js"
 import { canvas } from "./Window.js"
 import { KeyCode } from "./KeyCode.js"
+import { GamepadButtonCode } from "./GamepadButtonCode.js"
 
 export class OrthographicCameraController 
 {
@@ -46,7 +47,7 @@ export class OrthographicCameraController
             this.m_PreviousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
         }
 
-        if (Input.IsKeyPressed(KeyCode.Q)) 
+        if (Input.IsKeyPressed(KeyCode.Q) || Input.IsGamepadButtonPressed(GamepadButtonCode.Dpad_Down)) 
         {
             this.m_CameraAngle--;
             this.m_Camera.SetRotation(this.m_CameraAngle);

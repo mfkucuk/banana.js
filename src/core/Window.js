@@ -4,6 +4,7 @@ import { Input } from './Input.js'
 import * as mouse from '../event/MouseEvent.js'
 import * as keyboard from '../event/KeyboardEvent.js'
 import * as application from '../event/ApplicationEvent.js'
+import * as gamepad from '../event/GamepadEvent.js'
 
 export let canvas;
 
@@ -33,6 +34,11 @@ export class Window
         Log.Core_Info(`Creating window ${this.m_Title}, ${this.m_Width}x${this.m_Height}`);
 
         this.m_Context = new WebGLContext(canvas);
+
+        window.resizeTo(100, 100);
+        window.resizeTo(this.m_Width, this.m_Height);
+
+        // mouse events
 
         canvas.addEventListener('mousedown', (event) => 
         {
@@ -72,6 +78,8 @@ export class Window
             this.m_EventCallbackFn(mouseScrolledEvent);
         });
 
+        // keyboard events
+
         canvas.addEventListener('keydown', (event) => 
         {
             let keyboardButtonPressedEvent = new keyboard.KeyboardButtonPressedEvent(event.key);
@@ -106,6 +114,21 @@ export class Window
 
             this.m_EventCallbackFn(windowClosedEvent);
         })
+
+        // gamepad events
+        window.addEventListener('gamepadconnected', (event) => 
+        {
+            let gamepadConnectedEvent = new gamepad.GamepadConnectedEvent(event.gamepad);
+
+            this.m_EventCallbackFn(gamepadConnectedEvent);
+        });
+
+        window.addEventListener('gamepaddisconnected', (event) => 
+        {
+            let gamepadDisconnectedEvent = new gamepad.GamepadDisconnectedEvent(event.gamepad);
+
+            this.m_EventCallbackFn(gamepadDisconnectedEvent);
+        });
     }
 
     GetWidth() 

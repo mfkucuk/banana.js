@@ -1,6 +1,6 @@
 import { Event } from "./Event.js"
 
-export class KeyboardEvent extends Event 
+class KeyboardEvent extends Event 
 {
     constructor(key) 
     {

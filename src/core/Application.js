@@ -6,6 +6,8 @@ import { LayerStack } from "./LayerStack.js"
 import { Renderer } from "../render/Renderer.js"
 import { RenderCommand } from "../render/RenderCommand.js"
 import { Profiler } from "./Profiler.js"
+import { Renderer2D } from "../render/Renderer2D.js"
+import { Gamepad } from "./Gamepad.js"
 
 
 export class Application
@@ -21,6 +23,8 @@ export class Application
 
         this.m_Window = new Window('Engine', 600, 600);
         this.m_Window.SetEventCallback(this.OnEvent);
+
+        this.m_Gamepad = new Gamepad();
 
         this.m_LayerStack = new LayerStack();
 
@@ -43,9 +47,10 @@ export class Application
         let deltaTimeMilliseconds = currentFrameTime - this.m_LastFrameTime;
         let deltaTimeSeconds = deltaTimeMilliseconds / 1000;
         this.m_LastFrameTime = currentFrameTime;
+        let fps = parseInt(1 / deltaTimeSeconds);
 
         //Log.Core_Info(`Delta time: ${deltaTimeSeconds}s (${deltaTimeMilliseconds}ms)`);
-        Log.Core_Info(`FPS: ${1 / deltaTimeSeconds}`);
+        //Log.Core_Info(`FPS: ${fps}`);
 
         this.OnUpdate(deltaTimeSeconds);
 
@@ -54,6 +59,14 @@ export class Application
             layer.OnUpdate(deltaTimeSeconds);
         });
         
+        let data = {
+            fps: fps,
+            batch: Renderer2D.Stats.BatchCount,
+            vertices: Renderer2D.Stats.GetTotalVertexCount(),
+        };
+
+        window.opener.postMessage(data, '*');
+
         requestAnimationFrame(this.OnTick);
     }
 
@@ -70,6 +83,8 @@ export class Application
             this.m_LayerStack.GetLayers()[i].OnEvent(event);
             if ( event.m_Handled ) { break; }
         }
+
+        Gamepad.Instance.OnEvent(event);
 
         Log.Core_Info(event);
     }

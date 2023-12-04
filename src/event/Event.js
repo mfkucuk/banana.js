@@ -10,6 +10,7 @@ export class Event
         Mouse: 2,       // 00010
         MouseButton: 3, // 00100
         Keyboard: 4,    // 01000
+        Gamepad: 5,
     }
     
     static EventType = {
@@ -21,7 +22,9 @@ export class Event
         KeyboardButtonPressedEvent: 40,
         KeyboardButtonReleasedEvent: 41,
         WindowResizedEvent: 50,
-        WindowClosedEvent: 51
+        WindowClosedEvent: 51,
+        GamepadConnectedEvent: 60,
+        GamepadDisconnectedEvent: 61,
     }
 
     constructor() 

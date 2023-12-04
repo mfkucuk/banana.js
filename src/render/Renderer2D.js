@@ -9,11 +9,11 @@ import * as weml from '../ext/weml.js/weml.js'
 function Render2DData()
 {
 };
-Render2DData.MaxQuads = 200;
+Render2DData.MaxQuads = 10000;
 Render2DData.MaxVertices = Render2DData.MaxQuads * 4;
 Render2DData.MaxIndices = Render2DData.MaxQuads * 6; 
 
-Render2DData.QuadVertexPositions= [
+Render2DData.QuadVertexPositions = [
     weml.Vec4(-50, -50, 0, 1),
     weml.Vec4(50, -50, 0, 1),
     weml.Vec4(-50, 50, 0, 1),
