@@ -126,10 +126,20 @@ var weml = {
  */
 export var Vec2 = function(x, y, z) {
 	var vec = weml.allocateArray(2);
+	Object.assign(vec, Vec2.typeprototype._current);
 	vec[0] = x || 0;
 	vec[1] = y || 0;
 	return vec;
 };
+
+Vec2.typeprototype = {};
+(function() {
+	Vec2.typeprototype.sisd = {
+		toString: function() {
+			return `Vec2[${this[0]}, ${this[1]}]`;
+		},
+	};
+});
 
 /**
  * Constructs a new {@link Vec3} with the given values.
@@ -147,6 +157,7 @@ export var Vec3 = function(x, y, z) {
 	vec[2] = z || 0;
 	return vec;
 };
+
 
 Vec3.typeprototype = {};
 (function() {

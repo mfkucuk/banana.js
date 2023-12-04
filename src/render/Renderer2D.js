@@ -184,7 +184,7 @@ export class Renderer2D
         Render2DData.TextureSlotIndex = 1;
     }
 
-    static DrawColoredQuad(transform, color)  
+    static DrawColorQuad(transform, color)  
     {
         if (Render2DData.QuadIndexCount >= Render2DData.MaxIndices) 
         {
@@ -238,7 +238,7 @@ export class Renderer2D
         Renderer2D.Stats.QuadCount++;
     }
 
-    static DrawTexturedQuad(transform, texture) 
+    static DrawTextureQuad(transform, texture) 
     {
         if (Render2DData.QuadIndexCount >= Render2DData.MaxIndices) 
         {
@@ -269,13 +269,9 @@ export class Renderer2D
             Renderer2D.NewBatch();
         }
 
-        let x = 8, y = 0;
-        let sheetWidth = 320, sheetHeight = 184;
-        let spriteWidth = 16, spriteHeight = 16;
-
         let v1 = new QuadVertex();
         v1.Position = Render2DData.QuadVertexPositions[0];
-        v1.TexCoord = weml.Vec2(x * spriteWidth / sheetWidth, y * spriteHeight / sheetHeight);
+        v1.TexCoord = weml.Vec2(0, 0);
         v1.TexIndex = useTextureSlot;
         v1.Color = Color.TRANSPARENT;
         v1.Translation = transform.GetPosition();
@@ -285,7 +281,7 @@ export class Renderer2D
         Render2DData.QuadVertexCount++;
 
         v1.Position = Render2DData.QuadVertexPositions[1];
-        v1.TexCoord = weml.Vec2((x+1) * spriteWidth / sheetWidth, y * spriteHeight / sheetHeight);
+        v1.TexCoord = weml.Vec2(1, 0);
         v1.TexIndex = useTextureSlot;
         v1.Color = Color.TRANSPARENT;
         v1.Translation = transform.GetPosition();
@@ -295,7 +291,7 @@ export class Renderer2D
         Render2DData.QuadVertexCount++;
 
         v1.Position = Render2DData.QuadVertexPositions[2];
-        v1.TexCoord = weml.Vec2(x * spriteWidth / sheetWidth, (y+1) * spriteHeight / sheetHeight);
+        v1.TexCoord = weml.Vec2(0, 1);
         v1.TexIndex = useTextureSlot;
         v1.Color = Color.TRANSPARENT;
         v1.Translation = transform.GetPosition();
@@ -305,7 +301,87 @@ export class Renderer2D
         Render2DData.QuadVertexCount++;
 
         v1.Position = Render2DData.QuadVertexPositions[3];
-        v1.TexCoord = weml.Vec2((x+1) * spriteWidth / sheetWidth, (y+1) * spriteHeight / sheetHeight);
+        v1.TexCoord = weml.Vec2(1, 1);
+        v1.TexIndex = useTextureSlot;
+        v1.Color = Color.TRANSPARENT;
+        v1.Translation = transform.GetPosition();
+        v1.Rotation = transform.GetRotation();
+        v1.Scaling = transform.GetScale();
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        Render2DData.QuadVertexCount++;
+
+        Render2DData.QuadIndexCount += 6;
+
+        Renderer2D.Stats.QuadCount++;
+    }
+
+    static DrawSubTextureQuad(transform, subTexture) 
+    {
+        const texCoords = subTexture.GetTexCoords();
+        const texture = subTexture.GetTexture();
+
+        if (Render2DData.QuadIndexCount >= Render2DData.MaxIndices) 
+        {
+            Renderer2D.Flush();
+            Renderer2D.NewBatch();
+        }
+
+        let useTextureSlot = -1;
+
+        for (let i = 0; i < Render2DData.TextureSlotIndex; i++) 
+        {
+            if (Render2DData.TextureSlots[i] == texture) 
+            {
+                useTextureSlot = i;
+                break;
+            }
+        }
+
+        if (useTextureSlot == -1) 
+        {
+            useTextureSlot = Render2DData.TextureSlotIndex;
+            Render2DData.TextureSlots[Render2DData.TextureSlotIndex++] = texture;
+        }
+
+        if (Render2DData.TextureSlotIndex >= 16) 
+        {
+            Renderer2D.Flush();
+            Renderer2D.NewBatch();
+        }
+
+        let v1 = new QuadVertex();
+        v1.Position = Render2DData.QuadVertexPositions[0];
+        v1.TexCoord = texCoords[0];
+        v1.TexIndex = useTextureSlot;
+        v1.Color = Color.TRANSPARENT;
+        v1.Translation = transform.GetPosition();
+        v1.Rotation = transform.GetRotation();
+        v1.Scaling = transform.GetScale();
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        Render2DData.QuadVertexCount++;
+
+        v1.Position = Render2DData.QuadVertexPositions[1];
+        v1.TexCoord = texCoords[1];
+        v1.TexIndex = useTextureSlot;
+        v1.Color = Color.TRANSPARENT;
+        v1.Translation = transform.GetPosition();
+        v1.Rotation = transform.GetRotation();
+        v1.Scaling = transform.GetScale();
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        Render2DData.QuadVertexCount++;
+
+        v1.Position = Render2DData.QuadVertexPositions[2];
+        v1.TexCoord = texCoords[2];
+        v1.TexIndex = useTextureSlot;
+        v1.Color = Color.TRANSPARENT;
+        v1.Translation = transform.GetPosition();
+        v1.Rotation = transform.GetRotation();
+        v1.Scaling = transform.GetScale();
+        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        Render2DData.QuadVertexCount++;
+
+        v1.Position = Render2DData.QuadVertexPositions[3];
+        v1.TexCoord = texCoords[3];
         v1.TexIndex = useTextureSlot;
         v1.Color = Color.TRANSPARENT;
         v1.Translation = transform.GetPosition();

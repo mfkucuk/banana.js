@@ -73,6 +73,7 @@ export * from './src/render/Shader.js'
 export * from './src/render/Camera.js'
 export * from './src/render/Color.js'
 export * from './src/render/Texture.js'
+export * from './src/render/SubTexture.js'
 export * from './src/render/Transform.js'
 export * from './src/render/SceneGraph.js'
 

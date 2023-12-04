@@ -1,4 +1,5 @@
 import * as banana from '../banana.js'
+import * as weml from '../src/ext/weml.js/weml.js'
 
 export class SpriteSheetExample extends banana.Layer 
 {
@@ -12,6 +13,7 @@ export class SpriteSheetExample extends banana.Layer
 
         this.m_Transform = new banana.Transform2D();
         this.m_SpriteSheet = new banana.Texture('/sandbox/assets/tex/NpcGuest.png');
+        this.m_PurpleGirl = banana.SubTexture.CreateFromCoords(this.m_SpriteSheet, weml.Vec2(8, 0), weml.Vec2(16, 16));
     }
 
     OnAttach() 
@@ -31,7 +33,7 @@ export class SpriteSheetExample extends banana.Layer
         banana.Renderer2D.BeginScene(this.m_CameraController.GetCamera());
 
         // sprite sheet
-        banana.Renderer2D.DrawTexturedQuad(this.m_Transform, this.m_SpriteSheet);
+        banana.Renderer2D.DrawSubTextureQuad(this.m_Transform, this.m_PurpleGirl);
 
 
         banana.Renderer2D.EndScene();
