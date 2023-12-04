@@ -74,12 +74,12 @@ export class Sandbox2D extends banana.Layer
             {
                 if ((i + j) % 2 == 0) 
                 {
-                    banana.Renderer2D.DrawTexturedQuad(this.m_Transforms[i][j], this.m_MoonTexture);
+                    banana.Renderer2D.DrawColoredQuad(this.m_Transforms[i][j], banana.Color.RED);
                     
                 }
                 else 
                 {
-                    banana.Renderer2D.DrawTexturedQuad(this.m_Transforms[i][j], this.m_EarthTexture);
+                    banana.Renderer2D.DrawColoredQuad(this.m_Transforms[i][j], banana.Color.BLUE);
                 }
 
                 this.m_Transforms[i][j].SetRotation(this.m_Angle);

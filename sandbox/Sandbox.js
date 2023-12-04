@@ -1,6 +1,7 @@
 import * as banana from '../banana.js'
 import { Sandbox2D } from './Sandbox2D.js'
 import { SolarSystem } from './SolarSystem.js'
+import { SpriteSheetExample } from './SpriteSheetExample.js'
 
 class ExampleLayer extends banana.Layer 
 {
@@ -85,8 +86,9 @@ class Sandbox extends banana.Application
 
         this.SetTitle('Sandbox2D');
 
-        this.PushLayer(new Sandbox2D());   
+        //this.PushLayer(new Sandbox2D());   
         //this.PushLayer(new SolarSystem());   
+        this.PushLayer(new SpriteSheetExample());   
     }
 }
 

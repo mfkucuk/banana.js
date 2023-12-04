@@ -146,8 +146,15 @@ export class Window
         this.m_EventCallbackFn = callbackFn;
     }
 
-    SetTitle(title) 
+    SetTitle(titleText) 
     {
-        document.getElementById('title').innerText = title;
+        const title = document.getElementById('title');
+
+        if (!title) 
+        {
+            return;
+        }
+
+        title.innerText = titleText;
     }
 }

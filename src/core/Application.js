@@ -59,13 +59,16 @@ export class Application
             layer.OnUpdate(deltaTimeSeconds);
         });
         
-        let data = {
-            fps: fps,
-            batch: Renderer2D.Stats.BatchCount,
-            vertices: Renderer2D.Stats.GetTotalVertexCount(),
-        };
+        if (window.opener) 
+        {
+            let data = {
+                fps: fps,
+                batch: Renderer2D.Stats.BatchCount,
+                vertices: Renderer2D.Stats.GetTotalVertexCount(),
+            };
 
-        window.opener.postMessage(data, '*');
+            window.opener.postMessage(data, '*');
+        }
 
         requestAnimationFrame(this.OnTick);
     }

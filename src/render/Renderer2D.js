@@ -269,9 +269,13 @@ export class Renderer2D
             Renderer2D.NewBatch();
         }
 
+        let x = 8, y = 0;
+        let sheetWidth = 320, sheetHeight = 184;
+        let spriteWidth = 16, spriteHeight = 16;
+
         let v1 = new QuadVertex();
         v1.Position = Render2DData.QuadVertexPositions[0];
-        v1.TexCoord = weml.Vec2(0, 0);
+        v1.TexCoord = weml.Vec2(x * spriteWidth / sheetWidth, y * spriteHeight / sheetHeight);
         v1.TexIndex = useTextureSlot;
         v1.Color = Color.TRANSPARENT;
         v1.Translation = transform.GetPosition();
@@ -281,7 +285,7 @@ export class Renderer2D
         Render2DData.QuadVertexCount++;
 
         v1.Position = Render2DData.QuadVertexPositions[1];
-        v1.TexCoord = weml.Vec2(1, 0);
+        v1.TexCoord = weml.Vec2((x+1) * spriteWidth / sheetWidth, y * spriteHeight / sheetHeight);
         v1.TexIndex = useTextureSlot;
         v1.Color = Color.TRANSPARENT;
         v1.Translation = transform.GetPosition();
@@ -291,7 +295,7 @@ export class Renderer2D
         Render2DData.QuadVertexCount++;
 
         v1.Position = Render2DData.QuadVertexPositions[2];
-        v1.TexCoord = weml.Vec2(0, 1);
+        v1.TexCoord = weml.Vec2(x * spriteWidth / sheetWidth, (y+1) * spriteHeight / sheetHeight);
         v1.TexIndex = useTextureSlot;
         v1.Color = Color.TRANSPARENT;
         v1.Translation = transform.GetPosition();
@@ -301,7 +305,7 @@ export class Renderer2D
         Render2DData.QuadVertexCount++;
 
         v1.Position = Render2DData.QuadVertexPositions[3];
-        v1.TexCoord = weml.Vec2(1, 1);
+        v1.TexCoord = weml.Vec2((x+1) * spriteWidth / sheetWidth, (y+1) * spriteHeight / sheetHeight);
         v1.TexIndex = useTextureSlot;
         v1.Color = Color.TRANSPARENT;
         v1.Translation = transform.GetPosition();
