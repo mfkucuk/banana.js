@@ -2,8 +2,6 @@
 //  initShaders.js
 //
 
-import { Log } from "../core/Log.js"
-
 export function initShadersFromHTML( gl, vertexShaderId, fragmentShaderId )
 {
     var vertShdr;

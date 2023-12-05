@@ -101,7 +101,7 @@ export class Renderer2D
     {
         Renderer2D.Black_Texture = new Texture();
 
-        Render2DData.BasicShader = new Shader('/sandbox/assets/shader/basic.glsl');
+        Render2DData.BasicShader = new Shader('/Game/assets/shader/basic.glsl');
 
         let quadIndices = new Uint16Array( Render2DData.MaxIndices );
 

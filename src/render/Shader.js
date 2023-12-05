@@ -1,4 +1,4 @@
-import { initShadersFromHTML, initShadersFromFiles } from "../Common/initShaders.js"
+import { initShadersFromHTML, initShadersFromFiles } from "./initShaders.js"
 import { gl } from "./WebGLContext.js"
 import { Log } from "../core/Log.js"
 

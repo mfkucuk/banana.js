@@ -1,11 +1,11 @@
 import * as banana from '../src/banana.js'
 import * as weml from '../src/ext/weml.js/weml.js'
 
-export class SpriteSheetExample extends banana.Layer 
+export class Sandbox2D extends banana.Layer 
 {
     constructor() 
     {
-        super('SpriteSheetExample');
+        super('Sandbox2D');
 
         banana.Renderer2D.Init();
     
@@ -13,7 +13,7 @@ export class SpriteSheetExample extends banana.Layer
 
         this.m_Transform1 = new banana.Transform2D();
         this.m_Transform2 = new banana.Transform2D();
-        this.m_SpriteSheet = new banana.Texture('/sandbox/assets/tex/NpcGuest.png');
+        this.m_SpriteSheet = new banana.Texture('/Game/assets/tex/NpcGuest.png');
 
         this.m_PurpleGirl = new banana.SubTexture(this.m_SpriteSheet, weml.Vec2(8, 0), weml.Vec2(16, 16));
         this.m_GreenGirl = new banana.SubTexture(this.m_SpriteSheet, weml.Vec2(6, 2), weml.Vec2(16, 16));
@@ -58,4 +58,4 @@ export class SpriteSheetExample extends banana.Layer
     {
         this.m_CameraController.OnEvent(event);
     }
-} 
+}
