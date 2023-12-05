@@ -1,4 +1,4 @@
-import * as banana from '../banana.js'
+import * as banana from '../src/banana.js'
 import { Sandbox2D } from './Sandbox2D.js'
 import { SolarSystem } from './SolarSystem.js'
 import { SpriteSheetExample } from './SpriteSheetExample.js'

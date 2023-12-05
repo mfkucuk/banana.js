@@ -6,7 +6,7 @@ export class Texture
     constructor(src) 
     {
         this.m_TextureId = gl.createTexture();
-        this.m_OnTextureLoadFn = function() {}
+        this.m_Loaded = false;
         this.Bind();
         
 
@@ -50,6 +50,8 @@ export class Texture
     {     
         this.Bind();
 
+        this.m_Loaded = true;
+
         this.m_Width = this.m_Image.width;
         this.m_Height = this.m_Image.height;
         
@@ -69,7 +71,16 @@ export class Texture
         this.m_Image.removeEventListener('load', this.OnLoad);
         
         this.Unbind();
-        this.m_OnTextureLoadFn();
+    }
+
+    GetImage() 
+    {
+        return this.m_Image;
+    }
+
+    IsLoaded() 
+    {
+        return this.m_Loaded;
     }
 
     GetWidth() 

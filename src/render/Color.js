@@ -1,5 +1,6 @@
 import * as weml from '../ext/weml.js/weml.js'
-import { isString } from "../helper.js";
+
+let isString = value => typeof value === 'string';
 
 const hex = {
     '1': 1,

@@ -1,4 +1,4 @@
-import * as banana from "../banana.js"
+import * as banana from "../src/banana.js"
 
 export class SolarSystem extends banana.Layer 
 {

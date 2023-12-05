@@ -1,4 +1,4 @@
-import * as banana from '../banana.js'
+import * as banana from '../src/banana.js'
 import * as weml from '../src/ext/weml.js/weml.js'
 
 export class Sandbox2D extends banana.Layer 
@@ -74,12 +74,12 @@ export class Sandbox2D extends banana.Layer
             {
                 if ((i + j) % 2 == 0) 
                 {
-                    banana.Renderer2D.DrawColoredQuad(this.m_Transforms[i][j], banana.Color.RED);
+                    banana.Renderer2D.DrawTextureQuad(this.m_Transforms[i][j], this.m_MoonTexture);
                     
                 }
                 else 
                 {
-                    banana.Renderer2D.DrawColoredQuad(this.m_Transforms[i][j], banana.Color.BLUE);
+                    banana.Renderer2D.DrawTextureQuad(this.m_Transforms[i][j], this.m_EarthTexture);
                 }
 
                 this.m_Transforms[i][j].SetRotation(this.m_Angle);
