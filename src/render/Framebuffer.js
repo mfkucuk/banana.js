@@ -15,6 +15,8 @@ export class Framebuffer
     constructor(spec) 
     {
         this.m_Spec = spec;
+
+        this.Invalidate();
     }
 
     Invalidate() 
@@ -26,8 +28,8 @@ export class Framebuffer
         this.m_ColorAttachment = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, this.m_ColorAttachment);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.m_Spec.Width, this.m_Spec.Height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, GL_LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, GL_NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.m_ColorAttachment, 0);
 

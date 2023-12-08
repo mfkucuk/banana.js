@@ -1,5 +1,5 @@
 import { Log } from "./Log.js"
-import { Window } from "./Window.js"
+import { Window, canvas } from "./Window.js"
 import { Event, EventDispatcher } from "../event/Event.js"
 import { Input } from "./Input.js"
 import { LayerStack } from "./LayerStack.js"
@@ -12,7 +12,7 @@ import { Gamepad } from "./Gamepad.js"
 
 export class Application
 {
-    constructor() 
+    constructor(appName, windowWidth, windowHeight) 
     {
         this.OnEvent = this.OnEvent.bind(this);
         this.OnTick = this.OnTick.bind(this);
@@ -21,8 +21,10 @@ export class Application
 
         this.m_IsRunning = true;
 
-        this.m_Window = new Window('Engine', 600, 600);
+        this.m_Window = new Window(appName, windowWidth, windowHeight);
         this.m_Window.SetEventCallback(this.OnEvent);
+
+        this.m_Window.Resize(windowWidth, windowHeight);
 
         this.m_Gamepad = new Gamepad();
 
@@ -101,6 +103,8 @@ export class Application
 
     OnWindowResized(event) 
     {
+        canvas.width = event.GetWidth();
+        canvas.height = event.GetHeight();
         RenderCommand.SetViewport(event.GetWidth(), event.GetHeight());
 
         return true;

@@ -57,6 +57,7 @@ export * from './core/KeyCode.js'
 export * from './core/MouseButtonCode.js'
 export * from './core/CameraController.js'
 export * from './core/Application.js'
+export * from './core/Window.js'
 export * from './core/Profiler.js'
 
 // event

@@ -1,11 +1,15 @@
 import * as banana from '../src/banana.js'
 import * as weml from '../src/ext/weml.js/weml.js'
 
-export class Sandbox2D extends banana.Layer 
+export class EditorLayer extends banana.Layer 
 {
     constructor() 
     {
-        super('Sandbox2D');
+        super('Editor Layer');
+
+        this.m_Spec = new banana.FramebufferSpecification();
+        this.m_Spec.Width = 600;
+        this.m_Spec.Height = 600;
 
         banana.Renderer2D.Init();
     
@@ -17,6 +21,8 @@ export class Sandbox2D extends banana.Layer
 
         this.m_PurpleGirl = new banana.SubTexture(this.m_SpriteSheet, weml.Vec2(8, 0), weml.Vec2(16, 16));
         this.m_GreenGirl = new banana.SubTexture(this.m_SpriteSheet, weml.Vec2(6, 2), weml.Vec2(16, 16));
+
+        banana.Log.Core_Info('asdasdasd');
     }
 
     OnAttach() 
@@ -25,7 +31,7 @@ export class Sandbox2D extends banana.Layer
         
         this.m_Transform2.SetPosition(100, 0, 0);
     }
-    
+
     OnUpdate(deltaTime) 
     {
         banana.Renderer2D.ResetStats();

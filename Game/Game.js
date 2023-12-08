@@ -5,13 +5,9 @@ class Game extends banana.Application
 {
     constructor() 
     {
-        super();
+        super('Game', 600, 600);
 
-        this.SetTitle('Sandbox2D');
-
-        //this.PushLayer(new Sandbox2D());   
-        //this.PushLayer(new SolarSystem());   
-        this.PushLayer(new Sandbox2D());   
+        this.PushLayer(new Sandbox2D());
     }
 }
 

@@ -32,11 +32,9 @@ export class Window
         });
 
         Log.Core_Info(`Creating window ${this.m_Title}, ${this.m_Width}x${this.m_Height}`);
+        this.SetTitle(this.m_Title);
 
         this.m_Context = new WebGLContext(canvas);
-
-        window.resizeTo(100, 100);
-        window.resizeTo(this.m_Width, this.m_Height);
 
         // mouse events
 
@@ -100,16 +98,14 @@ export class Window
 
         window.addEventListener('resize', (event) => 
         {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            let windowResizedEvent = new application.WindowResizedEvent(canvas.width, canvas.height);
+            let windowResizedEvent = new application.WindowResizedEvent(window.innerWidth, window.innerHeight);
 
             this.m_EventCallbackFn(windowResizedEvent);
         })
 
         window.addEventListener('beforeunload', (event) => 
         {
+
             let windowClosedEvent = new application.WindowClosedEvent();
 
             this.m_EventCallbackFn(windowClosedEvent);
@@ -156,5 +152,12 @@ export class Window
         }
 
         title.innerText = titleText;
+    }
+
+    Resize(width, height) 
+    {
+        this.m_Width = width;
+        this.m_Height = height;
+        window.resizeTo(width, height);
     }
 }

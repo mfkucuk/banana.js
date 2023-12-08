@@ -8,13 +8,13 @@ function main()
 
     // init profiling
     //Profiler.BeginProfile('Application Init');
-    let sandboxApp = Application.CreateApplication(); 
+    let bananaApp = Application.CreateApplication(); 
     //Profiler.EndProfile();
 
     Log.Info('Game started');
 
     Profiler.BeginProfile('Application Runtime', 'Runtime.json');
-    sandboxApp.Run();
+    bananaApp.Run();
 
 }
 
