@@ -75,11 +75,6 @@ export class Shader
         gl.uniform1iv(uniformLocation, value);
     }
 
-    SetCamera(camera) 
-    {
-        this.SetUniformMatrix4fv("u_ViewProjectionMatrix", camera.GetViewProjectionMatrix());
-    }
-
     UseTexture(unit) 
     {
         this.SetUniform1i('u_Texture', unit);

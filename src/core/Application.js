@@ -24,13 +24,13 @@ export class Application
         this.m_Window = new Window(appName, windowWidth, windowHeight);
         this.m_Window.SetEventCallback(this.OnEvent);
 
-        this.m_Window.Resize(windowWidth, windowHeight);
-
         this.m_Gamepad = new Gamepad();
 
         this.m_LayerStack = new LayerStack();
 
         this.m_LastFrameTime = 0;
+
+        this.m_Window.Resize(windowWidth, windowHeight);
     }
 
     Run() 

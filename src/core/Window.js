@@ -129,12 +129,12 @@ export class Window
 
     GetWidth() 
     {
-        return m_Width;
+        return this.m_Width;
     }
 
     GetHeight() 
     {
-        return m_Height;
+        return this.m_Height;
     }
 
     SetEventCallback(callbackFn) 
@@ -158,6 +158,11 @@ export class Window
     {
         this.m_Width = width;
         this.m_Height = height;
+        
         window.resizeTo(width, height);
+
+        let windowResizedEvent = new application.WindowResizedEvent(window.innerWidth, window.innerHeight);
+
+        this.m_EventCallbackFn(windowResizedEvent);
     }
 }

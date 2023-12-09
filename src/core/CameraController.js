@@ -1,5 +1,5 @@
 import { Input } from "./Input.js"
-import { OrthographicCamera } from "../render/Camera.js"
+import { EditorCamera } from "../render/Camera.js"
 import { MouseButton } from "./MouseButtonCode.js"
 import * as weml from '../ext/weml.js/weml.js'
 import { Event, EventDispatcher } from "../event/Event.js"
@@ -7,7 +7,7 @@ import { canvas } from "./Window.js"
 import { KeyCode } from "./KeyCode.js"
 import { GamepadButtonCode } from "./GamepadButtonCode.js"
 
-export class OrthographicCameraController 
+export class EditorCameraController 
 {
     constructor() 
     {
@@ -20,7 +20,7 @@ export class OrthographicCameraController
         this.m_ZoomLevel = 1.0
         this.m_PreviousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
 
-        this.m_Camera = new OrthographicCamera(
+        this.m_EditorCamera = new EditorCamera(
             -canvas.width / 2 * this.m_ZoomLevel, 
             canvas.width / 2 * this.m_ZoomLevel,
             canvas.height / 2 * this.m_ZoomLevel,
@@ -31,7 +31,7 @@ export class OrthographicCameraController
 
     GetCamera() 
     {
-        return this.m_Camera;
+        return this.m_EditorCamera;
     }
 
     Update(deltaTime) 
@@ -42,7 +42,7 @@ export class OrthographicCameraController
             direction[0] = (this.m_PreviousMousePosition[0] - Input.mousePosition[0]) * this.m_ZoomLevel;
             direction[1] = (this.m_PreviousMousePosition[1] - Input.mousePosition[1]) * this.m_ZoomLevel;
 
-            this.m_Camera.SetPosition(this.m_Camera.GetPosition()[0] + direction[0], this.m_Camera.GetPosition()[1] + direction[1], 0.0);
+            this.m_EditorCamera.SetPosition(this.m_EditorCamera.GetPosition()[0] + direction[0], this.m_EditorCamera.GetPosition()[1] + direction[1], 0.0);
             
             this.m_PreviousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
         }
@@ -50,12 +50,12 @@ export class OrthographicCameraController
         if (Input.IsKeyPressed(KeyCode.Q) || Input.IsGamepadButtonPressed(GamepadButtonCode.Dpad_Down)) 
         {
             this.m_CameraAngle--;
-            this.m_Camera.SetRotation(this.m_CameraAngle);
+            this.m_EditorCamera.SetRotation(this.m_CameraAngle);
         }
         if (Input.IsKeyPressed(KeyCode.E)) 
         {
             this.m_CameraAngle++;
-            this.m_Camera.SetRotation(this.m_CameraAngle);
+            this.m_EditorCamera.SetRotation(this.m_CameraAngle);
         }
     }
 
@@ -74,7 +74,7 @@ export class OrthographicCameraController
         {
             this.m_ZoomLevel += 0.25;
             this.m_ZoomLevel = Math.min(2.0, this.m_ZoomLevel);
-            this.m_Camera.SetProjectionMatrix(
+            this.m_EditorCamera.SetOrthographic(
                 -canvas.width / 2 * this.m_ZoomLevel, 
                 canvas.width / 2 * this.m_ZoomLevel,
                 canvas.height / 2 * this.m_ZoomLevel,
@@ -86,7 +86,7 @@ export class OrthographicCameraController
         {
             this.m_ZoomLevel -= 0.25;
             this.m_ZoomLevel = Math.max(0.25, this.m_ZoomLevel);
-            this.m_Camera.SetProjectionMatrix(
+            this.m_EditorCamera.SetOrthographic(
                 -canvas.width / 2 * this.m_ZoomLevel, 
                 canvas.width / 2 * this.m_ZoomLevel,
                 canvas.height / 2 * this.m_ZoomLevel,
@@ -95,7 +95,7 @@ export class OrthographicCameraController
                 1);
         }
 
-        this.m_Camera.RecalculateViewProjectionMatrix();
+        this.m_EditorCamera.RecalculateViewProjectionMatrix();
 
         return true;
     }
@@ -109,14 +109,14 @@ export class OrthographicCameraController
 
     OnWindowResized(event) 
     {
-        this.m_Camera.SetProjectionMatrix(
+        this.m_EditorCamera.SetOrthographic(
             -canvas.width / 2 * this.m_ZoomLevel, 
             canvas.width / 2 * this.m_ZoomLevel,
             canvas.height / 2 * this.m_ZoomLevel,
             -canvas.height / 2 * this.m_ZoomLevel, 
             -1,
             1);
-        this.m_Camera.RecalculateViewProjectionMatrix();
+        this.m_EditorCamera.RecalculateViewProjectionMatrix();
 
         return true;
     }

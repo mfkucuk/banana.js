@@ -1,21 +1,64 @@
+import { canvas } from '../core/Window.js'
 import { Log } from '../core/Log.js'
 import * as weml from '../ext/weml.js/weml.js'
+
+const CameraType = 
+{
+    Orthographic: 0, 
+    Perspective: 1,
+};
 
 class Camera
 {
     constructor() 
     {
-        this.m_ViewMatrix = weml.Mat4();
         this.m_ProjectionMatrix = weml.Mat4();  
-        this.m_ViewProjectionMatrix  = weml.Mat4();
+    
+        this.m_CameraType = CameraType.Orthographic;        
+    }
+
+    SetOrthographic(x1, x2, y1, y2, z1, z2)
+    {
+        this.m_ProjectionMatrix.setOrtho(x1, x2, y1, y2, z1, z2);
+    }
+
+    SetPerspective(fovy, aspect, near, far) 
+    {
+        this.m_ProjectionMatrix.setPerspective(fovy, aspect, near, far);
+    }
+
+    GetViewProjectionMatrix() 
+    {
+        return this.m_ProjectionMatrix;
+    }
+}
+
+export class SceneCamera extends Camera
+{
+    constructor() 
+    {
+        super();
+    }
+}
+
+export class EditorCamera extends Camera
+{
+    constructor(x1, x2, y1, y2, z1, z2) 
+    {
+        super();
+
+        this.m_ViewMatrix = weml.Mat4();
+        this.m_ViewProjectionMatrix = weml.Mat4();
         
         this.m_CameraPosition = weml.Vec3(0, 0, 0);
         this.m_CameraRotation = 0;
 
-        this.SetViewMatrix();
+        this.SetView();
+        this.SetOrthographic(x1, x2, y1, y2, z1, z2);
+        this.RecalculateViewProjectionMatrix();
     }
 
-    SetViewMatrix() 
+    SetView() 
     {
         this.m_ViewMatrix.setTranslationVec3(this.m_CameraPosition);
 
@@ -24,18 +67,16 @@ class Camera
         this.m_ViewMatrix.invert();
     }
 
-    SetProjectionMatrix() { }
+    GetViewProjectionMatrix() 
+    {
+        return this.m_ViewProjectionMatrix;
+    }
 
     RecalculateViewProjectionMatrix() 
     {
         this.m_ViewProjectionMatrix = weml.Mat4();
         this.m_ViewProjectionMatrix.mul(this.m_ProjectionMatrix);
         this.m_ViewProjectionMatrix.mul(this.m_ViewMatrix);
-    }
-
-    GetViewProjectionMatrix() 
-    {
-        return this.m_ViewProjectionMatrix;
     }
 
     GetPosition() 
@@ -49,7 +90,7 @@ class Camera
         this.m_CameraPosition[1] = y;
         this.m_CameraPosition[2] = z;
 
-        this.SetViewMatrix();
+        this.SetView();
         this.RecalculateViewProjectionMatrix();
     }
 
@@ -62,39 +103,7 @@ class Camera
     {
         this.m_CameraRotation = angle;
 
-        this.SetViewMatrix();
+        this.SetView();
         this.RecalculateViewProjectionMatrix();
-    }
-}
-
-export class OrthographicCamera extends Camera 
-{
-    constructor(x1, x2, y1, y2, z1, z2) 
-    {
-        super();
-
-        this.SetProjectionMatrix(x1, x2, y1, y2, z1, z2);
-        this.RecalculateViewProjectionMatrix();
-    }
-
-    SetProjectionMatrix(x1, x2, y1, y2, z1, z2)
-    {
-        this.m_ProjectionMatrix.setOrtho(x1, x2, y1, y2, z1, z2);
-    }
-}
-
-export class PerspectiveCamera extends Camera 
-{
-    constructor() 
-    {
-        super();
-
-        //this.SetProjectionMatrix();
-        this.RecalculateViewProjectionMatrix();
-    }
-
-    SetProjectionMatrix(fovy, aspect, near, far) 
-    {
-        this.m_ProjectionMatrix.setPerspective(fovy, aspect, near, far);
     }
 }

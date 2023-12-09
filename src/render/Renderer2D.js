@@ -61,7 +61,7 @@ function QuadVertex()
         flatArray[12] = this.Translation[1];
         flatArray[13] = this.Translation[2];
 
-        flatArray[14] = this.Rotation;
+        flatArray[14] = this.Rotation[2];
 
         flatArray[15] = this.Scaling[0];
         flatArray[16] = this.Scaling[1];
@@ -150,12 +150,22 @@ export class Renderer2D
         Render2DData.TextureSlots[0] = Renderer2D.Black_Texture;
     }
 
-    static BeginScene(ortographicCamera) 
+    static BeginScene(camera, transform) 
     {
         Renderer2D.NewBatch();
         
         Render2DData.BasicShader.Bind();
-        Render2DData.BasicShader.SetCamera(ortographicCamera);
+
+        if (typeof transform == 'undefined') 
+        {
+            Render2DData.BasicShader.SetUniformMatrix4fv('u_ViewProjectionMatrix', camera.GetViewProjectionMatrix());
+        }
+        else 
+        {
+            const viewProj = camera.GetViewProjectionMatrix().mul(transform.invert());
+            Render2DData.BasicShader.SetUniformMatrix4fv('u_ViewProjectionMatrix', viewProj);
+        }
+
     }
 
     static EndScene() 

@@ -7,47 +7,57 @@ export class EditorLayer extends banana.Layer
     {
         super('Editor Layer');
 
-        this.m_Spec = new banana.FramebufferSpecification();
-        this.m_Spec.Width = 600;
-        this.m_Spec.Height = 600;
-
         banana.Renderer2D.Init();
     
-        this.m_CameraController = new banana.OrthographicCameraController();
+        this.m_CameraController = new banana.EditorCameraController();
 
-        this.m_Transform1 = new banana.Transform2D();
-        this.m_Transform2 = new banana.Transform2D();
         this.m_SpriteSheet = new banana.Texture('/Game/assets/tex/NpcGuest.png');
+           
+        this.m_ActiveScene = new banana.Scene();
+        
+        this.m_Entity = this.m_ActiveScene.CreateEntity();
+     
+        this.m_SpriteRendererComponent = new banana.SpriteRendererComponent();
+        this.m_Entity.AddComponent(banana.ComponentType.SpriteRendererComponent);
 
-        this.m_PurpleGirl = new banana.SubTexture(this.m_SpriteSheet, weml.Vec2(8, 0), weml.Vec2(16, 16));
-        this.m_GreenGirl = new banana.SubTexture(this.m_SpriteSheet, weml.Vec2(6, 2), weml.Vec2(16, 16));
+        this.m_CameraEntity = this.m_ActiveScene.CreateEntity();
+        this.m_CameraComponent = this.m_CameraEntity.AddComponent(banana.ComponentType.CameraComponent);
 
-        banana.Log.Core_Info('asdasdasd');
+        this.m_CameraComponent.GetCamera().SetOrthographic(
+            -banana.canvas.width / 2, 
+            banana.canvas.width / 2,
+            banana.canvas.height / 2,
+            -banana.canvas.height / 2, 
+            -1,
+            1
+        );
+
+        this.m_IsGameRunning = false;
     }
 
     OnAttach() 
     {
         banana.RenderCommand.SetClearColor( new banana.Color(0, 0, 0, 255) ); 
-        
-        this.m_Transform2.SetPosition(100, 0, 0);
+    
     }
 
     OnUpdate(deltaTime) 
     {
+        
         banana.Renderer2D.ResetStats();
-
+        
         this.m_CameraController.Update(deltaTime);
-
+        
         banana.RenderCommand.Clear();
-
-        banana.Renderer2D.BeginScene(this.m_CameraController.GetCamera());
-
-        // sprite sheet
-        banana.Renderer2D.DrawSubTextureQuad(this.m_Transform1, this.m_PurpleGirl);
-        banana.Renderer2D.DrawSubTextureQuad(this.m_Transform2, this.m_GreenGirl);
-
-
-        banana.Renderer2D.EndScene();
+        
+        if (this.m_IsGameRunning) 
+        {
+            this.m_ActiveScene.OnUpdateRuntime(deltaTime);
+        }
+        else 
+        {
+            this.m_ActiveScene.OnUpdateEditor(deltaTime, this.m_CameraController);
+        }
     }
 
     OnEvent(event) 
