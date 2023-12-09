@@ -15,4 +15,5 @@ export class ComponentType
     static TransformComponent = 101;
     static SpriteRendererComponent = 102;
     static CameraComponent = 103;
+    static NativeScriptComponent = 104;
 }

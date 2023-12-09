@@ -117,8 +117,27 @@ export class CameraComponent
     }
 }
 
+export class NativeScriptComponent 
+{
+    constructor() 
+    {
+        this.Instance = null;
+        this.m_InstanceScriptFn = function() {}
+        this.m_DestroyScriptFn = function(nativeScriptComponent) {}
+
+        this.type = ComponentType.NativeScriptComponent;
+    }
+
+    Bind(scriptableEntityClass) 
+    {
+        this.m_InstanceScriptFn = function() { return new scriptableEntityClass(); }
+        this.m_DestroyScriptFn = function(nativeScriptComponent) { nativeScriptComponent.Instance = null; }
+    }
+}
+
 export const ComponentCreator = {}
 ComponentCreator[ComponentType.TagComponent] = new TagComponent();
 ComponentCreator[ComponentType.TransformComponent] = new TransformComponent();
 ComponentCreator[ComponentType.SpriteRendererComponent] = new SpriteRendererComponent();
 ComponentCreator[ComponentType.CameraComponent] = new CameraComponent();
+ComponentCreator[ComponentType.NativeScriptComponent] = new NativeScriptComponent();
