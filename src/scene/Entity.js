@@ -11,7 +11,7 @@ export class Entity
 
     AddComponent(type) 
     {
-        return this.m_Scene.m_Registry.emplace(this.m_EntityHandle, ComponentCreator[type]);
+        return this.m_Scene.m_Registry.emplace(this.m_EntityHandle, new ComponentCreator[type]());
     }
 
     HasComponent(type) 

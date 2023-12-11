@@ -1,6 +1,7 @@
 import { canvas } from '../core/Window.js'
 import { Log } from '../core/Log.js'
 import * as weml from '../ext/weml.js/weml.js'
+import { Event, EventDispatcher } from '../event/Event.js'
 
 const CameraType = 
 {
@@ -38,6 +39,36 @@ export class SceneCamera extends Camera
     constructor() 
     {
         super();
+
+        this.OnWindowResized = this.OnWindowResized.bind(this);
+
+        this.SetOrthographic(
+            -canvas.width / 2, 
+            canvas.width / 2,
+            canvas.height / 2,
+            -canvas.height / 2, 
+            -1,
+            1);
+    }
+
+    OnEvent(event) 
+    {
+        const dispatcher = new EventDispatcher(event);
+
+        dispatcher.Dispatch(this.OnWindowResized, Event.EventType.WindowResizedEvent);
+    }
+
+    OnWindowResized(event) 
+    {
+        this.SetOrthographic(
+            -canvas.width / 2, 
+            canvas.width / 2,
+            canvas.height / 2,
+            -canvas.height / 2, 
+            -1,
+            1);
+
+        return true;
     }
 }
 

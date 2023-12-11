@@ -28,6 +28,7 @@ export class ntt
                 }
     
                 this.list.splice(index, 1);
+                this.count--;
             },
     
             valid: function(entity) 
@@ -94,6 +95,16 @@ export class ntt
                 }
     
                 return Object.values(this.component[componentType]);
+            },
+
+            get_all_with_entity: function(componentType) 
+            {
+                if (!this.component[componentType]) 
+                {
+                    return {};
+                }
+    
+                return this.component[componentType];
             },
 
             group: function(...componentType) 

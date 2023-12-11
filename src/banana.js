@@ -82,6 +82,8 @@ export * from './render/SubTexture.js'
 // scene
 export * from './scene/Scene.js'
 export * from './scene/Component.js'
+export * from './scene/Entity.js'
+export * from './scene/ScriptableEntity.js'
 
 // math
 export * from './ext/weml.js/weml.js'

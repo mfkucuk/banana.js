@@ -26,8 +26,37 @@ export class Scene
         return entity;
     }
 
+    RenderScene() 
+    {
+        const entities = this.m_Registry.group(ComponentType.TransformComponent, ComponentType.SpriteRendererComponent);
+
+        entities.forEach(entity => {
+            const transform = this.m_Registry.get(entity, ComponentType.TransformComponent);
+            const sprite = this.m_Registry.get(entity, ComponentType.SpriteRendererComponent);
+
+            Renderer2D.DrawColorQuad(transform, sprite.GetColor());
+        });
+    }
+
     OnUpdateRuntime(deltaTime) 
     {
+        {
+            // scriptable entities
+            const nativeScripts = this.m_Registry.get_all_with_entity(ComponentType.NativeScriptComponent);
+            
+            for (const [entity, ns] of Object.entries(nativeScripts))
+            {
+                if (!ns.Instance) 
+                {
+                    ns.Instance = ns.m_InstanceScriptFn();
+                    ns.Instance.m_Entity = new Entity(entity, this);
+                    ns.Instance.OnCreate();
+                }
+
+                ns.Instance.OnUpdate(deltaTime);
+            }
+        }
+
         let mainCamera = null;
         let mainCameraTransform = null;
 
@@ -56,14 +85,7 @@ export class Scene
 
         Renderer2D.BeginScene(mainCamera, view);
 
-        const entities = this.m_Registry.group(ComponentType.TransformComponent, ComponentType.SpriteRendererComponent);
-
-        entities.forEach(entity => {
-            const transform = this.m_Registry.get(entity, ComponentType.TransformComponent);
-            const sprite = this.m_Registry.get(entity, ComponentType.SpriteRendererComponent);
-
-            Renderer2D.DrawColorQuad(transform, sprite.GetColor());
-        });
+        this.RenderScene();
 
         Renderer2D.EndScene();
     }
@@ -72,15 +94,17 @@ export class Scene
     {
         Renderer2D.BeginScene(editorCameraController.GetCamera());
 
-        const entities = this.m_Registry.group(ComponentType.TransformComponent, ComponentType.SpriteRendererComponent);
-
-        entities.forEach(entity => {
-            const transform = this.m_Registry.get(entity, ComponentType.TransformComponent);
-            const sprite = this.m_Registry.get(entity, ComponentType.SpriteRendererComponent);
-
-            Renderer2D.DrawColorQuad(transform, sprite.GetColor());
-        });
+        this.RenderScene();
 
         Renderer2D.EndScene();
+    }
+
+    OnEvent(event) 
+    {
+        const cameraComponents = this.m_Registry.get_all(ComponentType.CameraComponent);
+
+        cameraComponents.forEach(cc => {
+            cc.GetCamera().OnEvent(event);
+        });
     }
 }

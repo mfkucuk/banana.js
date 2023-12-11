@@ -46,6 +46,13 @@ export class TransformComponent
         this.m_Position[2] = z;
     }
 
+    Translate(x, y, z) 
+    {
+        this.m_Position[0] += x;
+        this.m_Position[1] += y;
+        this.m_Position[2] += z;
+    }
+
     GetRotation() 
     {
         return this.m_Rotation;
@@ -56,6 +63,13 @@ export class TransformComponent
         this.m_Rotation[0] = angleX;
         this.m_Rotation[1] = angleY;
         this.m_Rotation[2] = angleZ;
+    }
+
+    Rotate(angleX, angleY, angleZ) 
+    {
+        this.m_Rotation[0] += angleX;
+        this.m_Rotation[1] += angleY;
+        this.m_Rotation[2] += angleZ;
     }
 
     GetScale() 
@@ -96,6 +110,7 @@ export class CameraComponent
     constructor() 
     {
         this.m_SceneCamera = new SceneCamera();
+
         this.m_Primary = true;
 
         this.type = ComponentType.CameraComponent;
@@ -136,8 +151,8 @@ export class NativeScriptComponent
 }
 
 export const ComponentCreator = {}
-ComponentCreator[ComponentType.TagComponent] = new TagComponent();
-ComponentCreator[ComponentType.TransformComponent] = new TransformComponent();
-ComponentCreator[ComponentType.SpriteRendererComponent] = new SpriteRendererComponent();
-ComponentCreator[ComponentType.CameraComponent] = new CameraComponent();
-ComponentCreator[ComponentType.NativeScriptComponent] = new NativeScriptComponent();
+ComponentCreator[ComponentType.TagComponent] = TagComponent;
+ComponentCreator[ComponentType.TransformComponent] = TransformComponent;
+ComponentCreator[ComponentType.SpriteRendererComponent] = SpriteRendererComponent;
+ComponentCreator[ComponentType.CameraComponent] = CameraComponent;
+ComponentCreator[ComponentType.NativeScriptComponent] = NativeScriptComponent;
