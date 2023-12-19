@@ -49,7 +49,6 @@
 
 // core
 export * from './core/EntryPoint.js'
-export * from './core/GUILayer.js'
 export * from './core/Layer.js'
 export * from './core/Log.js'
 export * from './core/Input.js'

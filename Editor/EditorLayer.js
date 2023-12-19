@@ -1,6 +1,10 @@
 import * as banana from '../src/banana.js'
 import * as weml from '../src/ext/weml.js/weml.js'
 
+import { MenubarPanel } from './panels/MenubarPanel.js'
+import { ViewportPanel } from './panels/ViewportPanel.js';
+import { SceneHierarchyPanel } from './panels/SceneHierarchyPanel.js'
+
 class Player extends banana.ScriptableEntity 
 {
     OnCreate() 
@@ -37,7 +41,7 @@ export class EditorLayer extends banana.Layer
            
         this.m_ActiveScene = new banana.Scene();
         
-        this.m_Entity = this.m_ActiveScene.CreateEntity();
+        this.m_Entity = this.m_ActiveScene.CreateEntity('Player');
 
         this.m_Transform = this.m_Entity.GetComponent(banana.ComponentType.TransformComponent);
      
@@ -45,13 +49,12 @@ export class EditorLayer extends banana.Layer
         this.m_Entity.AddComponent(banana.ComponentType.SpriteRendererComponent);
         this.m_Entity.AddComponent(banana.ComponentType.NativeScriptComponent).Bind(Player);
 
-        this.m_CameraEntity = this.m_ActiveScene.CreateEntity();
+        this.m_CameraEntity = this.m_ActiveScene.CreateEntity('Camera');
         this.m_CameraComponent = this.m_CameraEntity.AddComponent(banana.ComponentType.CameraComponent);
 
-        this.m_CameraTransform = this.m_CameraEntity.GetComponent(banana.ComponentType.TransformComponent);
-
-
-        this.m_IsGameRunning = false;
+        this.m_MenubarPanel = new MenubarPanel();
+        this.m_ViewportPanel = new ViewportPanel();
+        this.m_SceneHierarchyPanel = new SceneHierarchyPanel(this.m_ActiveScene);
     }
 
     OnAttach() 
@@ -64,8 +67,8 @@ export class EditorLayer extends banana.Layer
         banana.Renderer2D.ResetStats();
         
         banana.RenderCommand.Clear();
-        
-        if (this.m_IsGameRunning) 
+
+        if (this.m_MenubarPanel.IsGameRunning()) 
         {
             this.m_ActiveScene.OnUpdateRuntime(deltaTime);
         }
@@ -74,6 +77,13 @@ export class EditorLayer extends banana.Layer
             this.m_CameraController.Update(deltaTime);
             this.m_ActiveScene.OnUpdateEditor(deltaTime, this.m_CameraController);
         }
+    }
+
+    OnGUIRender() 
+    {
+        this.m_MenubarPanel.OnGUIRender();
+        this.m_ViewportPanel.OnGUIRender();
+        this.m_SceneHierarchyPanel.OnGUIRender();
     }
 
     OnEvent(event) 

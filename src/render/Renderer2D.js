@@ -76,7 +76,7 @@ QuadVertex.VertexSize = 18;
 
 export class Renderer2D 
 {
-    static Black_Texture;
+    static White_Texture;
     static Stats = {
         BatchCount: 0,
         QuadCount: 0,
@@ -99,9 +99,9 @@ export class Renderer2D
     
     static Init() 
     {
-        Renderer2D.Black_Texture = new Texture();
+        Renderer2D.White_Texture = new Texture();
 
-        Render2DData.BasicShader = new Shader('/Game/assets/shader/basic.glsl');
+        Render2DData.BasicShader = new Shader('/Editor/assets/shader/basic.glsl');
 
         let quadIndices = new Uint16Array( Render2DData.MaxIndices );
 
@@ -147,7 +147,7 @@ export class Renderer2D
 
         Render2DData.BasicShader.SetUniform1iv('u_Textures', samplers);
 
-        Render2DData.TextureSlots[0] = Renderer2D.Black_Texture;
+        Render2DData.TextureSlots[0] = Renderer2D.White_Texture;
     }
 
     static BeginScene(camera, transform) 
@@ -162,7 +162,10 @@ export class Renderer2D
         }
         else 
         {
-            const viewProj = camera.GetViewProjectionMatrix().mul(transform.invert());
+
+            const viewProj = weml.Mat4();
+            viewProj.mul(camera.GetViewProjectionMatrix());
+            viewProj.mul(transform.invert());
             Render2DData.BasicShader.SetUniformMatrix4fv('u_ViewProjectionMatrix', viewProj);
         }
 

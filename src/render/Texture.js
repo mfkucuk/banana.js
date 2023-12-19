@@ -10,9 +10,9 @@ export class Texture
         this.Bind();
         
 
-        // Fill the texture with a 1x1 black pixel.
+        // Fill the texture with a 1x1 white pixel.
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
-            new Uint8Array([0, 0, 0, 255]));
+            new Uint8Array([255, 255, 255, 255]));
 
         this.m_Width = 1;
         this.m_Height = 1;

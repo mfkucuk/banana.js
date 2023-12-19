@@ -11,28 +11,16 @@ export class EditorGUI extends banana.Layer
 
     OnAttach() 
     {
-        LiteGUI.init();
+        
 
-        var mainmenu = new LiteGUI.Menubar("mainmenubar");
-        
-        mainmenu.add("Game/Run", this.OnRunButtonClicked);
-        
-        let mainarea = new LiteGUI.Area({ id: "mainarea", content_id:"canvasarea", height: "calc(100%)", main:true, inmediateResize: true});
-        LiteGUI.add( mainarea );
-        mainarea.add(mainmenu);
-        
+
 
         let glCanvas = document.getElementById('gl-canvas');
 
-        mainarea.content.appendChild(glCanvas);
+        
 
 
-        mainarea.split("horizontal", [null, "30%"], true);
-
-
-        let hierarchyTree = new LiteGUI.Panel("right_panel", {title:'Hierarchy Tree', close: true});
-
-        mainarea.getSection(1).add( hierarchyTree );
+        
 
         //hierarchyTree.dockTo( mainarea.getSection(1).content,"full");
         //hierarchyTree.show();

@@ -8,8 +8,13 @@ class BananaEditor extends banana.Application
     {
         super('banana.js Editor', 1280, 720);
 
+        LiteGUI.init();
+
+        window.mainarea = new LiteGUI.Area({ id: "mainarea", content_id:"canvasarea", height: "calc(100%)", main:true, inmediateResize: true});
+        LiteGUI.add( window.mainarea );
+
         this.PushLayer(new EditorLayer());
-        this.PushLayer(new EditorGUI());
+        //this.PushLayer(new EditorGUI());
     }
 
     OnWindowResized(event) 

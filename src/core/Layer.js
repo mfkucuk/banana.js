@@ -8,6 +8,7 @@ export class Layer
     OnAttach() {}
     OnDetach() {}
     OnUpdate(deltaTime) {}
+    OnGUIRender() {}
     OnEvent(event) {}
 
     GetDebugName() 
