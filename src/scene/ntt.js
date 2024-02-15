@@ -29,6 +29,13 @@ export class ntt
     
                 this.list.splice(index, 1);
                 this.count--;
+
+                // Remove all components associated with the entity
+                Object.values(this.component).forEach(componentMap => {
+                    if (componentMap[entity]) {
+                        delete componentMap[entity];
+                    }
+                });
             },
     
             valid: function(entity) 

@@ -130,6 +130,21 @@ export class CameraComponent
     {
         return this.m_SceneCamera;
     }
+
+    GetSize() 
+    {
+        return this.m_SceneCamera.m_Size;
+    }
+
+    GetNear() 
+    {
+        return this.m_SceneCamera.m_Near;
+    }
+
+    GetFar() 
+    {
+        return this.m_SceneCamera.m_Far;
+    }
 }
 
 export class NativeScriptComponent 

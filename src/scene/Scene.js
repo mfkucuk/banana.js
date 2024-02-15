@@ -3,6 +3,7 @@ import { ComponentType } from '../core/Type.js'
 import { Renderer2D } from '../render/Renderer2D.js'
 import { Entity } from './Entity.js'
 import * as weml from '../ext/weml.js/weml.js'
+import { Log } from '../banana.js'
  
 export class Scene 
 {
@@ -24,6 +25,19 @@ export class Scene
         }
 
         return entity;
+    }
+
+    // entity is the entity object not the entity id.
+    DestroyEntity(entity) 
+    {
+        if (!this.m_Registry.valid(entity.m_EntityHandle)) 
+        {
+            Log.Core_Error('Cannot destroy a non-existing entity!');
+            return false;
+        }
+
+        this.m_Registry.release(entity.m_EntityHandle);
+        return true;
     }
 
     RenderScene() 

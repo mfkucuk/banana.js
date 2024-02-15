@@ -1,12 +1,17 @@
 import * as banana from '../src/banana.js'
 import { EditorGUI } from './EditorGUI.js'
 import { EditorLayer } from './EditorLayer.js'
+import { ContextMenuPanel } from './panels/ContextMenuPanel.js';
 
 class BananaEditor extends banana.Application 
 {
     constructor() 
     {
-        super('banana.js Editor', 1280, 720);
+        super('banana.js Editor', 1280, 800);
+
+        document.addEventListener('click', (event) => {
+            ContextMenuPanel.Close();
+        });
 
         LiteGUI.init();
 

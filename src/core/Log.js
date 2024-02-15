@@ -8,42 +8,100 @@ export class Log
     
     static Core_Info(object) 
     {
-        console.info(`${Log.Time()} CORE: ${object}`);
+        const message = `${Log.Time()}: ${object}`;
+
+        const event = new LogEvent(message, 'CORE');
+        event.Dispatch();
+
+        console.info(message);
     }
     
     static Core_Warn(object) 
     {
-        console.warn(`${Log.Time()} CORE: ${object}`);
+        const message = `${Log.Time()}: ${object}`;
+
+        const event = new LogEvent(message, 'CORE');
+        event.Dispatch();
+        
+        console.warn(message);
     }
     
     static Core_Error(object) 
     {
-        console.error(`${Log.Time()} CORE: ${object}`);
+        const message = `${Log.Time()}: ${object}`;
+
+        const event = new LogEvent(message, 'CORE');
+        event.Dispatch();
+        
+        console.error(message);
     }
     
     static Core_Trace(object) 
     {
-        console.trace(`${Log.Time()} CORE: ${object}`);
+        const message = `${Log.Time()}: ${object}`;
+
+        const event = new LogEvent(message, 'CORE');
+        event.Dispatch();
+        
+        console.trace(message);
     }
     
     static Info(object) 
     {
-        console.info(`${Log.Time()} APP: ${object}`);
+        const message = `${Log.Time()}: ${object}`;
+
+        const event = new LogEvent(message, 'APP');
+        event.Dispatch();
+        
+        console.info(message);
     }
     
     static Warn(object) 
     {
-        console.warn(`${Log.Time()} APP: ${object}`);
+        const message = `${Log.Time()}: ${object}`;
+
+        const event = new LogEvent(message, 'APP');
+        event.Dispatch();
+        
+        console.warn(message);
     }
     
     static Error(object) 
     {
-        console.error(`${Log.Time()} APP: ${object}`);
+        const message = `${Log.Time()}: ${object}`;
+
+        const event = new LogEvent(message, 'APP');
+        event.Dispatch();
+        
+        console.error(message);
     }
     
     static Trace(object) 
     {
-        console.trace(`${Log.Time()} APP: ${object}`);
+        const message = `${Log.Time()}: ${object}`;
+
+        const event = new LogEvent(message, 'APP');
+        event.Dispatch();
+        
+        console.trace(message);
     }
 
+}
+
+class LogEvent 
+{
+    constructor(message, dest) 
+    {
+        this.m_Message = message;        
+        this.m_Dest = dest;
+    }
+
+    Dispatch() 
+    {
+        const logEvent = new CustomEvent('logEvent', {
+            detail: { message: this.m_Message, dest: this.m_Dest },
+        });
+        
+        document.dispatchEvent(logEvent);
+    }
 }

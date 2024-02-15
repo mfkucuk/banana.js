@@ -1,31 +1,9 @@
 import * as banana from '../src/banana.js'
-import * as weml from '../src/ext/weml.js/weml.js'
 
 import { MenubarPanel } from './panels/MenubarPanel.js'
 import { ViewportPanel } from './panels/ViewportPanel.js';
 import { SceneHierarchyPanel } from './panels/SceneHierarchyPanel.js'
-
-class Player extends banana.ScriptableEntity 
-{
-    OnCreate() 
-    {
-        this.transform = this.GetComponent(banana.ComponentType.TransformComponent);
-        console.log(this.transform);
-    }
-    
-    OnUpdate(deltaTime) 
-    {
-        if (banana.Input.IsKeyPressed(banana.KeyCode.D)) 
-        {
-            this.transform.Translate(1, 0, 0);
-        }
-
-        if (banana.Input.IsKeyPressed(banana.KeyCode.Q)) 
-        {
-            this.transform.Rotate(0, 0, 1);
-        }
-    }
-}
+import { ConsolePanel } from './panels/ConsolePanel.js';
 
 export class EditorLayer extends banana.Layer 
 {
@@ -35,31 +13,27 @@ export class EditorLayer extends banana.Layer
 
         banana.Renderer2D.Init();
     
-        this.m_CameraController = new banana.EditorCameraController();
-
-        this.m_SpriteSheet = new banana.Texture('/Game/assets/tex/NpcGuest.png');
-           
         this.m_ActiveScene = new banana.Scene();
         
-        this.m_Entity = this.m_ActiveScene.CreateEntity('Player');
-
-        this.m_Transform = this.m_Entity.GetComponent(banana.ComponentType.TransformComponent);
-     
-        this.m_SpriteRendererComponent = new banana.SpriteRendererComponent();
-        this.m_Entity.AddComponent(banana.ComponentType.SpriteRendererComponent);
-        this.m_Entity.AddComponent(banana.ComponentType.NativeScriptComponent).Bind(Player);
-
+        this.m_CameraController = new banana.EditorCameraController();
+        
+        this.m_ClearColor = new banana.Color(0, 0, 0, 255);
+        
         this.m_CameraEntity = this.m_ActiveScene.CreateEntity('Camera');
-        this.m_CameraComponent = this.m_CameraEntity.AddComponent(banana.ComponentType.CameraComponent);
+        this.m_SquareEntity = this.m_ActiveScene.CreateEntity('Square');
+     
+        this.m_CameraEntity.AddComponent(banana.ComponentType.CameraComponent);
+        this.m_SquareEntity.AddComponent(banana.ComponentType.SpriteRendererComponent);
 
         this.m_MenubarPanel = new MenubarPanel();
         this.m_ViewportPanel = new ViewportPanel();
         this.m_SceneHierarchyPanel = new SceneHierarchyPanel(this.m_ActiveScene);
+        this.m_ConsolePanel = new ConsolePanel();
     }
 
     OnAttach() 
     {
-        banana.RenderCommand.SetClearColor( new banana.Color(0, 0, 0, 255) ); 
+        banana.RenderCommand.SetClearColor( this.m_ClearColor ); 
     }
 
     OnUpdate(deltaTime) 
@@ -84,6 +58,7 @@ export class EditorLayer extends banana.Layer
         this.m_MenubarPanel.OnGUIRender();
         this.m_ViewportPanel.OnGUIRender();
         this.m_SceneHierarchyPanel.OnGUIRender();
+        this.m_ConsolePanel.OnGUIRender();
     }
 
     OnEvent(event) 

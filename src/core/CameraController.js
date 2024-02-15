@@ -20,13 +20,7 @@ export class EditorCameraController
         this.m_ZoomLevel = 1.0
         this.m_PreviousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
 
-        this.m_EditorCamera = new EditorCamera(
-            -canvas.width / 2 * this.m_ZoomLevel, 
-            canvas.width / 2 * this.m_ZoomLevel,
-            canvas.height / 2 * this.m_ZoomLevel,
-            -canvas.height / 2 * this.m_ZoomLevel, 
-            -1,
-            1);
+        this.m_EditorCamera = new EditorCamera();
     }
 
     GetCamera() 
@@ -75,24 +69,18 @@ export class EditorCameraController
             this.m_ZoomLevel += 0.25;
             this.m_ZoomLevel = Math.min(2.0, this.m_ZoomLevel);
             this.m_EditorCamera.SetOrthographic(
-                -canvas.width / 2 * this.m_ZoomLevel, 
-                canvas.width / 2 * this.m_ZoomLevel,
-                canvas.height / 2 * this.m_ZoomLevel,
-                -canvas.height / 2 * this.m_ZoomLevel, 
-                -1,
-                1);
+                446 * this.m_ZoomLevel,
+                this.m_EditorCamera.m_Near,
+                this.m_EditorCamera.m_Far);
         }
         else if (event.GetOffsetY() < 0) // zoom in 
         {
             this.m_ZoomLevel -= 0.25;
             this.m_ZoomLevel = Math.max(0.25, this.m_ZoomLevel);
             this.m_EditorCamera.SetOrthographic(
-                -canvas.width / 2 * this.m_ZoomLevel, 
-                canvas.width / 2 * this.m_ZoomLevel,
-                canvas.height / 2 * this.m_ZoomLevel,
-                -canvas.height / 2 * this.m_ZoomLevel, 
-                -1,
-                1);
+                446 * this.m_ZoomLevel,
+                this.m_EditorCamera.m_Near,
+                this.m_EditorCamera.m_Far);
         }
 
         this.m_EditorCamera.RecalculateViewProjectionMatrix();
@@ -109,13 +97,8 @@ export class EditorCameraController
 
     OnWindowResized(event) 
     {
-        this.m_EditorCamera.SetOrthographic(
-            -canvas.width / 2 * this.m_ZoomLevel, 
-            canvas.width / 2 * this.m_ZoomLevel,
-            canvas.height / 2 * this.m_ZoomLevel,
-            -canvas.height / 2 * this.m_ZoomLevel, 
-            -1,
-            1);
+        this.m_EditorCamera.m_AspectRatio = parseFloat(event.GetWidth()) / parseFloat(event.GetHeight());
+        this.m_EditorCamera.SetViewportSize();
         this.m_EditorCamera.RecalculateViewProjectionMatrix();
 
         return true;

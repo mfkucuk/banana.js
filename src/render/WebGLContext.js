@@ -21,12 +21,6 @@ export class WebGLContext
             //gl.enable(gl.DEPTH_TEST);
             gl.enable(gl.BLEND);
             gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-
-            Log.Core_Info(`WebGL Renderer:
-                    Vendor: ${gl.getParameter(gl.VENDOR)}
-                    Renderer: ${gl.getParameter(gl.RENDERER)}
-                    Version: ${gl.getParameter(gl.VERSION)}
-                    Shading Language Version: ${gl.getParameter(gl.SHADING_LANGUAGE_VERSION)}`);
         }
     }
 }

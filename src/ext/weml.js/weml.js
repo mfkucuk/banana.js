@@ -56,7 +56,7 @@
  * The main weml class. Contains some util functions.
  * @author Jan Katzer [@coffeenotfound]{@link https://github.com/coffeenotfound}
  */
-var weml = {
+export var weml = {
 	/**
 	 * @private
 	 */

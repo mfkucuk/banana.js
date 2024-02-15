@@ -3,7 +3,7 @@ import { Log } from '../core/Log.js'
 import * as weml from '../ext/weml.js/weml.js'
 import { Event, EventDispatcher } from '../event/Event.js'
 
-const CameraType = 
+export const CameraType = 
 {
     Orthographic: 0, 
     Perspective: 1,
@@ -15,22 +15,49 @@ class Camera
     {
         this.m_ProjectionMatrix = weml.Mat4();  
     
-        this.m_CameraType = CameraType.Orthographic;        
+        this.m_CameraType = CameraType.Orthographic;      
+        this.m_AspectRatio = parseFloat(canvas.width) / parseFloat(canvas.height)
     }
 
-    SetOrthographic(x1, x2, y1, y2, z1, z2)
+    SetOrthographic(size, near, far)
     {
-        this.m_ProjectionMatrix.setOrtho(x1, x2, y1, y2, z1, z2);
+        this.m_CameraType = CameraType.Orthographic;
+
+        this.m_Size = size;
+        this.m_Near = near;
+        this.m_Far = far;
+
+        this.SetViewportSize();
     }
 
-    SetPerspective(fovy, aspect, near, far) 
+    SetPerspective(fovy, near, far) 
     {
-        this.m_ProjectionMatrix.setPerspective(fovy, aspect, near, far);
+        this.m_CameraType = CameraType.Perspective;
+
+        this.m_ProjectionMatrix.setPerspective(weml.weml.toRadians(fovy), this.m_AspectRatio, near, far);
+        this.m_Size = fovy;
+        this.m_Near = near;
+        this.m_Far = far;
     }
 
     GetViewProjectionMatrix() 
     {
         return this.m_ProjectionMatrix;
+    }
+
+    GetCameraType() 
+    {
+        return this.m_CameraType;
+    }
+
+    SetViewportSize() 
+    {
+        let orthoLeft = -this.m_Size * this.m_AspectRatio * 0.5;
+        let orthoRight = this.m_Size * this.m_AspectRatio * 0.5;
+        let orthoBottom = this.m_Size * 0.5;
+        let orthoTop = -this.m_Size * 0.5;
+
+        this.m_ProjectionMatrix.setOrtho(orthoLeft, orthoRight, orthoBottom, orthoTop, this.m_Near, this.m_Far);
     }
 }
 
@@ -42,13 +69,7 @@ export class SceneCamera extends Camera
 
         this.OnWindowResized = this.OnWindowResized.bind(this);
 
-        this.SetOrthographic(
-            -canvas.width / 2, 
-            canvas.width / 2,
-            canvas.height / 2,
-            -canvas.height / 2, 
-            -1,
-            1);
+        this.SetOrthographic(446, -1, 1);
     }
 
     OnEvent(event) 
@@ -60,13 +81,8 @@ export class SceneCamera extends Camera
 
     OnWindowResized(event) 
     {
-        this.SetOrthographic(
-            -canvas.width / 2, 
-            canvas.width / 2,
-            canvas.height / 2,
-            -canvas.height / 2, 
-            -1,
-            1);
+        this.m_AspectRatio = parseFloat(canvas.width) / parseFloat(canvas.height)
+        this.SetViewportSize();
 
         return true;
     }
@@ -74,7 +90,7 @@ export class SceneCamera extends Camera
 
 export class EditorCamera extends Camera
 {
-    constructor(x1, x2, y1, y2, z1, z2) 
+    constructor() 
     {
         super();
 
@@ -85,7 +101,7 @@ export class EditorCamera extends Camera
         this.m_CameraRotation = 0;
 
         this.SetView();
-        this.SetOrthographic(x1, x2, y1, y2, z1, z2);
+        this.SetOrthographic(446, -1, 1);
         this.RecalculateViewProjectionMatrix();
     }
 

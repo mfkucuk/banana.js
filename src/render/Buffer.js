@@ -9,7 +9,6 @@ function VertexAttribute(location, count, normalized)
 
 export class VertexBuffer 
 {
-
     constructor(data) 
     {
         this.m_BufferId = gl.createBuffer();
