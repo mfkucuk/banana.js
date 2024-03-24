@@ -64,6 +64,7 @@ export class Scene
                 {
                     ns.Instance = ns.m_InstanceScriptFn();
                     ns.Instance.m_Entity = new Entity(entity, this);
+                    ns.Instance.OnCreateSealed();
                     ns.Instance.OnCreate();
                 }
 

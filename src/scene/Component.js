@@ -2,6 +2,7 @@ import { Color } from '../render/Color.js'
 import { ComponentType } from '../core/Type.js'
 import * as weml from '../ext/weml.js/weml.js'
 import { SceneCamera } from '../render/Camera.js'
+import { Movement } from './Movement.js'
 
 export class TagComponent 
 {
@@ -165,9 +166,20 @@ export class NativeScriptComponent
     }
 }
 
+export class MovementComponent extends NativeScriptComponent
+{
+    constructor() 
+    {
+        super();
+
+        this.Bind(Movement);
+    }
+}
+
 export const ComponentCreator = {}
 ComponentCreator[ComponentType.TagComponent] = TagComponent;
 ComponentCreator[ComponentType.TransformComponent] = TransformComponent;
 ComponentCreator[ComponentType.SpriteRendererComponent] = SpriteRendererComponent;
 ComponentCreator[ComponentType.CameraComponent] = CameraComponent;
 ComponentCreator[ComponentType.NativeScriptComponent] = NativeScriptComponent;
+ComponentCreator[ComponentType.MovementComponent] = MovementComponent;

@@ -1,5 +1,6 @@
 import * as banana from '../../src/banana.js'
-import { ContextMenuPanel } from './ContextMenuPanel.js';
+import { Movement } from '../../src/scene/Movement.js'
+import { ContextMenuPanel } from './ContextMenuPanel.js'
 
 export class SceneHierarchyPanel 
 {
@@ -248,6 +249,17 @@ export class SceneHierarchyPanel
                     this.DrawComponents(this.m_SelectionContext);
                 }
             });
+
+            this.m_Inspector.addSeparator();
+        }
+
+        if (this.m_Context.m_Registry.has(entityId, banana.ComponentType.NativeScriptComponent)) 
+        {
+            this.m_Inspector.addButton('Script');
+
+            let ns = this.m_Context.m_Registry.get(entityId, banana.ComponentType.NativeScriptComponent);
+
+            this.m_Inspector.addSeparator();
         }
 
         this.m_Inspector.addButton('', 'Add Component', { callback: this.DrawAddComponentDialog });
@@ -268,6 +280,13 @@ export class SceneHierarchyPanel
         
         this.m_AddComponentInspector.addButton(null, 'Sprite Renderer', { callback: (handle) => {
             this.m_Context.m_Registry.emplace(this.m_SelectionContext, new banana.SpriteRendererComponent());
+            this.m_AddComponentDialog.close();
+            this.DrawComponents(this.m_SelectionContext);
+        }});
+
+        this.m_AddComponentInspector.addButton(null, 'Script', { callback: (handle) => {
+            this.m_Context.m_Registry.emplace(this.m_SelectionContext, new banana.MovementComponent());
+
             this.m_AddComponentDialog.close();
             this.DrawComponents(this.m_SelectionContext);
         }});

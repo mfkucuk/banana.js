@@ -81,6 +81,11 @@ export class ntt
 
             has: function(entity, componentType) 
             {
+                if (typeof this.component[componentType] == 'undefined') 
+                {
+                    this.component[componentType] = {};
+                }
+
                 return this.component[componentType][entity] != null;
             },
     
