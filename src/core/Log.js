@@ -10,8 +10,8 @@ export class Log
     {
         const message = `${Log.Time()}: ${object}`;
 
-        const event = new LogEvent(message, 'CORE');
-        event.Dispatch();
+        //const event = new LogEvent(message, 'CORE');
+        //event.Dispatch();
 
         console.info(message);
     }
@@ -20,8 +20,8 @@ export class Log
     {
         const message = `${Log.Time()}: ${object}`;
 
-        const event = new LogEvent(message, 'CORE');
-        event.Dispatch();
+        //const event = new LogEvent(message, 'CORE');
+        //event.Dispatch();
         
         console.warn(message);
     }
@@ -30,8 +30,8 @@ export class Log
     {
         const message = `${Log.Time()}: ${object}`;
 
-        const event = new LogEvent(message, 'CORE');
-        event.Dispatch();
+        //const event = new LogEvent(message, 'CORE');
+        //event.Dispatch();
         
         console.error(message);
     }
@@ -40,8 +40,8 @@ export class Log
     {
         const message = `${Log.Time()}: ${object}`;
 
-        const event = new LogEvent(message, 'CORE');
-        event.Dispatch();
+        //const event = new LogEvent(message, 'CORE');
+        //event.Dispatch();
         
         console.trace(message);
     }

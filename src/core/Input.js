@@ -34,7 +34,7 @@ export class Input
         {
             if (this.GamepadWarningFlag) 
             {
-                Log.Core_Warn('No gamepad is connected!');
+                Log.Warn('No gamepad is connected!');
                 this.GamepadWarningFlag = false;
             }
             return false;
@@ -50,7 +50,7 @@ export class Input
         {
             if (this.GamepadWarningFlag) 
             {
-                Log.Core_Warn('No gamepad is connected!');
+                Log.Warn('No gamepad is connected!');
                 this.GamepadWarningFlag = false;
             }
             return false;
