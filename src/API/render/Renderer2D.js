@@ -30,13 +30,13 @@ Render2DData.TextureSlots = [];
 function QuadVertex() 
 {
 
-    this.Position; // 4
-    this.TexCoord; // 2
-    this.TexIndex; // 1
-    this.Color;    // 4
-    this.Translation; // 3
-    this.Rotation; // 1
-    this.Scaling; // 3
+    this.Position = null; // 4
+    this.TexCoord = null; // 2
+    this.TexIndex = null; // 1
+    this.Color    = null;    // 4
+    this.Translation = null; // 3
+    this.Rotation = null; // 1
+    this.Scaling = null; // 3
 
     this.Flat = function() 
     {
@@ -101,7 +101,7 @@ export class Renderer2D
     {
         Renderer2D.White_Texture = new Texture();
 
-        Render2DData.BasicShader = new Shader('/Editor/assets/shader/basic.glsl');
+        Render2DData.BasicShader = new Shader('/shader/basic.glsl');
 
         let quadIndices = new Uint16Array( Render2DData.MaxIndices );
 

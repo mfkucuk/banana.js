@@ -1,7 +1,7 @@
-import * as banana from '../src/banana.js'
-import { EditorGUI } from './EditorGUI.js'
-import { EditorLayer } from './EditorLayer.js'
-import { ContextMenuPanel } from './panels/ContextMenuPanel.js';
+import { useEffect } from "react";
+import * as banana from "../API/banana";
+import { EditorLayer } from "./EditorLayer";
+import SceneHierarchyPanel from "./panels/SceneHierarchyPanel";
 
 class BananaEditor extends banana.Application 
 {
@@ -10,16 +10,10 @@ class BananaEditor extends banana.Application
         super('banana.js Editor', 1280, 800);
 
         document.addEventListener('click', (event) => {
-            ContextMenuPanel.Close();
+            //ContextMenuPanel.Close();
         });
 
-        LiteGUI.init();
-
-        window.mainarea = new LiteGUI.Area({ id: "mainarea", content_id:"canvasarea", height: "calc(100%)", main:true, inmediateResize: true});
-        LiteGUI.add( window.mainarea );
-
         this.PushLayer(new EditorLayer());
-        //this.PushLayer(new EditorGUI());
     }
 
     OnWindowResized(event) 
@@ -35,3 +29,20 @@ banana.Application.CreateApplication = function()
 {
     return new BananaEditor();
 }
+
+function Editor() {
+
+    useEffect(() => {
+        banana.main();
+    }, []);
+
+    return (
+        <div>
+            <canvas id="gl-canvas" width={600} height={600} tabIndex={1}></canvas>
+            <SceneHierarchyPanel.Render/>
+        </div>
+    );
+
+}
+
+export default Editor

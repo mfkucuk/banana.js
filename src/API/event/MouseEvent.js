@@ -78,7 +78,7 @@ class MouseButtonEvent extends MouseEvent
 
     GetCategoryFlags() 
     {
-        return Event.EventCategory.Mouse & EventCategory.MouseButtonEvent;
+        return Event.EventCategory.Mouse & Event.EventCategory.MouseButtonEvent;
     }
 
     toString() 

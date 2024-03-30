@@ -1,12 +1,8 @@
 import { Log } from "./Log.js"
 import { Window, canvas } from "./Window.js"
 import { Event, EventDispatcher } from "../event/Event.js"
-import { Input } from "./Input.js"
 import { LayerStack } from "./LayerStack.js"
-import { Renderer } from "../render/Renderer.js"
 import { RenderCommand } from "../render/RenderCommand.js"
-import { Profiler } from "./Profiler.js"
-import { Renderer2D } from "../render/Renderer2D.js"
 import { Gamepad } from "./Gamepad.js"
 
 
@@ -117,11 +113,16 @@ export class Application
         this.m_LayerStack.PushOverlay(overlay);
         overlay.OnAttach();
 
-        Log.Core_Info(`${layer.GetDebugName()} is attached`);
+        Log.Core_Info(`${overlay.GetDebugName()} is attached`);
     }
 
     SetTitle(title) 
     {
         this.m_Window.SetTitle(title);
+    }
+
+    static CreateApplication() 
+    {
+        
     }
 }

@@ -39,7 +39,7 @@ export class LayerStack
 
         if (index == -1) 
         {
-            Log.Core_Error(`Overlay '${layer.GetDebugName()}' does not exist!`);
+            Log.Core_Error(`Overlay '${overlay.GetDebugName()}' does not exist!`);
             return;
         }
 

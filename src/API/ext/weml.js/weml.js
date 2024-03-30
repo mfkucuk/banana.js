@@ -139,7 +139,7 @@ Vec2.typeprototype = {};
 			return `Vec2[${this[0]}, ${this[1]}]`;
 		},
 	};
-});
+})();
 
 /**
  * Constructs a new {@link Vec3} with the given values.

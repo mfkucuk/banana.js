@@ -67,7 +67,6 @@ export * from './event/MouseEvent.js'
 export * from './event/ApplicationEvent.js'
 
 // render
-export * from './render/Renderer.js'
 export * from './render/Renderer2D.js'
 export * from './render/RenderCommand.js'
 export * from './render/Framebuffer.js'

@@ -10,7 +10,6 @@ export class Gamepad
         {
             Gamepad.Instance = this;
 
-            this.m_CurrentGamepad;
             this.m_IsGamepadConnected = false;
             this.OnGamepadConnected = this.OnGamepadConnected.bind(this);
             this.OnGamepadDisconnected = this.OnGamepadDisconnected.bind(this);

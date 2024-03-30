@@ -78,9 +78,6 @@ class Instrumentor
         this.m_Output = '';
         this.m_ProfileCount = 0;
         this.m_Filepath = '';
-
-        //singleton
-        this.m_Instance;
     }
 
     BeginSession(name, filepath) 

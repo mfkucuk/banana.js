@@ -83,14 +83,16 @@ export function initShadersFromFiles(gl, shaderSrc) {
         gl.compileShader(vertexShader);
         
         if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
+            console.log('yarrak');
             alert(gl.getShaderInfoLog(vertexShader));
             return null;
         }
-
+        
         gl.shaderSource(fragmentShader, fragmentScript);
         gl.compileShader(fragmentShader);
-
+        
         if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+            console.log('AM');
             alert(gl.getShaderInfoLog(fragmentShader));
             return null;
         }

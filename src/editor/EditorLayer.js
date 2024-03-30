@@ -1,9 +1,9 @@
-import * as banana from '../src/banana.js'
+import * as banana from '../API/banana.js'
 
-import { MenubarPanel } from './panels/MenubarPanel.js'
-import { ViewportPanel } from './panels/ViewportPanel.js';
-import { SceneHierarchyPanel } from './panels/SceneHierarchyPanel.js'
-import { ConsolePanel } from './panels/ConsolePanel.js';
+//import { MenubarPanel } from './panels/MenubarPanel.js'
+//import { ViewportPanel } from './panels/ViewportPanel.js';
+//import { SceneHierarchyPanel } from './panels/SceneHierarchyPanel.js'
+//import { ConsolePanel } from './panels/ConsolePanel.js';
 
 export class EditorLayer extends banana.Layer 
 {
@@ -25,10 +25,10 @@ export class EditorLayer extends banana.Layer
         this.m_CameraEntity.AddComponent(banana.ComponentType.CameraComponent);
         this.m_SquareEntity.AddComponent(banana.ComponentType.SpriteRendererComponent);
 
-        this.m_MenubarPanel = new MenubarPanel();
-        this.m_ViewportPanel = new ViewportPanel();
-        this.m_SceneHierarchyPanel = new SceneHierarchyPanel(this.m_ActiveScene);
-        this.m_ConsolePanel = new ConsolePanel();
+        //this.m_MenubarPanel = new MenubarPanel();
+        //this.m_ViewportPanel = new ViewportPanel();
+        //this.m_SceneHierarchyPanel = new SceneHierarchyPanel(this.m_ActiveScene);
+        //this.m_ConsolePanel = new ConsolePanel();
     }
 
     OnAttach() 
@@ -42,23 +42,23 @@ export class EditorLayer extends banana.Layer
         
         banana.RenderCommand.Clear();
 
-        if (this.m_MenubarPanel.IsGameRunning()) 
-        {
-            this.m_ActiveScene.OnUpdateRuntime(deltaTime);
-        }
-        else 
-        {
+        // if (this.m_MenubarPanel.IsGameRunning()) 
+        // {
+        //     this.m_ActiveScene.OnUpdateRuntime(deltaTime);
+        // }
+        // else 
+        // {
             this.m_CameraController.Update(deltaTime);
             this.m_ActiveScene.OnUpdateEditor(deltaTime, this.m_CameraController);
-        }
+        //}
     }
 
     OnGUIRender() 
     {
-        this.m_MenubarPanel.OnGUIRender();
-        this.m_ViewportPanel.OnGUIRender();
-        this.m_SceneHierarchyPanel.OnGUIRender();
-        this.m_ConsolePanel.OnGUIRender();
+        //this.m_MenubarPanel.OnGUIRender();
+        //this.m_ViewportPanel.OnGUIRender();
+        //this.m_SceneHierarchyPanel.OnGUIRender();
+        //this.m_ConsolePanel.OnGUIRender();
     }
 
     OnEvent(event) 

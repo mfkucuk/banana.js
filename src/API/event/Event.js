@@ -34,12 +34,12 @@ export class Event
 
     GetCategoryFlags() 
     {
-        return EventCategory.None;
+        return Event.EventCategory.None;
     }
 
     GetEventType()
     {
-        return EventType.None;
+        return Event.EventType.None;
     }
     
     GetEventName() 
@@ -49,7 +49,7 @@ export class Event
 
     IsInCategory(category) 
     {
-        return GetCategoryFlags() & category;
+        return this.GetCategoryFlags() & category;
     }
 }
 
