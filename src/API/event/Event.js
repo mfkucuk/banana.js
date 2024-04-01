@@ -29,7 +29,7 @@ export class Event
 
     constructor() 
     {    
-        this.m_Handled = false;
+        this.handled = false;
     }
 
     GetCategoryFlags() 
@@ -57,14 +57,14 @@ export class EventDispatcher
 {
     constructor(event) 
     {
-        this.m_Event = event;
+        this.event = event;
     }
 
     Dispatch(dispatchFn, eventType) 
     {
-        if (this.m_Event.GetEventType() == eventType) 
+        if (this.event.GetEventType() == eventType) 
         {
-            this.m_Event.m_Handle = dispatchFn(this.m_Event);
+            this.event.handle = dispatchFn(this.event);
             return true;
         }
 

@@ -6,12 +6,12 @@ class GamepadEvent extends Event
     {
         super();
 
-        this.m_Gamepad = gamepad;
+        this.gamepad = gamepad;
     }
 
     GetGamepad() 
     {
-        return this.m_Gamepad;
+        return this.gamepad;
     }
 
     GetCategoryFlags() 

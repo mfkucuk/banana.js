@@ -38,8 +38,8 @@ export class MouseScrolledEvent extends Event
     constructor(offsetX, offsetY) 
     {
         super();
-        this.m_OffsetX = offsetX;
-        this.m_OffsetY = offsetY;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
     }
 
     GetCategoryFlags()
@@ -59,12 +59,12 @@ export class MouseScrolledEvent extends Event
 
     GetOffsetY() 
     {
-        return this.m_OffsetY;
+        return this.offsetY;
     }
 
     toString() 
     {
-        return `${this.GetEventName()}: Offset=(${this.m_OffsetX}, ${this.m_OffsetY})`;
+        return `${this.GetEventName()}: Offset=(${this.offsetX}, ${this.offsetY})`;
     }
 }
 
@@ -73,7 +73,7 @@ class MouseButtonEvent extends MouseEvent
     constructor(mousePositionX, mousePositionY, button) 
     {
         super(mousePositionX, mousePositionY);
-        this.m_Button = button;
+        this.button = button;
     }
 
     GetCategoryFlags() 
@@ -83,7 +83,7 @@ class MouseButtonEvent extends MouseEvent
 
     toString() 
     {
-        return `${this.GetEventName()}: Button=${this.m_Button}, Pos=(${this.m_MousePositionX}, ${this.m_MousePositionY})`;
+        return `${this.GetEventName()}: Button=${this.button}, Pos=(${this.m_MousePositionX}, ${this.m_MousePositionY})`;
     }
 }
 

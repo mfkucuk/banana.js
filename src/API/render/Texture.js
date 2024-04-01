@@ -5,8 +5,8 @@ export class Texture
 {
     constructor(src) 
     {
-        this.m_TextureId = gl.createTexture();
-        this.m_Loaded = false;
+        this.textureId = gl.createTexture();
+        this.loaded = false;
         this.Bind();
         
 
@@ -14,8 +14,8 @@ export class Texture
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
             new Uint8Array([255, 255, 255, 255]));
 
-        this.m_Width = 1;
-        this.m_Height = 1;
+        this.width = 1;
+        this.height = 1;
             
         if (typeof src == 'undefined') 
         {
@@ -24,21 +24,21 @@ export class Texture
 
         this.OnLoad = this.OnLoad.bind(this)
         
-        this.m_Image = new Image();
-        this.m_Image.src = src;
-        this.m_Image.addEventListener('load', this.OnLoad);
+        this.image = new Image();
+        this.image.src = src;
+        this.image.addEventListener('load', this.OnLoad);
         
         // error handling
-        this.m_Image.addEventListener('error', (error) => {
+        this.image.addEventListener('error', (error) => {
             Log.Core_Error(`${error.type}: Loading image`);
-            this.m_Image.removeEventListener('error', this);
+            this.image.removeEventListener('error', this);
         });
     }
 
     Bind(unit = 0) 
     {
         gl.activeTexture(gl.TEXTURE0 + unit);
-        gl.bindTexture(gl.TEXTURE_2D, this.m_TextureId);
+        gl.bindTexture(gl.TEXTURE_2D, this.textureId);
     }
 
     Unbind() 
@@ -50,46 +50,46 @@ export class Texture
     {     
         this.Bind();
 
-        this.m_Loaded = true;
+        this.loaded = true;
 
-        this.m_Width = this.m_Image.width;
-        this.m_Height = this.m_Image.height;
+        this.width = this.image.width;
+        this.height = this.image.height;
         
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.m_Image);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
         // gl.generateMipmap(gl.TEXTURE_2D);
 
         Log.Core_Info(`Loaded texture with:
-                    Width: ${this.m_Width}px
-                    Height: ${this.m_Height}px
-                    Source: ${this.m_Image.src}`);
+                    Width: ${this.width}px
+                    Height: ${this.height}px
+                    Source: ${this.image.src}`);
 
-        this.m_Image.removeEventListener('load', this.OnLoad);
+        this.image.removeEventListener('load', this.OnLoad);
         
         this.Unbind();
     }
 
     GetImage() 
     {
-        return this.m_Image;
+        return this.image;
     }
 
     IsLoaded() 
     {
-        return this.m_Loaded;
+        return this.loaded;
     }
 
     GetWidth() 
     {
-        return this.m_Width;
+        return this.width;
     }
 
     GetHeight() 
     {
-        return this.m_Height;
+        return this.height;
     }
 }

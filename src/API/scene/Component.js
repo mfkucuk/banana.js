@@ -8,19 +8,19 @@ export class TagComponent
 {
     constructor() 
     {
-        this.m_Name = 'Banana';
+        this.name = 'Banana';
 
         this.type = ComponentType.TagComponent
     }
 
     SetName(name) 
     {
-        this.m_Name = name;
+        this.name = name;
     }
 
     GetName() 
     {
-        return this.m_Name;
+        return this.name;
     }
 }
 
@@ -28,61 +28,61 @@ export class TransformComponent
 {
     constructor() 
     {
-        this.m_Position = weml.Vec3(0, 0, 0);
-        this.m_Rotation = weml.Vec3(0, 0, 0);
-        this.m_Scale = weml.Vec3(1, 1, 1);
+        this.position = weml.Vec3(0, 0, 0);
+        this.rotation = weml.Vec3(0, 0, 0);
+        this.scale = weml.Vec3(1, 1, 1);
 
         this.type = ComponentType.TransformComponent;
     }
 
     GetPosition() 
     {
-        return this.m_Position;
+        return this.position;
     }
 
     SetPosition(x, y, z) 
     {
-        this.m_Position[0] = x;
-        this.m_Position[1] = y;
-        this.m_Position[2] = z;
+        this.position[0] = x;
+        this.position[1] = y;
+        this.position[2] = z;
     }
 
     Translate(x, y, z) 
     {
-        this.m_Position[0] += x;
-        this.m_Position[1] += y;
-        this.m_Position[2] += z;
+        this.position[0] += x;
+        this.position[1] += y;
+        this.position[2] += z;
     }
 
     GetRotation() 
     {
-        return this.m_Rotation;
+        return this.rotation;
     }
 
     SetRotation(angleX, angleY, angleZ) 
     {
-        this.m_Rotation[0] = angleX;
-        this.m_Rotation[1] = angleY;
-        this.m_Rotation[2] = angleZ;
+        this.rotation[0] = angleX;
+        this.rotation[1] = angleY;
+        this.rotation[2] = angleZ;
     }
 
     Rotate(angleX, angleY, angleZ) 
     {
-        this.m_Rotation[0] += angleX;
-        this.m_Rotation[1] += angleY;
-        this.m_Rotation[2] += angleZ;
+        this.rotation[0] += angleX;
+        this.rotation[1] += angleY;
+        this.rotation[2] += angleZ;
     }
 
     GetScale() 
     {
-        return this.m_Scale;
+        return this.scale;
     }
 
     SetScale(x, y, z) 
     {
-        this.m_Scale[0] = x;
-        this.m_Scale[1] = y;
-        this.m_Scale[2] = z;
+        this.scale[0] = x;
+        this.scale[1] = y;
+        this.scale[2] = z;
     }
 }
 
@@ -90,19 +90,19 @@ export class SpriteRendererComponent
 {
     constructor() 
     {
-        this.m_Color = Color.WHITE;
+        this.color = Color.WHITE;
 
         this.type = ComponentType.SpriteRendererComponent;
     }
 
     SetColor(color) 
     {
-        this.m_Color = color;
+        this.color = color;
     }
 
     GetColor() 
     {
-        return this.m_Color;
+        return this.color;
     }
 }
 
@@ -110,41 +110,41 @@ export class CameraComponent
 {
     constructor() 
     {
-        this.m_SceneCamera = new SceneCamera();
+        this.sceneCamera = new SceneCamera();
 
-        this.m_Primary = true;
+        this.primary = true;
 
         this.type = ComponentType.CameraComponent;
     }
 
     IsPrimary() 
     {
-        return this.m_Primary;
+        return this.primary;
     }
 
     SetPrimary(flag) 
     {
-        this.m_Primary = flag;
+        this.primary = flag;
     }
 
     GetCamera() 
     {
-        return this.m_SceneCamera;
+        return this.sceneCamera;
     }
 
     GetSize() 
     {
-        return this.m_SceneCamera.m_Size;
+        return this.sceneCamera.size;
     }
 
     GetNear() 
     {
-        return this.m_SceneCamera.m_Near;
+        return this.sceneCamera.near;
     }
 
     GetFar() 
     {
-        return this.m_SceneCamera.m_Far;
+        return this.sceneCamera.far;
     }
 }
 

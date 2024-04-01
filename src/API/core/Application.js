@@ -15,23 +15,23 @@ export class Application
         this.OnWindowClosed = this.OnWindowClosed.bind(this);
         this.OnWindowResized = this.OnWindowResized.bind(this);
 
-        this.m_IsRunning = true;
+        this.isRunning = true;
 
-        this.m_Window = new Window(appName, windowWidth, windowHeight);
-        this.m_Window.SetEventCallback(this.OnEvent);
+        this.window = new Window(appName, windowWidth, windowHeight);
+        this.window.SetEventCallback(this.OnEvent);
 
-        this.m_Gamepad = new Gamepad();
+        this.gamepad = new Gamepad();
 
-        this.m_LayerStack = new LayerStack();
+        this.layerStack = new LayerStack();
 
-        this.m_LastFrameTime = 0;
+        this.lastFrameTime = 0;
 
-        this.m_Window.Resize(windowWidth, windowHeight);
+        this.window.Resize(windowWidth, windowHeight);
     }
 
     Run() 
     {
-        this.m_LayerStack.GetLayers().forEach(layer => 
+        this.layerStack.GetLayers().forEach(layer => 
         {
             layer.OnGUIRender();
         });
@@ -47,9 +47,9 @@ export class Application
     OnTick() 
     {
         let currentFrameTime = Date.now();
-        let deltaTimeMilliseconds = currentFrameTime - this.m_LastFrameTime;
+        let deltaTimeMilliseconds = currentFrameTime - this.lastFrameTime;
         let deltaTimeSeconds = deltaTimeMilliseconds / 1000;
-        this.m_LastFrameTime = currentFrameTime;
+        this.lastFrameTime = currentFrameTime;
         let fps = parseInt(1 / deltaTimeSeconds);
 
         //Log.Core_Info(`Delta time: ${deltaTimeSeconds}s (${deltaTimeMilliseconds}ms)`);
@@ -57,7 +57,7 @@ export class Application
 
         this.OnUpdate(deltaTimeSeconds);
 
-        this.m_LayerStack.GetLayers().forEach(layer => 
+        this.layerStack.GetLayers().forEach(layer => 
         {
             layer.OnUpdate(deltaTimeSeconds);
         });
@@ -73,9 +73,9 @@ export class Application
         dispatcher.Dispatch(this.OnWindowClosed, Event.EventType.WindowClosedEvent);
         dispatcher.Dispatch(this.OnWindowResized, Event.EventType.WindowResizedEvent);
 
-        for (let i = 0; i < this.m_LayerStack.GetLayers().length; i++) 
+        for (let i = 0; i < this.layerStack.GetLayers().length; i++) 
         {
-            this.m_LayerStack.GetLayers()[i].OnEvent(event);
+            this.layerStack.GetLayers()[i].OnEvent(event);
             if ( event.m_Handled ) { break; }
         }
 
@@ -102,7 +102,7 @@ export class Application
 
     PushLayer(layer) 
     {
-        this.m_LayerStack.PushLayer(layer);
+        this.layerStack.PushLayer(layer);
         layer.OnAttach();
     
         Log.Core_Info(`${layer.GetDebugName()} is attached`);
@@ -110,7 +110,7 @@ export class Application
 
     PushOverlay(overlay) 
     {
-        this.m_LayerStack.PushOverlay(overlay);
+        this.layerStack.PushOverlay(overlay);
         overlay.OnAttach();
 
         Log.Core_Info(`${overlay.GetDebugName()} is attached`);
@@ -118,7 +118,7 @@ export class Application
 
     SetTitle(title) 
     {
-        this.m_Window.SetTitle(title);
+        this.window.SetTitle(title);
     }
 
     static CreateApplication() 

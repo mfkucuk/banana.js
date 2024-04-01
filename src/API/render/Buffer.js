@@ -11,31 +11,31 @@ export class VertexBuffer
 {
     constructor(data) 
     {
-        this.m_BufferId = gl.createBuffer();
+        this.bufferId = gl.createBuffer();
         
         if (!Array.isArray(data)) 
         {
-            this.m_Data = new Float32Array( data );
-            this.m_Usage = gl.DYNAMIC_DRAW;
+            this.data = new Float32Array( data );
+            this.usage = gl.DYNAMIC_DRAW;
         }
         else 
         {
-            this.m_Data = data;
-            this.m_Usage = gl.STATIC_DRAW;
+            this.data = data;
+            this.usage = gl.STATIC_DRAW;
         }
         this.Bind();
         
         // attribute related properties
-        this.m_Offset = 0;
-        this.m_Stride = 0;
-        this.m_Attributes = [];
+        this.offset = 0;
+        this.stride = 0;
+        this.attributes = [];
     }
 
 
     Bind()
     {
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.m_BufferId);
-        gl.bufferData(gl.ARRAY_BUFFER, this.m_Data, this.m_Usage);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferId);
+        gl.bufferData(gl.ARRAY_BUFFER, this.data, this.usage);
     }
 
     Unbind() 
@@ -51,31 +51,31 @@ export class VertexBuffer
     {
         for (let i = 0; i < vertex.length; i++) 
         {
-            this.m_Data[index * vertex.length + i] = vertex[i];
+            this.data[index * vertex.length + i] = vertex[i];
         }
     }
 
     PushAttribute(attribLocation, count, normalized = false) 
     {
-        this.m_Attributes.push(new VertexAttribute(attribLocation, count, normalized));
+        this.attributes.push(new VertexAttribute(attribLocation, count, normalized));
 
-        this.m_Stride += 4 * count;
+        this.stride += 4 * count;
     }
 
     LinkAttributes() 
     {
-        this.m_Attributes.forEach(attribute => 
+        this.attributes.forEach(attribute => 
         {   
             gl.enableVertexAttribArray(attribute.location);
-            gl.vertexAttribPointer(attribute.location, attribute.count, gl.FLOAT, attribute.normalized, this.m_Stride, this.m_Offset);
+            gl.vertexAttribPointer(attribute.location, attribute.count, gl.FLOAT, attribute.normalized, this.stride, this.offset);
 
-            this.m_Offset += 4 * attribute.count;
+            this.offset += 4 * attribute.count;
         });
     }
 
     GetAttributeCount() 
     {
-        return this.m_Attributes.length;
+        return this.attributes.length;
     }
 }
 
@@ -83,16 +83,16 @@ export class IndexBuffer
 {
     constructor(data) 
     {
-        this.m_BufferId = gl.createBuffer();
-        this.m_Data = data;
+        this.bufferId = gl.createBuffer();
+        this.data = data;
         this.Bind();
     }
 
 
     Bind() 
     {
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.m_BufferId);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.m_Data, gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferId);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.data, gl.STATIC_DRAW);
     }
 
     Unbind() 
@@ -102,11 +102,11 @@ export class IndexBuffer
 
     AddIndex(indices) 
     {
-        this.m_Data.push(indices);
+        this.data.push(indices);
     }
 
     GetCount() 
     {
-        return this.m_Data.length;
+        return this.data.length;
     }
 }

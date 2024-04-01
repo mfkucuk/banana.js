@@ -5,18 +5,18 @@ export class Entity
 {
     constructor(entityHandle, scene) 
     {
-        this.m_EntityHandle = entityHandle;
-        this.m_Scene = scene;
+        this.entityHandle = entityHandle;
+        this.scene = scene;
     }
 
     AddComponent(type) 
     {
-        return this.m_Scene.m_Registry.emplace(this.m_EntityHandle, new ComponentCreator[type]());
+        return this.scene.registry.emplace(this.entityHandle, new ComponentCreator[type]());
     }
 
     HasComponent(type) 
     {
-        return this.m_Scene.m_Registry.has(this.m_EntityHandle, type);
+        return this.scene.registry.has(this.entityHandle, type);
     }
 
     GetComponent(type) 
@@ -27,6 +27,6 @@ export class Entity
             return null;
         }
 
-        return this.m_Scene.m_Registry.get(this.m_EntityHandle, type);
+        return this.scene.registry.get(this.entityHandle, type);
     }
 }

@@ -4,12 +4,12 @@ export class ScriptableEntity
 {
     constructor() 
     {
-        this.m_Entity = null;
+        this.entity = null;
     }
 
     GetComponent(componentType) 
     {
-        return this.m_Entity.GetComponent(componentType);
+        return this.entity.GetComponent(componentType);
     }
 
     OnCreate() {}

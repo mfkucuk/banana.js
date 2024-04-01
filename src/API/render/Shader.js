@@ -12,15 +12,15 @@ export class Shader
 {
     constructor(source) 
     {        
-        this.m_ShaderId = initShadersFromFiles(gl, source);        
+        this.shaderId = initShadersFromFiles(gl, source);        
         this.Bind();
 
-        this.m_UniformLookupTable = {};
+        this.uniformLookupTable = {};
     }
 
     Bind() 
     {
-        gl.useProgram(this.m_ShaderId);
+        gl.useProgram(this.shaderId);
     }
 
     Unbind() 
@@ -30,19 +30,19 @@ export class Shader
 
     GetAttributeLocation(attributeName) 
     {
-        return gl.getAttribLocation(this.m_ShaderId, attributeName);
+        return gl.getAttribLocation(this.shaderId, attributeName);
     }
 
     GetUniformLocation(uniformName) 
     {
-        if (typeof this.m_UniformLookupTable[uniformName] != 'undefined') 
+        if (typeof this.uniformLookupTable[uniformName] != 'undefined') 
         {
-            return this.m_UniformLookupTable[uniformName];
+            return this.uniformLookupTable[uniformName];
         }
 
-        let uniformLoc = gl.getUniformLocation(this.m_ShaderId, uniformName);
+        let uniformLoc = gl.getUniformLocation(this.shaderId, uniformName);
 
-        this.m_UniformLookupTable[uniformName] = uniformLoc;
+        this.uniformLookupTable[uniformName] = uniformLoc;
         
         return uniformLoc;
     }

@@ -13,51 +13,51 @@ class Camera
 {
     constructor() 
     {
-        this.m_ProjectionMatrix = weml.Mat4();  
+        this.projectionMatrix = weml.Mat4();  
     
-        this.m_CameraType = CameraType.Orthographic;      
-        this.m_AspectRatio = parseFloat(canvas.width) / parseFloat(canvas.height)
+        this.cameraType = CameraType.Orthographic;      
+        this.aspectRatio = parseFloat(canvas.width) / parseFloat(canvas.height)
     }
 
     SetOrthographic(size, near, far)
     {
-        this.m_CameraType = CameraType.Orthographic;
+        this.cameraType = CameraType.Orthographic;
 
-        this.m_Size = size;
-        this.m_Near = near;
-        this.m_Far = far;
+        this.size = size;
+        this.near = near;
+        this.far = far;
 
         this.SetViewportSize();
     }
 
     SetPerspective(fovy, near, far) 
     {
-        this.m_CameraType = CameraType.Perspective;
+        this.cameraType = CameraType.Perspective;
 
-        this.m_ProjectionMatrix.setPerspective(weml.weml.toRadians(fovy), this.m_AspectRatio, near, far);
-        this.m_Size = fovy;
-        this.m_Near = near;
-        this.m_Far = far;
+        this.projectionMatrix.setPerspective(weml.weml.toRadians(fovy), this.aspectRatio, near, far);
+        this.size = fovy;
+        this.near = near;
+        this.far = far;
     }
 
     GetViewProjectionMatrix() 
     {
-        return this.m_ProjectionMatrix;
+        return this.projectionMatrix;
     }
 
     GetCameraType() 
     {
-        return this.m_CameraType;
+        return this.cameraType;
     }
 
     SetViewportSize() 
     {
-        let orthoLeft = -this.m_Size * this.m_AspectRatio * 0.5;
-        let orthoRight = this.m_Size * this.m_AspectRatio * 0.5;
-        let orthoBottom = this.m_Size * 0.5;
-        let orthoTop = -this.m_Size * 0.5;
+        let orthoLeft = -this.size * this.aspectRatio * 0.5;
+        let orthoRight = this.size * this.aspectRatio * 0.5;
+        let orthoBottom = this.size * 0.5;
+        let orthoTop = -this.size * 0.5;
 
-        this.m_ProjectionMatrix.setOrtho(orthoLeft, orthoRight, orthoBottom, orthoTop, this.m_Near, this.m_Far);
+        this.projectionMatrix.setOrtho(orthoLeft, orthoRight, orthoBottom, orthoTop, this.near, this.far);
     }
 }
 
@@ -81,7 +81,7 @@ export class SceneCamera extends Camera
 
     OnWindowResized(event) 
     {
-        this.m_AspectRatio = parseFloat(canvas.width) / parseFloat(canvas.height)
+        this.aspectRatio = parseFloat(canvas.width) / parseFloat(canvas.height)
         this.SetViewportSize();
 
         return true;
@@ -94,11 +94,11 @@ export class EditorCamera extends Camera
     {
         super();
 
-        this.m_ViewMatrix = weml.Mat4();
-        this.m_ViewProjectionMatrix = weml.Mat4();
+        this.viewMatrix = weml.Mat4();
+        this.viewProjectionMatrix = weml.Mat4();
         
-        this.m_CameraPosition = weml.Vec3(0, 0, 0);
-        this.m_CameraRotation = 0;
+        this.cameraPosition = weml.Vec3(0, 0, 0);
+        this.cameraRotation = 0;
 
         this.SetView();
         this.SetOrthographic(446, -1, 1);
@@ -107,35 +107,35 @@ export class EditorCamera extends Camera
 
     SetView() 
     {
-        this.m_ViewMatrix.setTranslationVec3(this.m_CameraPosition);
+        this.viewMatrix.setTranslationVec3(this.cameraPosition);
 
-        this.m_ViewMatrix.applyRotationZ(this.m_CameraRotation);
+        this.viewMatrix.applyRotationZ(this.cameraRotation);
 
-        this.m_ViewMatrix.invert();
+        this.viewMatrix.invert();
     }
 
     GetViewProjectionMatrix() 
     {
-        return this.m_ViewProjectionMatrix;
+        return this.viewProjectionMatrix;
     }
 
     RecalculateViewProjectionMatrix() 
     {
-        this.m_ViewProjectionMatrix = weml.Mat4();
-        this.m_ViewProjectionMatrix.mul(this.m_ProjectionMatrix);
-        this.m_ViewProjectionMatrix.mul(this.m_ViewMatrix);
+        this.viewProjectionMatrix = weml.Mat4();
+        this.viewProjectionMatrix.mul(this.projectionMatrix);
+        this.viewProjectionMatrix.mul(this.viewMatrix);
     }
 
     GetPosition() 
     {
-        return weml.Vec3(this.m_CameraPosition[0], this.m_CameraPosition[1], this.m_CameraPosition[2]);
+        return weml.Vec3(this.cameraPosition[0], this.cameraPosition[1], this.cameraPosition[2]);
     }
 
     SetPosition(x, y, z) 
     {
-        this.m_CameraPosition[0] = x;
-        this.m_CameraPosition[1] = y;
-        this.m_CameraPosition[2] = z;
+        this.cameraPosition[0] = x;
+        this.cameraPosition[1] = y;
+        this.cameraPosition[2] = z;
 
         this.SetView();
         this.RecalculateViewProjectionMatrix();
@@ -143,12 +143,12 @@ export class EditorCamera extends Camera
 
     GetRotation() 
     {
-        return this.m_CameraRotation;
+        return this.cameraRotation;
     }
 
     SetRotation(angle) 
     {
-        this.m_CameraRotation = angle;
+        this.cameraRotation = angle;
 
         this.SetView();
         this.RecalculateViewProjectionMatrix();

@@ -10,7 +10,7 @@ export class Gamepad
         {
             Gamepad.Instance = this;
 
-            this.m_IsGamepadConnected = false;
+            this.isGamepadConnected = false;
             this.OnGamepadConnected = this.OnGamepadConnected.bind(this);
             this.OnGamepadDisconnected = this.OnGamepadDisconnected.bind(this);
         }
@@ -28,25 +28,25 @@ export class Gamepad
 
     OnGamepadConnected(event) 
     {
-        this.m_CurrentGamepad = event.GetGamepad(); 
+        this.currentGamepad = event.GetGamepad(); 
 
-        this.m_IsGamepadConnected = true;
+        this.isGamepadConnected = true;
     }
     
     OnGamepadDisconnected(event) 
     {
-        this.m_CurrentGamepad = undefined;
+        this.currentGamepad = undefined;
 
-        this.m_IsGamepadConnected = false;
+        this.isGamepadConnected = false;
     }
 
     CurrentGamepad() 
     {
-        return navigator.getGamepads()[this.m_CurrentGamepad.index];
+        return navigator.getGamepads()[this.currentGamepad.index];
     }
 
     IsGamepadConnected() 
     {
-        return this.m_IsGamepadConnected;
+        return this.isGamepadConnected;
     }
 }

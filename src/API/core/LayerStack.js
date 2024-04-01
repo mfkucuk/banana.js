@@ -4,24 +4,24 @@ export class LayerStack
 {
     constructor() 
     {
-        this.m_Layers = [];
-        this.m_LastLayerIndex = 0;
+        this.layers = [];
+        this.lastLayerIndex = 0;
     }
 
     PushLayer(layer) 
     {
-        this.m_Layers.splice(this.m_LastLayerIndex, 0, layer);
-        this.m_LastLayerIndex++;
+        this.layers.splice(this.lastLayerIndex, 0, layer);
+        this.lastLayerIndex++;
     }
 
     PushOverlay(overlay)
     {
-        this.m_Layers.push(overlay);
+        this.layers.push(overlay);
     }
 
     PopLayer(layer) 
     {
-        let index = this.m_Layers.indexOf(layer);
+        let index = this.layers.indexOf(layer);
 
         if (index == -1) 
         {
@@ -29,13 +29,13 @@ export class LayerStack
             return;
         }
 
-        this.m_Layers.splice(index, 1);
-        this.m_LastLayerIndex--;
+        this.layers.splice(index, 1);
+        this.lastLayerIndex--;
     }
 
     PopOverlay(overlay) 
     {
-        let index = this.m_Layers.indexOf(overlay);
+        let index = this.layers.indexOf(overlay);
 
         if (index == -1) 
         {
@@ -43,11 +43,11 @@ export class LayerStack
             return;
         }
 
-        this.m_Layers.splice(index, 1);
+        this.layers.splice(index, 1);
     }
 
     GetLayers() 
     {
-        return this.m_Layers;
+        return this.layers;
     }
 }

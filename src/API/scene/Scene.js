@@ -9,12 +9,12 @@ export class Scene
 {
     constructor() 
     {
-        this.m_Registry = ntt.create_registry();
+        this.registry = ntt.create_registry();
     }
 
     CreateEntity(name) 
     {
-        const entity = new Entity(this.m_Registry.create(), this);
+        const entity = new Entity(this.registry.create(), this);
         
         entity.AddComponent(ComponentType.TransformComponent);
         const tag = entity.AddComponent(ComponentType.TagComponent);
@@ -30,23 +30,23 @@ export class Scene
     // entity is the entity object not the entity id.
     DestroyEntity(entity) 
     {
-        if (!this.m_Registry.valid(entity.m_EntityHandle)) 
+        if (!this.registry.valid(entity.m_EntityHandle)) 
         {
             Log.Core_Error('Cannot destroy a non-existing entity!');
             return false;
         }
 
-        this.m_Registry.release(entity.m_EntityHandle);
+        this.registry.release(entity.m_EntityHandle);
         return true;
     }
 
     RenderScene() 
     {
-        const entities = this.m_Registry.group(ComponentType.TransformComponent, ComponentType.SpriteRendererComponent);
+        const entities = this.registry.group(ComponentType.TransformComponent, ComponentType.SpriteRendererComponent);
 
         entities.forEach(entity => {
-            const transform = this.m_Registry.get(entity, ComponentType.TransformComponent);
-            const sprite = this.m_Registry.get(entity, ComponentType.SpriteRendererComponent);
+            const transform = this.registry.get(entity, ComponentType.TransformComponent);
+            const sprite = this.registry.get(entity, ComponentType.SpriteRendererComponent);
 
             Renderer2D.DrawColorQuad(transform, sprite.GetColor());
         });
@@ -56,7 +56,7 @@ export class Scene
     {
         {
             // scriptable entities
-            const nativeScripts = this.m_Registry.get_all_with_entity(ComponentType.NativeScriptComponent);
+            const nativeScripts = this.registry.get_all_with_entity(ComponentType.NativeScriptComponent);
             
             for (const [entity, ns] of Object.entries(nativeScripts))
             {
@@ -75,10 +75,10 @@ export class Scene
         let mainCamera = null;
         let mainCameraTransform = null;
 
-        const cameraEntities = this.m_Registry.group(ComponentType.TransformComponent, ComponentType.CameraComponent);
+        const cameraEntities = this.registry.group(ComponentType.TransformComponent, ComponentType.CameraComponent);
         cameraEntities.forEach(cameraEntity => {
-            const transform = this.m_Registry.get(cameraEntity, ComponentType.TransformComponent)
-            const camera = this.m_Registry.get(cameraEntity, ComponentType.CameraComponent);
+            const transform = this.registry.get(cameraEntity, ComponentType.TransformComponent)
+            const camera = this.registry.get(cameraEntity, ComponentType.CameraComponent);
 
             if (camera.IsPrimary()) 
             {
@@ -116,7 +116,7 @@ export class Scene
 
     OnEvent(event) 
     {
-        const cameraComponents = this.m_Registry.get_all(ComponentType.CameraComponent);
+        const cameraComponents = this.registry.get_all(ComponentType.CameraComponent);
 
         cameraComponents.forEach(cc => {
             cc.GetCamera().OnEvent(event);

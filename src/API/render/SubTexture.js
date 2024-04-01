@@ -7,57 +7,57 @@ export class SubTexture
 {
     constructor(spriteSheet, coords, cellSize, spriteSize = weml.Vec2(1, 1)) 
     {
-        this.m_SpriteSheet = spriteSheet;
-        this.m_SpriteSheetCoords = coords;
-        this.m_CellSize = cellSize;
-        this.m_SpriteSize = spriteSize;
+        this.spriteSheet = spriteSheet;
+        this.spriteSheetCoords = coords;
+        this.cellSize = cellSize;
+        this.spriteSize = spriteSize;
 
         this.OnTextureLoad = this.OnTextureLoad.bind(this);
 
-        if (this.m_SpriteSheet.IsLoaded()) 
+        if (this.spriteSheet.IsLoaded()) 
         {
             this.OnTextureLoad();
             return;
         }
 
-        this.m_SpriteSheet.GetImage().addEventListener('load', this.OnTextureLoad);
+        this.spriteSheet.GetImage().addEventListener('load', this.OnTextureLoad);
     }
 
     OnTextureLoad() 
     {
-        const min = weml.Vec2((this.m_SpriteSheetCoords[0] * this.m_CellSize[0]) / this.m_SpriteSheet.GetWidth(),
-                              (this.m_SpriteSheetCoords[1] * this.m_CellSize[1]) / this.m_SpriteSheet.GetHeight());
+        const min = weml.Vec2((this.spriteSheetCoords[0] * this.cellSize[0]) / this.spriteSheet.GetWidth(),
+                              (this.spriteSheetCoords[1] * this.cellSize[1]) / this.spriteSheet.GetHeight());
     
-        const max = weml.Vec2(((this.m_SpriteSheetCoords[0] + this.m_SpriteSize[0]) * this.m_CellSize[0]) / this.m_SpriteSheet.GetWidth(),
-                              ((this.m_SpriteSheetCoords[1] + this.m_SpriteSize[1]) * this.m_CellSize[1]) / this.m_SpriteSheet.GetHeight());
+        const max = weml.Vec2(((this.spriteSheetCoords[0] + this.spriteSize[0]) * this.cellSize[0]) / this.spriteSheet.GetWidth(),
+                              ((this.spriteSheetCoords[1] + this.spriteSize[1]) * this.cellSize[1]) / this.spriteSheet.GetHeight());
 
-        this.m_TexCoords = [
+        this.texCoords = [
             weml.Vec2(min[0], min[1]),
             weml.Vec2(max[0], min[1]),
             weml.Vec2(min[0], max[1]),
             weml.Vec2(max[0], max[1])
         ];
 
-        this.m_SpriteSheet.m_Image.removeEventListener('load', this.OnTextureLoad);
+        this.spriteSheet.m_Image.removeEventListener('load', this.OnTextureLoad);
     }
 
     GetTexCoords() 
     {
-        if (typeof this.m_TexCoords == 'undefined') 
+        if (typeof this.texCoords == 'undefined') 
         {
             return defaultTexCoords;
         }
 
-        return this.m_TexCoords;
+        return this.texCoords;
     }
 
     GetTexture() 
     {
-        if (typeof this.m_SpriteSheet == 'undefined') 
+        if (typeof this.spriteSheet == 'undefined') 
         {
             return Renderer2D.Black_Texture;
         }
 
-        return this.m_SpriteSheet;
+        return this.spriteSheet;
     }
 }

@@ -14,24 +14,24 @@ export class Framebuffer
 {
     constructor(spec) 
     {
-        this.m_Spec = spec;
+        this.spec = spec;
 
         this.Invalidate();
     }
 
     Invalidate() 
     {
-        this.m_FramebufferId = gl.createFramebuffer();
+        this.framebufferId = gl.createFramebuffer();
 
         this.Bind();
         
-        this.m_ColorAttachment = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, this.m_ColorAttachment);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.m_Spec.Width, this.m_Spec.Height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        this.colorAttachment = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, this.colorAttachment);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.spec.Width, this.spec.Height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.m_ColorAttachment, 0);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.colorAttachment, 0);
 
         if (!gl.checkFramebufferStatus(gl.FRAMEBUFFER) == gl.FRAMEBUFFER_COMPLETE) 
         {
@@ -43,7 +43,7 @@ export class Framebuffer
 
     Bind() 
     {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.m_FramebufferId);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebufferId);
     }
 
     Unbind() 
@@ -53,6 +53,6 @@ export class Framebuffer
 
     GetColorAttachmentId() 
     {
-        return this.m_ColorAttachment;
+        return this.colorAttachment;
     }
 }

@@ -2,7 +2,7 @@ export class Layer
 {
     constructor(name = 'Layer') 
     {
-        this.m_DebugName = name;
+        this.debugName = name;
     }
 
     OnAttach() {}
@@ -13,6 +13,6 @@ export class Layer
 
     GetDebugName() 
     {
-        return this.m_DebugName;
+        return this.debugName;
     }
 }

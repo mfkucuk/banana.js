@@ -4,43 +4,43 @@ import { Log } from './Log.js'
 
 export class Input 
 {
-    static GamepadWarningFlag = true;
+    static gamepadWarningFlag = true;
 
     static IsKeyPressed(key) 
     {
-        if (typeof Input.s_KeyStates[key] == 'undefined') 
+        if (typeof Input.keyStates[key] == 'undefined') 
         {
-            Input.s_KeyStates[key] = false;
+            Input.keyStates[key] = false;
         }
 
-        return Input.s_KeyStates[key];
+        return Input.keyStates[key];
     }
 
     static IsMouseButtonPressed(button) 
     {
         let key = `${button}`;
         
-        if (typeof Input.s_ButtonStates[key] == 'undefined') 
+        if (typeof Input.buttonStates[key] == 'undefined') 
         {
-            Input.s_ButtonStates[key] = false;
+            Input.buttonStates[key] = false;
         }
 
-        return Input.s_ButtonStates[key];
+        return Input.buttonStates[key];
     }
 
     static IsGamepadButtonPressed(button) 
     {
         if (!Gamepad.Instance.IsGamepadConnected()) 
         {
-            if (this.GamepadWarningFlag) 
+            if (this.gamepadWarningFlag) 
             {
                 Log.Warn('No gamepad is connected!');
-                this.GamepadWarningFlag = false;
+                this.gamepadWarningFlag = false;
             }
             return false;
         } 
         
-        this.GamepadWarningFlag = true;
+        this.gamepadWarningFlag = true;
         return Gamepad.Instance.CurrentGamepad().buttons[button].pressed;
     }
 
@@ -48,20 +48,20 @@ export class Input
     {
         if (!Gamepad.Instance.IsGamepadConnected()) 
         {
-            if (this.GamepadWarningFlag) 
+            if (this.gamepadWarningFlag) 
             {
                 Log.Warn('No gamepad is connected!');
-                this.GamepadWarningFlag = false;
+                this.gamepadWarningFlag = false;
             }
             return false;
         } 
 
-        this.GamepadWarningFlag = true;
+        this.gamepadWarningFlag = true;
         return Gamepad.Instance.CurrentGamepad().axes[axis].value;
     }
 
     static mousePosition = weml.Vec2(0, 0);
 
-    static s_KeyStates = {};
-    static s_ButtonStates = {};
+    static keyStates = {};
+    static buttonStates = {};
 }

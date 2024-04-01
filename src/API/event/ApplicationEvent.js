@@ -13,8 +13,8 @@ export class WindowResizedEvent extends ApplicationEvent
     constructor(width, height) 
     {
         super();
-        this.m_Width = width;
-        this.m_Height = height;
+        this.width = width;
+        this.height = height;
     }
 
     GetEventType() 
@@ -29,17 +29,17 @@ export class WindowResizedEvent extends ApplicationEvent
 
     GetWidth() 
     {
-        return this.m_Width;
+        return this.width;
     }
 
     GetHeight() 
     {
-        return this.m_Height;
+        return this.height;
     }
 
     toString() 
     {
-        return `${this.GetEventName()}: [${this.m_Width}, ${this.m_Height}]`
+        return `${this.GetEventName()}: [${this.width}, ${this.height}]`
     }
 }
 

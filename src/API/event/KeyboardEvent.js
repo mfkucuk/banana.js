@@ -5,7 +5,7 @@ class KeyboardEvent extends Event
     constructor(key) 
     {
         super();
-        this.m_Key = key;
+        this.key = key;
     }
 
     GetCategoryFlags()
@@ -15,7 +15,7 @@ class KeyboardEvent extends Event
 
     GetKey() 
     {
-        return this.m_Key;
+        return this.key;
     }
 
     toString() 

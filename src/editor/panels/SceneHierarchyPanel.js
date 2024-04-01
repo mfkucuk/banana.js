@@ -11,7 +11,7 @@ class SceneHierarchyPanel extends React.Component {
 
         const names = [];
 
-        const entities = SceneHierarchyPanel.scene.m_Registry.get_all_with_entity(banana.ComponentType.TagComponent);
+        const entities = SceneHierarchyPanel.scene.registry.get_all_with_entity(banana.ComponentType.TagComponent);
 
         for (const [id, tag] of Object.entries(entities)) {
             names.push(<TreeItem key={id} name={tag.GetName()}/>);
@@ -40,10 +40,10 @@ function Inspector() {
 
     components.push(<h1 key={'Inspector'}>Inspector</h1>);
 
-    const tag = SceneHierarchyPanel.scene.m_Registry.get(SceneHierarchyPanel.selectedEntity, banana.ComponentType.TagComponent);
+    const tag = SceneHierarchyPanel.scene.registry.get(SceneHierarchyPanel.selectedEntity, banana.ComponentType.TagComponent);
 
-    if (SceneHierarchyPanel.scene.m_Registry.has(SceneHierarchyPanel.selectedEntity, banana.ComponentType.SpriteRendererComponent)) {
-        const spriteRenderer = SceneHierarchyPanel.scene.m_Registry.get(SceneHierarchyPanel.selectedEntity, banana.ComponentType.SpriteRendererComponent)
+    if (SceneHierarchyPanel.scene.registry.has(SceneHierarchyPanel.selectedEntity, banana.ComponentType.SpriteRendererComponent)) {
+        const spriteRenderer = SceneHierarchyPanel.scene.registry.get(SceneHierarchyPanel.selectedEntity, banana.ComponentType.SpriteRendererComponent)
     }
 
     components.push(<p key={tag.GetName()}>Tag Component: {tag.GetName()}</p>);

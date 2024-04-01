@@ -15,17 +15,17 @@ export class EditorCameraController
         this.OnMouseScrolled = this.OnMouseScrolled.bind(this);
         this.OnWindowResized = this.OnWindowResized.bind(this);
 
-        this.m_CameraPanSpeed = 60;
-        this.m_CameraAngle = 0;
-        this.m_ZoomLevel = 1.0
-        this.m_PreviousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
+        this.cameraPanSpeed = 60;
+        this.cameraAngle = 0;
+        this.zoomLevel = 1.0
+        this.previousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
 
-        this.m_EditorCamera = new EditorCamera();
+        this.editorCamera = new EditorCamera();
     }
 
     GetCamera() 
     {
-        return this.m_EditorCamera;
+        return this.editorCamera;
     }
 
     Update(deltaTime) 
@@ -33,23 +33,23 @@ export class EditorCameraController
         if (Input.IsMouseButtonPressed(MouseButton.MOUSE_MIDDLE)) 
         {
             let direction = weml.Vec2();
-            direction[0] = (this.m_PreviousMousePosition[0] - Input.mousePosition[0]) * this.m_ZoomLevel;
-            direction[1] = (this.m_PreviousMousePosition[1] - Input.mousePosition[1]) * this.m_ZoomLevel;
+            direction[0] = (this.previousMousePosition[0] - Input.mousePosition[0]) * this.zoomLevel / 1.5;
+            direction[1] = (this.previousMousePosition[1] - Input.mousePosition[1]) * this.zoomLevel / 1.5;
 
-            this.m_EditorCamera.SetPosition(this.m_EditorCamera.GetPosition()[0] + direction[0], this.m_EditorCamera.GetPosition()[1] + direction[1], 0.0);
+            this.editorCamera.SetPosition(this.editorCamera.GetPosition()[0] + direction[0], this.editorCamera.GetPosition()[1] + direction[1], 0.0);
             
-            this.m_PreviousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
+            this.previousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
         }
 
         if (Input.IsKeyPressed(KeyCode.Q) || Input.IsGamepadButtonPressed(GamepadButtonCode.Dpad_Down)) 
         {
-            this.m_CameraAngle--;
-            this.m_EditorCamera.SetRotation(this.m_CameraAngle);
+            this.cameraAngle--;
+            this.editorCamera.SetRotation(this.cameraAngle);
         }
         if (Input.IsKeyPressed(KeyCode.E)) 
         {
-            this.m_CameraAngle++;
-            this.m_EditorCamera.SetRotation(this.m_CameraAngle);
+            this.cameraAngle++;
+            this.editorCamera.SetRotation(this.cameraAngle);
         }
     }
 
@@ -66,40 +66,40 @@ export class EditorCameraController
     {
         if (event.GetOffsetY() > 0) // zoom out
         {
-            this.m_ZoomLevel += 0.25;
-            this.m_ZoomLevel = Math.min(2.0, this.m_ZoomLevel);
-            this.m_EditorCamera.SetOrthographic(
-                446 * this.m_ZoomLevel,
-                this.m_EditorCamera.m_Near,
-                this.m_EditorCamera.m_Far);
+            this.zoomLevel += 0.25;
+            this.zoomLevel = Math.min(2.0, this.zoomLevel);
+            this.editorCamera.SetOrthographic(
+                446 * this.zoomLevel,
+                this.editorCamera.near,
+                this.editorCamera.far);
         }
         else if (event.GetOffsetY() < 0) // zoom in 
         {
-            this.m_ZoomLevel -= 0.25;
-            this.m_ZoomLevel = Math.max(0.25, this.m_ZoomLevel);
-            this.m_EditorCamera.SetOrthographic(
-                446 * this.m_ZoomLevel,
-                this.m_EditorCamera.m_Near,
-                this.m_EditorCamera.m_Far);
+            this.zoomLevel -= 0.25;
+            this.zoomLevel = Math.max(0.25, this.zoomLevel);
+            this.editorCamera.SetOrthographic(
+                446 * this.zoomLevel,
+                this.editorCamera.near,
+                this.editorCamera.far);
         }
 
-        this.m_EditorCamera.RecalculateViewProjectionMatrix();
+        this.editorCamera.RecalculateViewProjectionMatrix();
 
         return true;
     }
 
     OnMouseButtonClicked(event) 
     {
-        this.m_PreviousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
+        this.previousMousePosition = weml.Vec2(Input.mousePosition[0], Input.mousePosition[1]);
 
         return true;
     }
 
     OnWindowResized(event) 
     {
-        this.m_EditorCamera.m_AspectRatio = parseFloat(event.GetWidth()) / parseFloat(event.GetHeight());
-        this.m_EditorCamera.SetViewportSize();
-        this.m_EditorCamera.RecalculateViewProjectionMatrix();
+        this.editorCamera.m_AspectRatio = parseFloat(event.GetWidth()) / parseFloat(event.GetHeight());
+        this.editorCamera.SetViewportSize();
+        this.editorCamera.RecalculateViewProjectionMatrix();
 
         return true;
     }
