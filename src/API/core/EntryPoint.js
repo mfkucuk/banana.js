@@ -11,8 +11,6 @@ export function main()
     let bananaApp = Application.CreateApplication(); 
     //Profiler.EndProfile();
 
-    console.log(bananaApp);
-
     Log.Info('Game started');
 
     Profiler.BeginProfile('Application Runtime', 'Runtime.json');

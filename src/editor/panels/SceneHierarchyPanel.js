@@ -1,10 +1,11 @@
-class SceneHierarchyPanel {
+import React from "react";
+import * as banana from "../../API/banana";
 
+class SceneHierarchyPanel extends React.Component {
 
-    static Render() {
-
+    render() {
         return (
-            <h1>TEST123</h1>
+            <div>YOYOYOYOYOYOYOYOYOYOYOYOYOYOYOY</div>
         );
     }
 }

@@ -2,7 +2,7 @@ import * as banana from '../API/banana.js'
 
 //import { MenubarPanel } from './panels/MenubarPanel.js'
 //import { ViewportPanel } from './panels/ViewportPanel.js';
-//import { SceneHierarchyPanel } from './panels/SceneHierarchyPanel.js'
+import SceneHierarchyPanel from './panels/SceneHierarchyPanel'
 //import { ConsolePanel } from './panels/ConsolePanel.js';
 
 export class EditorLayer extends banana.Layer 
@@ -27,7 +27,7 @@ export class EditorLayer extends banana.Layer
 
         //this.m_MenubarPanel = new MenubarPanel();
         //this.m_ViewportPanel = new ViewportPanel();
-        //this.m_SceneHierarchyPanel = new SceneHierarchyPanel(this.m_ActiveScene);
+        this.m_SceneHierarchyPanel = new SceneHierarchyPanel(this.m_ActiveScene);
         //this.m_ConsolePanel = new ConsolePanel();
     }
 
