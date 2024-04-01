@@ -27,7 +27,7 @@ export class EditorLayer extends banana.Layer
 
         //this.m_MenubarPanel = new MenubarPanel();
         //this.m_ViewportPanel = new ViewportPanel();
-        this.m_SceneHierarchyPanel = new SceneHierarchyPanel(this.m_ActiveScene);
+        SceneHierarchyPanel.SetScene(this.m_ActiveScene);
         //this.m_ConsolePanel = new ConsolePanel();
     }
 

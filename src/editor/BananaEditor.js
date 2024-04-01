@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as banana from "../API/banana";
 import { EditorLayer } from "./EditorLayer";
 import SceneHierarchyPanel from "./panels/SceneHierarchyPanel";
@@ -30,21 +30,22 @@ banana.Application.CreateApplication = function()
     return new BananaEditor();
 }
 
+
 function Editor() {
-
-    const [isRenderable, setIsRenderable] = useState(false);
-
+    const [bananaMainComplete, setBananaMainComplete] = useState(false);
+    
     useEffect(() => {
         banana.main();
-    }, []);
+        setBananaMainComplete(true);
+    })
 
     return (
         <div>
             <canvas id="gl-canvas" width={600} height={600} tabIndex={1}></canvas>
-            <SceneHierarchyPanel/> 
+            {bananaMainComplete && <SceneHierarchyPanel />}
         </div>
     );
-
 }
+
 
 export default Editor
