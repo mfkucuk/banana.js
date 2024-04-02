@@ -3,28 +3,24 @@ import { Renderer2D } from './Renderer2D.js'
 
 const defaultTexCoords = [weml.Vec2(0, 0), weml.Vec2(1, 0), weml.Vec2(0, 1), weml.Vec2(1, 1)];
 
-export class SubTexture 
-{
-    constructor(spriteSheet, coords, cellSize, spriteSize = weml.Vec2(1, 1)) 
-    {
+export class SubTexture {
+    constructor(spriteSheet, coords, cellSize, spriteSize = weml.Vec2(1, 1)) {
         this.spriteSheet = spriteSheet;
         this.spriteSheetCoords = coords;
         this.cellSize = cellSize;
         this.spriteSize = spriteSize;
 
-        this.OnTextureLoad = this.OnTextureLoad.bind(this);
+        this.OnTextureLoad = this.onTextureLoad.bind(this);
 
-        if (this.spriteSheet.IsLoaded()) 
-        {
-            this.OnTextureLoad();
+        if (this.spriteSheet.isLoaded()) {
+            this.onTextureLoad();
             return;
         }
 
-        this.spriteSheet.GetImage().addEventListener('load', this.OnTextureLoad);
+        this.spriteSheet.getImage().addEventListener('load', this.onTextureLoad);
     }
 
-    OnTextureLoad() 
-    {
+    onTextureLoad() {
         const min = weml.Vec2((this.spriteSheetCoords[0] * this.cellSize[0]) / this.spriteSheet.GetWidth(),
                               (this.spriteSheetCoords[1] * this.cellSize[1]) / this.spriteSheet.GetHeight());
     
@@ -38,23 +34,19 @@ export class SubTexture
             weml.Vec2(max[0], max[1])
         ];
 
-        this.spriteSheet.m_Image.removeEventListener('load', this.OnTextureLoad);
+        this.spriteSheet.image.removeEventListener('load', this.OnTextureLoad);
     }
 
-    GetTexCoords() 
-    {
-        if (typeof this.texCoords == 'undefined') 
-        {
+    getTexCoords() {
+        if (typeof this.texCoords == 'undefined') {
             return defaultTexCoords;
         }
 
         return this.texCoords;
     }
 
-    GetTexture() 
-    {
-        if (typeof this.spriteSheet == 'undefined') 
-        {
+    GetTexture() {
+        if (typeof this.spriteSheet == 'undefined') {
             return Renderer2D.Black_Texture;
         }
 

@@ -1,7 +1,5 @@
-export class Writer 
-{
-    static SaveArrayAsJson(data, filename) 
-    {
+export class Writer {
+    static saveArrayAsJson(data, filename) {
         // Convert the array to a JSON string
         const jsonData = JSON.stringify(data, null, 2); // The second argument (null) is for replacer function, and the third (2) is for indentation
     
@@ -23,8 +21,7 @@ export class Writer
         URL.revokeObjectURL(blobUrl);
     }
 
-    static SaveStringAsJson(data, filename) 
-    {
+    static saveStringAsJson(data, filename) {
         // Create a Blob with the JSON data
         const blob = new Blob([data], { type: 'application/json' });
     
@@ -44,10 +41,8 @@ export class Writer
     }
 }
 
-export class Reader 
-{
-    static LoadDataFromJson(file) 
-    {
+export class Reader {
+    static loadDataFromJson(file) {
         const reader = new FileReader();
 
         reader.readAsText(file);
@@ -55,7 +50,7 @@ export class Reader
         reader.onload = (e) => {
             const fileContents = e.target.result;
 
-            return JSON.parse(fileContents);
+            return JSON.parse(fileContents.toString());
         }
     }
 }

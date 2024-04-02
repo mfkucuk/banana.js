@@ -14,19 +14,19 @@ class BananaEditor extends banana.Application
             //ContextMenuPanel.Close();
         });
 
-        this.PushLayer(new EditorLayer());
+        this.pushLayer(new EditorLayer());
     }
 
-    OnWindowResized(event) 
+    onWindowResized(event) 
     {
-        banana.canvas.width = event.GetWidth() * (0.7);
-        banana.canvas.height = event.GetHeight() * (0.7);
-        banana.RenderCommand.SetViewport(banana.canvas.width, banana.canvas.height);
+        banana.canvas.width = event.getWidth() * (0.7);
+        banana.canvas.height = event.getHeight() * (0.7);
+        banana.RenderCommand.setViewport(banana.canvas.width, banana.canvas.height);
         return true;
     }
 }
 
-banana.Application.CreateApplication = function() 
+banana.Application.createApplication = function() 
 {
     return new BananaEditor();
 }
@@ -43,7 +43,7 @@ function Editor() {
     return (
         <div>
             <canvas id="gl-canvas" width={600} height={600} tabIndex={1}></canvas>
-            {bananaMainComplete && <SceneHierarchyPanel />}
+            { bananaMainComplete && <SceneHierarchyPanel /> }
         </div>
     );
 }

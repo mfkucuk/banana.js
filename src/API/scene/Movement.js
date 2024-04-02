@@ -1,9 +1,8 @@
 import { Input, KeyCode, Log } from "../banana.js"
 import { ScriptableEntity } from "./ScriptableEntity.js"
 
-export class Movement extends ScriptableEntity 
-{    
-    OnCreate() 
+export class Movement extends ScriptableEntity {    
+    onCreate() 
     {
         Log.Info('I AM ALIVE');
 

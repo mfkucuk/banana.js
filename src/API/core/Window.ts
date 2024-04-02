@@ -1,17 +1,21 @@
-import { WebGLContext } from '../render/WebGLContext.js' 
-import { Log } from './Log.js'
-import { Input } from './Input.js'
-import * as mouse from '../event/MouseEvent.js'
-import * as keyboard from '../event/KeyboardEvent.js'
-import * as application from '../event/ApplicationEvent.js'
-import * as gamepad from '../event/GamepadEvent.js'
+import { WebGLContext } from '../render/WebGLContext.ts' 
+import { Log } from './Log.ts'
+import { Input } from './Input.ts'
+import * as mouse from '../event/MouseEvent.ts'
+import * as keyboard from '../event/KeyboardEvent.ts'
+import * as application from '../event/ApplicationEvent.ts'
+import * as gamepad from '../event/GamepadEvent.ts'
 
 export let canvas;
 
-export class Window 
-{
-    constructor(title, width, height) 
-    {
+export class Window {
+    title: string;
+    width: number;
+    height: number;
+    eventCallbackFn: Function;
+    context: WebGLContext;
+
+    constructor(title, width, height) {
         this.title = title;
         this.width = width;
         this.height = height;
@@ -32,7 +36,7 @@ export class Window
         });
 
         Log.Core_Info(`Creating window ${this.title}, ${this.width}x${this.height}`);
-        this.SetTitle(this.title);
+        this.setTitle(this.title);
 
         this.context = new WebGLContext(canvas);
 
@@ -65,8 +69,8 @@ export class Window
 
         canvas.addEventListener('mousemove', (event) => {
 
-            Input.mousePosition[0] = event.x;
-            Input.mousePosition[1] = event.y;
+            Input.mousePosition.x = event.x;
+            Input.mousePosition.y = event.y;
         })
 
         canvas.addEventListener('wheel', (event) => 
@@ -127,35 +131,29 @@ export class Window
         });
     }
 
-    GetWidth() 
-    {
+    getWidth() {
         return this.width;
     }
 
-    GetHeight() 
-    {
+    getHeight() {
         return this.height;
     }
 
-    SetEventCallback(callbackFn) 
-    {
+    setEventCallback(callbackFn) {
         this.eventCallbackFn = callbackFn;
     }
 
-    SetTitle(titleText) 
-    {
+    setTitle(titleText) {
         const title = document.getElementById('title');
 
-        if (!title) 
-        {
+        if (!title) {
             return;
         }
 
         title.innerText = titleText;
     }
 
-    Resize(width, height) 
-    {
+    resize(width, height) {
         this.width = width;
         this.height = height;
         

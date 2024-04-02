@@ -2,8 +2,7 @@
 //  initShaders.js
 //
 
-export function initShadersFromHTML( gl, vertexShaderId, fragmentShaderId )
-{
+export function initShadersFromHTML( gl, vertexShaderId, fragmentShaderId ) {
     var vertShdr;
     var fragShdr;
 
@@ -14,7 +13,7 @@ export function initShadersFromHTML( gl, vertexShaderId, fragmentShaderId )
     }
     else {
         vertShdr = gl.createShader( gl.VERTEX_SHADER );
-        gl.shaderSource( vertShdr, vertElem.text );
+        gl.shaderSource( vertShdr, vertElem.textContent );
         gl.compileShader( vertShdr );
         if ( !gl.getShaderParameter(vertShdr, gl.COMPILE_STATUS) ) {
             var msg = "Vertex shader failed to compile.  The error log is:"
@@ -31,7 +30,7 @@ export function initShadersFromHTML( gl, vertexShaderId, fragmentShaderId )
     }
     else {
         fragShdr = gl.createShader( gl.FRAGMENT_SHADER );
-        gl.shaderSource( fragShdr, fragElem.text );
+        gl.shaderSource( fragShdr, fragElem.textContent );
         gl.compileShader( fragShdr );
         if ( !gl.getShaderParameter(fragShdr, gl.COMPILE_STATUS) ) {
             var msg = "Fragment shader failed to compile.  The error log is:"
@@ -83,7 +82,6 @@ export function initShadersFromFiles(gl, shaderSrc) {
         gl.compileShader(vertexShader);
         
         if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-            console.log('yarrak');
             alert(gl.getShaderInfoLog(vertexShader));
             return null;
         }
@@ -92,7 +90,6 @@ export function initShadersFromFiles(gl, shaderSrc) {
         gl.compileShader(fragmentShader);
         
         if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-            console.log('AM');
             alert(gl.getShaderInfoLog(fragmentShader));
             return null;
         }

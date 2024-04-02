@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import * as banana from "../../API/banana";
 
 class SceneHierarchyPanel extends React.Component {
-    static SetScene(scene) {
+    static setScene(scene) {
         SceneHierarchyPanel.scene = scene;
     }
 
@@ -14,7 +14,7 @@ class SceneHierarchyPanel extends React.Component {
         const entities = SceneHierarchyPanel.scene.registry.get_all_with_entity(banana.ComponentType.TagComponent);
 
         for (const [id, tag] of Object.entries(entities)) {
-            names.push(<TreeItem key={id} name={tag.GetName()}/>);
+            names.push(<TreeItem key={id} name={tag.getName()}/>);
             SceneHierarchyPanel.selectedEntity = id;
         }
         
@@ -46,7 +46,7 @@ function Inspector() {
         const spriteRenderer = SceneHierarchyPanel.scene.registry.get(SceneHierarchyPanel.selectedEntity, banana.ComponentType.SpriteRendererComponent)
     }
 
-    components.push(<p key={tag.GetName()}>Tag Component: {tag.GetName()}</p>);
+    components.push(<p key={tag.getName()}>Tag Component: {tag.getName()}</p>);
 
     return (
         <div>

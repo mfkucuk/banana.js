@@ -1,29 +1,36 @@
-import { gl } from "./WebGLContext.js"
+import { gl } from "./WebGLContext.ts"
 
-function VertexAttribute(location, count, normalized) 
-{
-    this.location = location;
-    this.count = count;
-    this.normalized = normalized;
+class VertexAttribute {
+
+    location: number;
+    count: number;
+    normalized: boolean;
+
+    constructor(location, count, normalized) {
+        this.location = location;
+        this.count = count;
+        this.normalized = normalized;
+    }
+
 }
 
-export class VertexBuffer 
-{
-    constructor(data) 
-    {
+export class VertexBuffer {
+    
+    bufferId: number;
+    data: Float32Array;
+    usage: number;
+
+    offset: number;
+    stride: number;
+    attributes: VertexAttribute[];
+    
+    constructor(data) {
         this.bufferId = gl.createBuffer();
         
-        if (!Array.isArray(data)) 
-        {
-            this.data = new Float32Array( data );
-            this.usage = gl.DYNAMIC_DRAW;
-        }
-        else 
-        {
-            this.data = data;
-            this.usage = gl.STATIC_DRAW;
-        }
-        this.Bind();
+        this.data = new Float32Array( data );
+        this.usage = gl.DYNAMIC_DRAW;
+
+        this.bind();
         
         // attribute related properties
         this.offset = 0;
@@ -32,37 +39,31 @@ export class VertexBuffer
     }
 
 
-    Bind()
+    bind()
     {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferId);
         gl.bufferData(gl.ARRAY_BUFFER, this.data, this.usage);
     }
 
-    Unbind() 
-    {
+    unbind() {
         gl.bindBuffer(gl.ARRAY_BUFFER, null);
     }
 
-    SetData() 
-    {
-    }
-
-    AddVertex(index, vertex)
-    {
+    addVertex(index: number, vertex) {
         for (let i = 0; i < vertex.length; i++) 
         {
             this.data[index * vertex.length + i] = vertex[i];
         }
     }
 
-    PushAttribute(attribLocation, count, normalized = false) 
+    pushAttribute(attribLocation, count, normalized = false) 
     {
         this.attributes.push(new VertexAttribute(attribLocation, count, normalized));
 
         this.stride += 4 * count;
     }
 
-    LinkAttributes() 
+    linkAttributes() 
     {
         this.attributes.forEach(attribute => 
         {   
@@ -73,7 +74,7 @@ export class VertexBuffer
         });
     }
 
-    GetAttributeCount() 
+    getAttributeCount() 
     {
         return this.attributes.length;
     }
@@ -81,31 +82,28 @@ export class VertexBuffer
 
 export class IndexBuffer 
 {
+    bufferId: number;
+    data: Uint16Array;
+
     constructor(data) 
     {
         this.bufferId = gl.createBuffer();
         this.data = data;
-        this.Bind();
+        this.bind();
     }
 
-
-    Bind() 
+    bind() 
     {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferId);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.data, gl.STATIC_DRAW);
     }
 
-    Unbind() 
+    unbind() 
     {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
     }
 
-    AddIndex(indices) 
-    {
-        this.data.push(indices);
-    }
-
-    GetCount() 
+    getCount() 
     {
         return this.data.length;
     }

@@ -1,37 +1,32 @@
-import { canvas } from '../core/Window.js'
-import { Log } from '../core/Log.js'
+import { canvas } from '../core/Window.ts'
+import { Log } from '../core/Log.ts'
 import * as weml from '../ext/weml.js/weml.js'
-import { Event, EventDispatcher } from '../event/Event.js'
+import { Event, EventType, EventDispatcher } from '../event/Event.ts'
 
-export const CameraType = 
-{
+export const CameraType = {
     Orthographic: 0, 
     Perspective: 1,
 };
 
-class Camera
-{
-    constructor() 
-    {
+class Camera {
+    constructor() {
         this.projectionMatrix = weml.Mat4();  
     
         this.cameraType = CameraType.Orthographic;      
         this.aspectRatio = parseFloat(canvas.width) / parseFloat(canvas.height)
     }
 
-    SetOrthographic(size, near, far)
-    {
+    setOrthographic(size, near, far) {
         this.cameraType = CameraType.Orthographic;
 
         this.size = size;
         this.near = near;
         this.far = far;
 
-        this.SetViewportSize();
+        this.setViewportSize();
     }
 
-    SetPerspective(fovy, near, far) 
-    {
+    setPerspective(fovy, near, far) {
         this.cameraType = CameraType.Perspective;
 
         this.projectionMatrix.setPerspective(weml.weml.toRadians(fovy), this.aspectRatio, near, far);
@@ -40,18 +35,15 @@ class Camera
         this.far = far;
     }
 
-    GetViewProjectionMatrix() 
-    {
+    getViewProjectionMatrix() {
         return this.projectionMatrix;
     }
 
-    GetCameraType() 
-    {
+    getCameraType() {
         return this.cameraType;
     }
 
-    SetViewportSize() 
-    {
+    setViewportSize() {
         let orthoLeft = -this.size * this.aspectRatio * 0.5;
         let orthoRight = this.size * this.aspectRatio * 0.5;
         let orthoBottom = this.size * 0.5;
@@ -61,37 +53,31 @@ class Camera
     }
 }
 
-export class SceneCamera extends Camera
-{
-    constructor() 
-    {
+export class SceneCamera extends Camera {
+    constructor() {
         super();
 
-        this.OnWindowResized = this.OnWindowResized.bind(this);
+        this.onWindowResized = this.onWindowResized.bind(this);
 
-        this.SetOrthographic(446, -1, 1);
+        this.setOrthographic(446, -1, 1);
     }
 
-    OnEvent(event) 
-    {
+    onEvent(event) {
         const dispatcher = new EventDispatcher(event);
 
-        dispatcher.Dispatch(this.OnWindowResized, Event.EventType.WindowResizedEvent);
+        dispatcher.dispatch(this.onWindowResized, EventType.WindowResizedEvent);
     }
 
-    OnWindowResized(event) 
-    {
+    onWindowResized(event) {
         this.aspectRatio = parseFloat(canvas.width) / parseFloat(canvas.height)
-        this.SetViewportSize();
+        this.setViewportSize();
 
         return true;
     }
 }
 
-export class EditorCamera extends Camera
-{
-    constructor() 
-    {
+export class EditorCamera extends Camera {
+    constructor() {
         super();
 
         this.viewMatrix = weml.Mat4();
@@ -100,13 +86,12 @@ export class EditorCamera extends Camera
         this.cameraPosition = weml.Vec3(0, 0, 0);
         this.cameraRotation = 0;
 
-        this.SetView();
-        this.SetOrthographic(446, -1, 1);
-        this.RecalculateViewProjectionMatrix();
+        this.setView();
+        this.setOrthographic(446, -1, 1);
+        this.recalculateViewProjectionMatrix();
     }
 
-    SetView() 
-    {
+    setView() {
         this.viewMatrix.setTranslationVec3(this.cameraPosition);
 
         this.viewMatrix.applyRotationZ(this.cameraRotation);
@@ -114,43 +99,37 @@ export class EditorCamera extends Camera
         this.viewMatrix.invert();
     }
 
-    GetViewProjectionMatrix() 
-    {
+    getViewProjectionMatrix() {
         return this.viewProjectionMatrix;
     }
 
-    RecalculateViewProjectionMatrix() 
-    {
+    recalculateViewProjectionMatrix() {
         this.viewProjectionMatrix = weml.Mat4();
         this.viewProjectionMatrix.mul(this.projectionMatrix);
         this.viewProjectionMatrix.mul(this.viewMatrix);
     }
 
-    GetPosition() 
-    {
+    getPosition() {
         return weml.Vec3(this.cameraPosition[0], this.cameraPosition[1], this.cameraPosition[2]);
     }
 
-    SetPosition(x, y, z) 
-    {
+    setPosition(x, y, z) {
         this.cameraPosition[0] = x;
         this.cameraPosition[1] = y;
         this.cameraPosition[2] = z;
 
-        this.SetView();
-        this.RecalculateViewProjectionMatrix();
+        this.setView();
+        this.recalculateViewProjectionMatrix();
     }
 
-    GetRotation() 
-    {
+    GetRotation() {
         return this.cameraRotation;
     }
 
-    SetRotation(angle) 
-    {
+    setRotation(angle) {
         this.cameraRotation = angle;
 
-        this.SetView();
-        this.RecalculateViewProjectionMatrix();
+        this.setView();
+        this.recalculateViewProjectionMatrix();
     }
 }

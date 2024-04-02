@@ -1,25 +1,21 @@
 import { ComponentType } from "../banana.js"
 
-export class ScriptableEntity 
-{
-    constructor() 
-    {
+export class ScriptableEntity {
+    constructor() {
         this.entity = null;
     }
 
-    GetComponent(componentType) 
-    {
-        return this.entity.GetComponent(componentType);
+    getComponent(componentType) {
+        return this.entity.getComponent(componentType);
     }
 
-    OnCreate() {}
-    OnUpdate(deltaTime) {}
-    OnDestroy() {}
+    onCreate() {}
+    onUpdate(deltaTime) {}
+    onDestroy() {}
 
     // DONT INHERIT THESE METHODS
-    OnCreateSealed() 
-    {
-        this.tag = this.GetComponent(ComponentType.TagComponent);
-        this.transform = this.GetComponent(ComponentType.TransformComponent);
+    onCreateSealed() {
+        this.tag = this.getComponent(ComponentType.TagComponent);
+        this.transform = this.getComponent(ComponentType.TransformComponent);
     }
 }

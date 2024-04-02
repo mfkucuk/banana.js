@@ -1,13 +1,18 @@
-import { Log } from "../core/Log.js"
-import { gl } from "./WebGLContext.js"
+import { Log } from "../core/Log.ts"
+import { gl } from "./WebGLContext.ts"
 
-export class Texture 
-{
-    constructor(src) 
-    {
+export class Texture {
+
+    textureId: number;
+    loaded: boolean;
+    width: number;
+    height: number;
+    image: HTMLImageElement;
+
+    constructor(src) {
         this.textureId = gl.createTexture();
         this.loaded = false;
-        this.Bind();
+        this.bind();
         
 
         // Fill the texture with a 1x1 white pixel.
@@ -17,38 +22,34 @@ export class Texture
         this.width = 1;
         this.height = 1;
             
-        if (typeof src == 'undefined') 
-        {
+        if (typeof src == 'undefined') {
             return;
         }
 
-        this.OnLoad = this.OnLoad.bind(this)
+        this.onLoad = this.onLoad.bind(this)
         
         this.image = new Image();
         this.image.src = src;
-        this.image.addEventListener('load', this.OnLoad);
+        this.image.addEventListener('load', this.onLoad);
         
         // error handling
         this.image.addEventListener('error', (error) => {
             Log.Core_Error(`${error.type}: Loading image`);
-            this.image.removeEventListener('error', this);
+            this.image.removeEventListener('error', this.onLoad);
         });
     }
 
-    Bind(unit = 0) 
-    {
+    bind(unit: number = 0) {
         gl.activeTexture(gl.TEXTURE0 + unit);
         gl.bindTexture(gl.TEXTURE_2D, this.textureId);
     }
 
-    Unbind() 
-    {
+    unbind() {
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
-    OnLoad() 
-    {     
-        this.Bind();
+    onLoad() {     
+        this.bind();
 
         this.loaded = true;
 
@@ -68,9 +69,9 @@ export class Texture
                     Height: ${this.height}px
                     Source: ${this.image.src}`);
 
-        this.image.removeEventListener('load', this.OnLoad);
+        this.image.removeEventListener('load', this.onLoad);
         
-        this.Unbind();
+        this.unbind();
     }
 
     GetImage() 

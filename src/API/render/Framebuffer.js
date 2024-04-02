@@ -1,5 +1,5 @@
-import { Log } from "../core/Log.js"
-import { gl } from "./WebGLContext.js"
+import { Log } from "../core/Log.ts"
+import { gl } from "./WebGLContext.ts"
 
 export function FramebufferSpecification() 
 {

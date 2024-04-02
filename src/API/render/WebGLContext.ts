@@ -1,21 +1,20 @@
-import { Log } from "../core/Log.js"
+import { Log } from "../core/Log.ts"
 
 export let gl;
 
-export class WebGLContext 
-{
-    constructor(canvas) 
-    {
+export class WebGLContext {
+
+    maxTextureCount: number;
+
+    constructor(canvas) {
         gl = canvas.getContext('webgl2');
-        if ( !gl ) 
-        { 
+        if ( !gl ) { 
             Log.Core_Error('WebGL isn\'t available'); 
         }
-        else 
-        {
+        else {
             gl.viewport( 0, 0, canvas.width, canvas.height );
 
-            this.m_MaxTextureCount = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+            this.maxTextureCount = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
 
             //gl.enable(gl.CULL_FACE);
             //gl.enable(gl.DEPTH_TEST);

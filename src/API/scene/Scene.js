@@ -1,37 +1,34 @@
-import { ntt } from './ntt.js'
-import { ComponentType } from '../core/Type.js'
+import { ntt } from './ntt.ts'
+import { ComponentType } from '../core/Type.ts'
 import { Renderer2D } from '../render/Renderer2D.js'
-import { Entity } from './Entity.js'
+import { Entity } from './Entity.ts'
 import * as weml from '../ext/weml.js/weml.js'
 import { Log } from '../banana.js'
+import PhysicsSystem from '../physics/PhysicsSystem.ts'
  
 export class Scene 
 {
     constructor() 
     {
-        this.registry = ntt.create_registry();
+        this.registry = new ntt();
     }
 
-    CreateEntity(name) 
-    {
+    createEntity(name) {
         const entity = new Entity(this.registry.create(), this);
         
-        entity.AddComponent(ComponentType.TransformComponent);
-        const tag = entity.AddComponent(ComponentType.TagComponent);
+        entity.addComponent(ComponentType.TransformComponent);
+        const tag = entity.addComponent(ComponentType.TagComponent);
 
-        if (typeof name != 'undefined') 
-        {
-            tag.SetName(name);
+        if (typeof name != 'undefined') {
+            tag.setName(name);
         }
 
         return entity;
     }
 
     // entity is the entity object not the entity id.
-    DestroyEntity(entity) 
-    {
-        if (!this.registry.valid(entity.m_EntityHandle)) 
-        {
+    destroyEntity(entity) {
+        if (!this.registry.valid(entity.m_EntityHandle)) {
             Log.Core_Error('Cannot destroy a non-existing entity!');
             return false;
         }
@@ -40,36 +37,45 @@ export class Scene
         return true;
     }
 
-    RenderScene() 
-    {
+    renderScene() {
         const entities = this.registry.group(ComponentType.TransformComponent, ComponentType.SpriteRendererComponent);
 
         entities.forEach(entity => {
             const transform = this.registry.get(entity, ComponentType.TransformComponent);
             const sprite = this.registry.get(entity, ComponentType.SpriteRendererComponent);
 
-            Renderer2D.DrawColorQuad(transform, sprite.GetColor());
+            Renderer2D.DrawColorQuad(transform, sprite.getColor());
         });
     }
 
-    OnUpdateRuntime(deltaTime) 
-    {
+    onUpdateRuntime(deltaTime) {
         {
             // scriptable entities
             const nativeScripts = this.registry.get_all_with_entity(ComponentType.NativeScriptComponent);
             
-            for (const [entity, ns] of Object.entries(nativeScripts))
-            {
+            for (const [entity, ns] of Object.entries(nativeScripts)) {
                 if (!ns.Instance) 
                 {
-                    ns.Instance = ns.m_InstanceScriptFn();
+                    ns.Instance = ns.instaceScriptFn();
                     ns.Instance.m_Entity = new Entity(entity, this);
-                    ns.Instance.OnCreateSealed();
-                    ns.Instance.OnCreate();
+                    ns.Instance.onCreateSealed();
+                    ns.Instance.onCreate();
                 }
 
-                ns.Instance.OnUpdate(deltaTime);
+                ns.Instance.onUpdate(deltaTime);
             }
+        }
+
+        {
+            // physics
+            const groupedEntities = this.registry.group(ComponentType.TransformComponent, ComponentType.RigidBodyComponent);
+
+            groupedEntities.forEach(entity => {
+                const transformComponent = this.registry.get(entity, ComponentType.TransformComponent);
+                const rigidBodyComponent = this.registry.get(entity, ComponentType.RigidBodyComponent);
+
+                PhysicsSystem.update(rigidBodyComponent, transformComponent, deltaTime);
+            });
         }
 
         let mainCamera = null;
@@ -80,46 +86,45 @@ export class Scene
             const transform = this.registry.get(cameraEntity, ComponentType.TransformComponent)
             const camera = this.registry.get(cameraEntity, ComponentType.CameraComponent);
 
-            if (camera.IsPrimary()) 
+            if (camera.isPrimary()) 
             {
                 mainCameraTransform = transform;
-                mainCamera = camera.GetCamera();
+                mainCamera = camera.getCamera();
             }
         });
 
 
-        if (!mainCamera) 
-        {
+        if (!mainCamera) {
             return;
         }
 
 
         let view = weml.Mat4();
-        view.setTranslationVec3(mainCameraTransform.GetPosition());
-        view.applyRotationZ(mainCameraTransform.GetRotation()[2]);
+        view.setTranslationVec3(mainCameraTransform.getPosition());
+        view.applyRotationZ(mainCameraTransform.getRotation()[2]);
 
         Renderer2D.BeginScene(mainCamera, view);
 
-        this.RenderScene();
+        this.renderScene();
 
         Renderer2D.EndScene();
     }
 
-    OnUpdateEditor(deltaTime, editorCameraController) 
+    onUpdateEditor(deltaTime, editorCameraController) 
     {
-        Renderer2D.BeginScene(editorCameraController.GetCamera());
+        Renderer2D.BeginScene(editorCameraController.getCamera());
 
-        this.RenderScene();
+        this.renderScene();
 
         Renderer2D.EndScene();
     }
 
-    OnEvent(event) 
+    onEvent(event) 
     {
         const cameraComponents = this.registry.get_all(ComponentType.CameraComponent);
 
         cameraComponents.forEach(cc => {
-            cc.GetCamera().OnEvent(event);
+            cc.getCamera().onEvent(event);
         });
     }
 }

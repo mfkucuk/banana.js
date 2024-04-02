@@ -1,4 +1,5 @@
 import * as banana from '../API/banana.js'
+import { Vec3 } from '../API/math/MV.ts';
 
 //import { MenubarPanel } from './panels/MenubarPanel.js'
 //import { ViewportPanel } from './panels/ViewportPanel.js';
@@ -13,47 +14,53 @@ export class EditorLayer extends banana.Layer
 
         banana.Renderer2D.Init();
     
-        this.m_ActiveScene = new banana.Scene();
+        this.activeScene = new banana.Scene();
         
-        this.m_CameraController = new banana.EditorCameraController();
+        this.cameraController = new banana.EditorCameraController();
         
-        this.m_ClearColor = new banana.Color(0, 0, 0, 255);
+        this.clearColor = new banana.Color(0, 0, 0, 255);
         
-        this.m_CameraEntity = this.m_ActiveScene.CreateEntity('Camera');
-        this.m_SquareEntity = this.m_ActiveScene.CreateEntity('Square');
+        this.cameraEntity = this.activeScene.createEntity('Camera');
+        this.squareEntity = this.activeScene.createEntity('Square');
      
-        this.m_CameraEntity.AddComponent(banana.ComponentType.CameraComponent);
-        this.m_SquareEntity.AddComponent(banana.ComponentType.SpriteRendererComponent);
+        this.cameraEntity.addComponent(banana.ComponentType.CameraComponent);
+        this.squareEntity.addComponent(banana.ComponentType.SpriteRendererComponent);
+        this.rigidBody = this.squareEntity.addComponent(banana.ComponentType.RigidBodyComponent);
+        this.rigidBody.rigidBody.velocity = new Vec3(100, 0, 0);
+
+        this.transform = this.squareEntity.getComponent(banana.ComponentType.TransformComponent);
 
         //this.m_MenubarPanel = new MenubarPanel();
         //this.m_ViewportPanel = new ViewportPanel();
-        SceneHierarchyPanel.SetScene(this.m_ActiveScene);
+        SceneHierarchyPanel.setScene(this.activeScene);
         //this.m_ConsolePanel = new ConsolePanel();
     }
 
-    OnAttach() 
+    onAttach() 
     {
-        banana.RenderCommand.SetClearColor( this.m_ClearColor ); 
+        banana.RenderCommand.setClearColor( this.clearColor ); 
     }
 
-    OnUpdate(deltaTime) 
+    onUpdate(deltaTime) 
     {        
         banana.Renderer2D.ResetStats();
         
-        banana.RenderCommand.Clear();
+        banana.RenderCommand.clear();
+
+        //console.log(this.transform.GetPosition());
 
         // if (this.m_MenubarPanel.IsGameRunning()) 
         // {
-        //     this.m_ActiveScene.OnUpdateRuntime(deltaTime);
+        //    this.activeScene.onUpdateRuntime(deltaTime);
         // }
         // else 
         // {
-            this.m_CameraController.Update(deltaTime);
-            this.m_ActiveScene.OnUpdateEditor(deltaTime, this.m_CameraController);
+            this.cameraController.update(deltaTime);
+            this.activeScene.onUpdateEditor(deltaTime, this.cameraController);
         //}
     }
 
-    OnGUIRender() 
+    onGUIRender() 
     {
         //this.m_MenubarPanel.OnGUIRender();
         //this.m_ViewportPanel.OnGUIRender();
@@ -61,9 +68,9 @@ export class EditorLayer extends banana.Layer
         //this.m_ConsolePanel.OnGUIRender();
     }
 
-    OnEvent(event) 
+    onEvent(event) 
     {
-        this.m_CameraController.OnEvent(event);
-        this.m_ActiveScene.OnEvent(event);
+        this.cameraController.onEvent(event);
+        this.activeScene.onEvent(event);
     }
 }

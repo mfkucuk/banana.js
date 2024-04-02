@@ -1,9 +1,8 @@
-import { Log } from "../core/Log.js"
-import { IndexBuffer, VertexBuffer } from "./Buffer.js"
+import { IndexBuffer, VertexBuffer } from "./Buffer.ts"
 import { Color } from "./Color.js"
-import { Shader } from "./Shader.js"
-import { Texture } from "./Texture.js"
-import { gl } from "./WebGLContext.js"
+import { Shader } from "./Shader.ts"
+import { Texture } from "./Texture.ts"
+import { gl } from "./WebGLContext.ts"
 import * as weml from '../ext/weml.js/weml.js'
 
 function Render2DData()
@@ -122,22 +121,22 @@ export class Renderer2D
         Render2DData.QuadVertexBuffer = new VertexBuffer(Render2DData.MaxVertices * QuadVertex.VertexSize);
         Render2DData.QuadIndexBuffer = new IndexBuffer(quadIndices);
 
-        const aPosition = Render2DData.BasicShader.GetAttributeLocation('a_Position');
-        const aTexCoord = Render2DData.BasicShader.GetAttributeLocation('a_TexCoord');
-        const aTexIndex = Render2DData.BasicShader.GetAttributeLocation('a_TexIndex');
-        const aColor = Render2DData.BasicShader.GetAttributeLocation('a_Color');
-        const aTranslation = Render2DData.BasicShader.GetAttributeLocation('a_Translation');
-        const aRotation = Render2DData.BasicShader.GetAttributeLocation('a_Rotation');
-        const aScaling = Render2DData.BasicShader.GetAttributeLocation('a_Scaling');
+        const aPosition = Render2DData.BasicShader.getAttributeLocation('a_Position');
+        const aTexCoord = Render2DData.BasicShader.getAttributeLocation('a_TexCoord');
+        const aTexIndex = Render2DData.BasicShader.getAttributeLocation('a_TexIndex');
+        const aColor = Render2DData.BasicShader.getAttributeLocation('a_Color');
+        const aTranslation = Render2DData.BasicShader.getAttributeLocation('a_Translation');
+        const aRotation = Render2DData.BasicShader.getAttributeLocation('a_Rotation');
+        const aScaling = Render2DData.BasicShader.getAttributeLocation('a_Scaling');
 
-        Render2DData.QuadVertexBuffer.PushAttribute(aPosition, 4);
-        Render2DData.QuadVertexBuffer.PushAttribute(aTexCoord, 2);
-        Render2DData.QuadVertexBuffer.PushAttribute(aTexIndex, 1);
-        Render2DData.QuadVertexBuffer.PushAttribute(aColor, 4);
-        Render2DData.QuadVertexBuffer.PushAttribute(aTranslation, 3);
-        Render2DData.QuadVertexBuffer.PushAttribute(aRotation, 1);
-        Render2DData.QuadVertexBuffer.PushAttribute(aScaling, 3);
-        Render2DData.QuadVertexBuffer.LinkAttributes();
+        Render2DData.QuadVertexBuffer.pushAttribute(aPosition, 4);
+        Render2DData.QuadVertexBuffer.pushAttribute(aTexCoord, 2);
+        Render2DData.QuadVertexBuffer.pushAttribute(aTexIndex, 1);
+        Render2DData.QuadVertexBuffer.pushAttribute(aColor, 4);
+        Render2DData.QuadVertexBuffer.pushAttribute(aTranslation, 3);
+        Render2DData.QuadVertexBuffer.pushAttribute(aRotation, 1);
+        Render2DData.QuadVertexBuffer.pushAttribute(aScaling, 3);
+        Render2DData.QuadVertexBuffer.linkAttributes();
 
         let samplers = [];
         for (let i = 0; i < Render2DData.MaxTextureSlots; i++) 
@@ -145,7 +144,7 @@ export class Renderer2D
             samplers[i] = i;
         }
 
-        Render2DData.BasicShader.SetUniform1iv('u_Textures', samplers);
+        Render2DData.BasicShader.setUniform1iv('u_Textures', samplers);
 
         Render2DData.TextureSlots[0] = Renderer2D.White_Texture;
     }
@@ -154,19 +153,19 @@ export class Renderer2D
     {
         Renderer2D.NewBatch();
         
-        Render2DData.BasicShader.Bind();
+        Render2DData.BasicShader.bind();
 
         if (typeof transform == 'undefined') 
         {
-            Render2DData.BasicShader.SetUniformMatrix4fv('u_ViewProjectionMatrix', camera.GetViewProjectionMatrix());
+            Render2DData.BasicShader.setUniformMatrix4fv('u_ViewProjectionMatrix', camera.getViewProjectionMatrix());
         }
         else 
         {
 
             const viewProj = weml.Mat4();
-            viewProj.mul(camera.GetViewProjectionMatrix());
+            viewProj.mul(camera.getViewProjectionMatrix());
             viewProj.mul(transform.invert());
-            Render2DData.BasicShader.SetUniformMatrix4fv('u_ViewProjectionMatrix', viewProj);
+            Render2DData.BasicShader.setUniformMatrix4fv('u_ViewProjectionMatrix', viewProj);
         }
 
     }
@@ -178,12 +177,12 @@ export class Renderer2D
 
     static Flush() 
     {
-        Render2DData.QuadVertexBuffer.Bind();
-        Render2DData.QuadIndexBuffer.Bind();
+        Render2DData.QuadVertexBuffer.bind();
+        Render2DData.QuadIndexBuffer.bind();
 
         for (let i = 0; i < Render2DData.TextureSlotIndex; i++) 
         {
-            Render2DData.TextureSlots[i].Bind(i);
+            Render2DData.TextureSlots[i].bind(i);
         }
 
         gl.drawElements(gl.TRIANGLES, Render2DData.QuadIndexCount, gl.UNSIGNED_SHORT, 0);
@@ -210,40 +209,40 @@ export class Renderer2D
         v1.texCoord = weml.Vec2(0, 0);
         v1.texIndex = 0;
         v1.color = color;
-        v1.translation = transform.GetPosition();
-        v1.rotation = transform.GetRotation();
-        v1.scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        v1.translation = transform.getPosition();
+        v1.rotation = transform.getRotation();
+        v1.scaling = transform.getScale();
+        Render2DData.QuadVertexBuffer.addVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[1];
         v1.texCoord = weml.Vec2(1, 0);
         v1.texIndex = 0;
         v1.color = color;
-        v1.translation = transform.GetPosition();
-        v1.rotation = transform.GetRotation();
-        v1.scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        v1.translation = transform.getPosition();
+        v1.rotation = transform.getRotation();
+        v1.scaling = transform.getScale();
+        Render2DData.QuadVertexBuffer.addVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[2];
         v1.texCoord = weml.Vec2(0, 1);
         v1.texIndex = 0;
         v1.color = color;
-        v1.translation = transform.GetPosition();
-        v1.rotation = transform.GetRotation();
-        v1.scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        v1.translation = transform.getPosition();
+        v1.rotation = transform.getRotation();
+        v1.scaling = transform.getScale();
+        Render2DData.QuadVertexBuffer.addVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[3];
         v1.texCoord = weml.Vec2(1, 1);
         v1.texIndex = 0;
         v1.color = color;
-        v1.translation = transform.GetPosition();
-        v1.rotation = transform.GetRotation();
-        v1.scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        v1.translation = transform.getPosition();
+        v1.rotation = transform.getRotation();
+        v1.scaling = transform.getScale();
+        Render2DData.QuadVertexBuffer.addVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
         
         Render2DData.QuadIndexCount += 6;
@@ -287,40 +286,40 @@ export class Renderer2D
         v1.texCoord = weml.Vec2(0, 0);
         v1.texIndex = useTextureSlot;
         v1.color = Color.TRANSPARENT;
-        v1.translation = transform.GetPosition();
-        v1.rotation = transform.GetRotation();
-        v1.scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        v1.translation = transform.getPosition();
+        v1.rotation = transform.getRotation();
+        v1.scaling = transform.getScale();
+        Render2DData.QuadVertexBuffer.addVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[1];
         v1.texCoord = weml.Vec2(1, 0);
         v1.texIndex = useTextureSlot;
         v1.color = Color.TRANSPARENT;
-        v1.translation = transform.GetPosition();
-        v1.rotation = transform.GetRotation();
-        v1.scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        v1.translation = transform.getPosition();
+        v1.rotation = transform.getRotation();
+        v1.scaling = transform.getScale();
+        Render2DData.QuadVertexBuffer.addVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[2];
         v1.texCoord = weml.Vec2(0, 1);
         v1.texIndex = useTextureSlot;
         v1.color = Color.TRANSPARENT;
-        v1.translation = transform.GetPosition();
-        v1.rotation = transform.GetRotation();
-        v1.scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        v1.translation = transform.getPosition();
+        v1.rotation = transform.getRotation();
+        v1.scaling = transform.getScale();
+        Render2DData.QuadVertexBuffer.addVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[3];
         v1.texCoord = weml.Vec2(1, 1);
         v1.texIndex = useTextureSlot;
         v1.color = Color.TRANSPARENT;
-        v1.translation = transform.GetPosition();
-        v1.rotation = transform.GetRotation();
-        v1.scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        v1.translation = transform.getPosition();
+        v1.rotation = transform.getRotation();
+        v1.scaling = transform.getScale();
+        Render2DData.QuadVertexBuffer.addVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
         Render2DData.QuadIndexCount += 6;
@@ -330,8 +329,8 @@ export class Renderer2D
 
     static DrawSubTextureQuad(transform, subTexture) 
     {
-        const texCoords = subTexture.GetTexCoords();
-        const texture = subTexture.GetTexture();
+        const texCoords = subTexture.getTexCoords();
+        const texture = subTexture.getTexture();
 
         if (Render2DData.QuadIndexCount >= Render2DData.MaxIndices) 
         {
@@ -367,40 +366,40 @@ export class Renderer2D
         v1.texCoord = texCoords[0];
         v1.texIndex = useTextureSlot;
         v1.color = Color.TRANSPARENT;
-        v1.translation = transform.GetPosition();
-        v1.rotation = transform.GetRotation();
-        v1.scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        v1.translation = transform.getPosition();
+        v1.rotation = transform.getRotation();
+        v1.scaling = transform.getScale();
+        Render2DData.QuadVertexBuffer.addVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[1];
         v1.texCoord = texCoords[1];
         v1.texIndex = useTextureSlot;
         v1.color = Color.TRANSPARENT;
-        v1.translation = transform.GetPosition();
-        v1.rotation = transform.GetRotation();
-        v1.scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        v1.translation = transform.getPosition();
+        v1.rotation = transform.getRotation();
+        v1.scaling = transform.getScale();
+        Render2DData.QuadVertexBuffer.addVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[2];
         v1.texCoord = texCoords[2];
         v1.texIndex = useTextureSlot;
         v1.color = Color.TRANSPARENT;
-        v1.translation = transform.GetPosition();
-        v1.rotation = transform.GetRotation();
-        v1.scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        v1.translation = transform.getPosition();
+        v1.rotation = transform.getRotation();
+        v1.scaling = transform.getScale();
+        Render2DData.QuadVertexBuffer.addVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[3];
         v1.texCoord = texCoords[3];
         v1.texIndex = useTextureSlot;
         v1.color = Color.TRANSPARENT;
-        v1.translation = transform.GetPosition();
-        v1.rotation = transform.GetRotation();
-        v1.scaling = transform.GetScale();
-        Render2DData.QuadVertexBuffer.AddVertex(Render2DData.QuadVertexCount, v1.Flat());
+        v1.translation = transform.getPosition();
+        v1.rotation = transform.getRotation();
+        v1.scaling = transform.getScale();
+        Render2DData.QuadVertexBuffer.addVertex(Render2DData.QuadVertexCount, v1.Flat());
         Render2DData.QuadVertexCount++;
 
         Render2DData.QuadIndexCount += 6;

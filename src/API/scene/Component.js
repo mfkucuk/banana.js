@@ -1,33 +1,37 @@
 import { Color } from '../render/Color.js'
-import { ComponentType } from '../core/Type.js'
+import { ComponentType } from '../core/Type.ts'
 import * as weml from '../ext/weml.js/weml.js'
 import { SceneCamera } from '../render/Camera.js'
 import { Movement } from './Movement.js'
+import RigidBody from '../physics/RigidBody.ts'
 
-export class TagComponent 
-{
-    constructor() 
-    {
+export class Component {
+    constructor() {
+        this.type = undefined;
+    }
+}
+
+export class TagComponent extends Component {
+    constructor() {
+        super();
+
         this.name = 'Banana';
 
         this.type = ComponentType.TagComponent
     }
 
-    SetName(name) 
-    {
+    setName(name) {
         this.name = name;
     }
 
-    GetName() 
-    {
+    getName() {
         return this.name;
     }
 }
 
-export class TransformComponent
-{
-    constructor() 
-    {
+export class TransformComponent extends Component {
+    constructor() {
+        super();
         this.position = weml.Vec3(0, 0, 0);
         this.rotation = weml.Vec3(0, 0, 0);
         this.scale = weml.Vec3(1, 1, 1);
@@ -35,81 +39,69 @@ export class TransformComponent
         this.type = ComponentType.TransformComponent;
     }
 
-    GetPosition() 
-    {
+    getPosition() {
         return this.position;
     }
 
-    SetPosition(x, y, z) 
-    {
+    setPosition(x, y, z) {
         this.position[0] = x;
         this.position[1] = y;
         this.position[2] = z;
     }
 
-    Translate(x, y, z) 
-    {
+    translate(x, y, z) {
         this.position[0] += x;
         this.position[1] += y;
         this.position[2] += z;
     }
 
-    GetRotation() 
-    {
+    getRotation() {
         return this.rotation;
     }
 
-    SetRotation(angleX, angleY, angleZ) 
-    {
+    setRotation(angleX, angleY, angleZ) {
         this.rotation[0] = angleX;
         this.rotation[1] = angleY;
         this.rotation[2] = angleZ;
     }
 
-    Rotate(angleX, angleY, angleZ) 
-    {
+    rotate(angleX, angleY, angleZ) {
         this.rotation[0] += angleX;
         this.rotation[1] += angleY;
         this.rotation[2] += angleZ;
     }
 
-    GetScale() 
-    {
+    getScale() {
         return this.scale;
     }
 
-    SetScale(x, y, z) 
-    {
+    setScale(x, y, z) {
         this.scale[0] = x;
         this.scale[1] = y;
         this.scale[2] = z;
     }
 }
 
-export class SpriteRendererComponent 
-{
-    constructor() 
-    {
+export class SpriteRendererComponent extends Component {
+    constructor() {
+        super();
         this.color = Color.WHITE;
 
         this.type = ComponentType.SpriteRendererComponent;
     }
 
-    SetColor(color) 
-    {
+    setColor(color) {
         this.color = color;
     }
 
-    GetColor() 
-    {
+    getColor() {
         return this.color;
     }
 }
 
-export class CameraComponent 
-{
-    constructor() 
-    {
+export class CameraComponent extends Component {
+    constructor() {
+        super();
         this.sceneCamera = new SceneCamera();
 
         this.primary = true;
@@ -117,62 +109,62 @@ export class CameraComponent
         this.type = ComponentType.CameraComponent;
     }
 
-    IsPrimary() 
-    {
+    isPrimary() {
         return this.primary;
     }
 
-    SetPrimary(flag) 
-    {
+    setPrimary(flag) {
         this.primary = flag;
     }
 
-    GetCamera() 
-    {
+    getCamera() {
         return this.sceneCamera;
     }
 
-    GetSize() 
-    {
+    getSize() {
         return this.sceneCamera.size;
     }
 
-    GetNear() 
-    {
+    getNear() {
         return this.sceneCamera.near;
     }
 
-    GetFar() 
-    {
+    getFar() {
         return this.sceneCamera.far;
     }
 }
 
-export class NativeScriptComponent 
-{
-    constructor() 
-    {
+export class NativeScriptComponent extends Component {
+    constructor() {
+        super();
         this.Instance = null;
-        this.m_InstanceScriptFn = function() {}
-        this.m_DestroyScriptFn = function(nativeScriptComponent) {}
+        this.instanceScriptFn = function() {}
+        this.destroyScriptFn = function(nativeScriptComponent) {}
 
         this.type = ComponentType.NativeScriptComponent;
     }
 
-    Bind(scriptableEntityClass) 
-    {
-        this.m_InstanceScriptFn = function() { return new scriptableEntityClass(); }
-        this.m_DestroyScriptFn = function(nativeScriptComponent) { nativeScriptComponent.Instance = null; }
+    Bind(scriptableEntityClass) {
+        this.instanceScriptFn = function() { return new scriptableEntityClass(); }
+        this.destroyScriptFn = function(nativeScriptComponent) { nativeScriptComponent.Instance = null; }
     }
 }
 
-export class MovementComponent extends NativeScriptComponent
-{
-    constructor() 
-    {
+export class MovementComponent extends NativeScriptComponent {
+    constructor() {
         super();
-
+        
         this.Bind(Movement);
+    }
+}
+
+// PHYSICS-RELATED COMPONENTS
+export class RigidBodyComponent extends Component {
+    constructor() {
+        super();
+        this.rigidBody = new RigidBody();
+
+        this.type = ComponentType.RigidBodyComponent;
     }
 }
 
@@ -183,3 +175,4 @@ ComponentCreator[ComponentType.SpriteRendererComponent] = SpriteRendererComponen
 ComponentCreator[ComponentType.CameraComponent] = CameraComponent;
 ComponentCreator[ComponentType.NativeScriptComponent] = NativeScriptComponent;
 ComponentCreator[ComponentType.MovementComponent] = MovementComponent;
+ComponentCreator[ComponentType.RigidBodyComponent] = RigidBodyComponent;
