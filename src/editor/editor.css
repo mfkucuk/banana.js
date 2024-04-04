@@ -1,0 +1,12 @@
+.container {
+    display: flex; /* Set the container as a flex container */
+}
+  
+.item {
+    margin: 5vh; /* Add some margin between items */
+}
+
+.tree-item, .tree-item:visited, .tree-item:active {
+    color: inherit;
+    text-decoration: none;
+}

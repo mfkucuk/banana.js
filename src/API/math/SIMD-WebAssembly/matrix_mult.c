@@ -1,11 +1,19 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <emmintrin.h> // Include SIMD intrinsics header
+#include <emscripten.h>
 
-float* mat4_multiply(float* out, const float* a, const float* b) {
-    __m128 row1 = _mm_loadu_ps(&a[0]);
-    __m128 row2 = _mm_loadu_ps(&a[4]);
-    __m128 row3 = _mm_loadu_ps(&a[8]);
-    __m128 row4 = _mm_loadu_ps(&a[12]);
+EMSCRIPTEN_KEEPALIVE
+float* allocate_memory(int size) {
+    return (float*)malloc(size * sizeof(float));
+}
+
+EMSCRIPTEN_KEEPALIVE
+void mat4_multiply(float* out, const float* a, const float* b) {
+    __m128 row1 = _mm_load_ps(&a[0]);
+    __m128 row2 = _mm_load_ps(&a[4]);
+    __m128 row3 = _mm_load_ps(&a[8]);
+    __m128 row4 = _mm_load_ps(&a[12]);
 
     for (int i = 0; i < 4; ++i) {
         __m128 brod1 = _mm_set1_ps(b[i * 4]);
@@ -19,7 +27,6 @@ float* mat4_multiply(float* out, const float* a, const float* b) {
             _mm_add_ps(
                 _mm_mul_ps(brod3, row3),
                 _mm_mul_ps(brod4, row4)));
-        _mm_storeu_ps(&out[i * 4], row);
+        _mm_store_ps(&out[i * 4], row);
     }
-    return out;
 }

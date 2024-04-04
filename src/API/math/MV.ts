@@ -177,6 +177,7 @@ export class Mat4 {
         this.data[13] = nm31;
         this.data[14] = nm32;
         this.data[15] = nm33;
+
         return this;
     }
 
@@ -265,14 +266,6 @@ export class Mat4 {
         this.data[1] = nm01;
         this.data[2] = nm02;
         this.data[3] = nm03;
-        this.data[8] = this.data[8];
-        this.data[9] = this.data[9];
-        this.data[10] = this.data[10];
-        this.data[11] = this.data[11];
-        this.data[12] = this.data[12];
-        this.data[13] = this.data[13];
-        this.data[14] = this.data[14];
-        this.data[15] = this.data[15];
     
         return this;
     }

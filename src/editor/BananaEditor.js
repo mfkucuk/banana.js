@@ -3,6 +3,8 @@ import * as banana from "../API/banana";
 import { EditorLayer } from "./EditorLayer";
 import SceneHierarchyPanel from "./panels/SceneHierarchyPanel";
 
+import './editor.css';
+
 class BananaEditor extends banana.Application 
 {
     constructor() 
@@ -40,9 +42,9 @@ function Editor() {
     })
 
     return (
-        <div>
-            <canvas id="gl-canvas" width={600} height={600} tabIndex={1}></canvas>
-            { bananaMainComplete && <SceneHierarchyPanel /> }
+        <div className="container">
+            <canvas className="item" id="gl-canvas" width={600} height={600} tabIndex={1}></canvas>
+            { bananaMainComplete && <SceneHierarchyPanel/> }
         </div>
     );
 }
