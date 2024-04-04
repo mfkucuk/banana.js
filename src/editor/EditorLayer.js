@@ -25,8 +25,8 @@ export class EditorLayer extends banana.Layer
      
         this.cameraEntity.addComponent(banana.ComponentType.CameraComponent);
         this.squareEntity.addComponent(banana.ComponentType.SpriteRendererComponent);
-        this.rigidBody = this.squareEntity.addComponent(banana.ComponentType.RigidBodyComponent);
-        this.rigidBody.rigidBody.velocity = new Vec3(100, 0, 0);
+        this.rigidBody = this.squareEntity.addComponent(banana.ComponentType.RigidBody2DComponent);
+        this.rigidBody.rigidBody2D.velocity = new Vec3(0, 0, 0);
 
         this.transform = this.squareEntity.getComponent(banana.ComponentType.TransformComponent);
 

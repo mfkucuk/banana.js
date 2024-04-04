@@ -4,5 +4,6 @@ export enum ComponentType {
     SpriteRendererComponent,
     CameraComponent,
     NativeScriptComponent,
-    RigidBodyComponent,
+    MovementComponent,
+    RigidBody2DComponent,
 }

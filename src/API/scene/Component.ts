@@ -1,17 +1,19 @@
-import { Color } from '../render/Color.js'
+import { Color } from '../render/Color.ts'
 import { ComponentType } from '../core/Type.ts'
-import * as weml from '../ext/weml.js/weml.js'
-import { SceneCamera } from '../render/Camera.js'
-import { Movement } from './Movement.js'
-import RigidBody from '../physics/RigidBody.ts'
+import { SceneCamera } from '../render/Camera.ts'
+import { Movement } from './Movement.ts'
+import RigidBody2D from '../physics/RigidBody2D.ts'
+import { Vec3 } from '../math/MV.ts'
+import { ScriptableEntity } from './ScriptableEntity.ts'
 
 export class Component {
-    constructor() {
-        this.type = undefined;
-    }
+    type: ComponentType;
 }
 
 export class TagComponent extends Component {
+
+    name: string;
+
     constructor() {
         super();
 
@@ -20,7 +22,7 @@ export class TagComponent extends Component {
         this.type = ComponentType.TagComponent
     }
 
-    setName(name) {
+    setName(name: string) {
         this.name = name;
     }
 
@@ -30,45 +32,50 @@ export class TagComponent extends Component {
 }
 
 export class TransformComponent extends Component {
+
+    position: Vec3;
+    rotation: Vec3;
+    scale: Vec3;
+
     constructor() {
         super();
-        this.position = weml.Vec3(0, 0, 0);
-        this.rotation = weml.Vec3(0, 0, 0);
-        this.scale = weml.Vec3(1, 1, 1);
+        this.position = new Vec3(0, 0, 0);
+        this.rotation = new Vec3(0, 0, 0);
+        this.scale = new Vec3(1, 1, 1);
 
         this.type = ComponentType.TransformComponent;
     }
 
-    getPosition() {
+    getPosition(): Vec3 {
         return this.position;
     }
 
-    setPosition(x, y, z) {
-        this.position[0] = x;
-        this.position[1] = y;
-        this.position[2] = z;
+    setPosition(x: number, y: number, z: number) {
+        this.position.x = x;
+        this.position.y = y;
+        this.position.z = z;
     }
 
-    translate(x, y, z) {
-        this.position[0] += x;
-        this.position[1] += y;
-        this.position[2] += z;
+    translate(x: number, y: number, z: number) {
+        this.position.x += x;
+        this.position.y += y;
+        this.position.z += z;
     }
 
-    getRotation() {
+    getRotation(): Vec3 {
         return this.rotation;
     }
 
     setRotation(angleX, angleY, angleZ) {
-        this.rotation[0] = angleX;
-        this.rotation[1] = angleY;
-        this.rotation[2] = angleZ;
+        this.rotation.x = angleX;
+        this.rotation.y = angleY;
+        this.rotation.z = angleZ;
     }
 
     rotate(angleX, angleY, angleZ) {
-        this.rotation[0] += angleX;
-        this.rotation[1] += angleY;
-        this.rotation[2] += angleZ;
+        this.rotation.x += angleX;
+        this.rotation.y += angleY;
+        this.rotation.z += angleZ;
     }
 
     getScale() {
@@ -76,13 +83,16 @@ export class TransformComponent extends Component {
     }
 
     setScale(x, y, z) {
-        this.scale[0] = x;
-        this.scale[1] = y;
-        this.scale[2] = z;
+        this.scale.x = x;
+        this.scale.y = y;
+        this.scale.z = z;
     }
 }
 
 export class SpriteRendererComponent extends Component {
+    
+    color: Color;
+    
     constructor() {
         super();
         this.color = Color.WHITE;
@@ -90,16 +100,20 @@ export class SpriteRendererComponent extends Component {
         this.type = ComponentType.SpriteRendererComponent;
     }
 
-    setColor(color) {
+    setColor(color: Color) {
         this.color = color;
     }
 
-    getColor() {
+    getColor(): Color {
         return this.color;
     }
 }
 
 export class CameraComponent extends Component {
+
+    sceneCamera: SceneCamera;
+    primary: boolean
+
     constructor() {
         super();
         this.sceneCamera = new SceneCamera();
@@ -109,44 +123,49 @@ export class CameraComponent extends Component {
         this.type = ComponentType.CameraComponent;
     }
 
-    isPrimary() {
+    isPrimary(): boolean {
         return this.primary;
     }
 
-    setPrimary(flag) {
+    setPrimary(flag: boolean) {
         this.primary = flag;
     }
 
-    getCamera() {
+    getCamera(): SceneCamera {
         return this.sceneCamera;
     }
 
-    getSize() {
+    getSize(): number {
         return this.sceneCamera.size;
     }
 
-    getNear() {
+    getNear(): number {
         return this.sceneCamera.near;
     }
 
-    getFar() {
+    getFar(): number {
         return this.sceneCamera.far;
     }
 }
 
 export class NativeScriptComponent extends Component {
+
+    Instance: ScriptableEntity;
+    instanceScriptFn: Function;
+    destroyScriptFn: Function;
+
     constructor() {
         super();
         this.Instance = null;
         this.instanceScriptFn = function() {}
-        this.destroyScriptFn = function(nativeScriptComponent) {}
+        this.destroyScriptFn = function(nativeScriptComponent: NativeScriptComponent) {}
 
         this.type = ComponentType.NativeScriptComponent;
     }
 
-    Bind(scriptableEntityClass) {
+    bind(scriptableEntityClass: { new(): ScriptableEntity }) {
         this.instanceScriptFn = function() { return new scriptableEntityClass(); }
-        this.destroyScriptFn = function(nativeScriptComponent) { nativeScriptComponent.Instance = null; }
+        this.destroyScriptFn = function(nativeScriptComponent: NativeScriptComponent) { nativeScriptComponent.Instance = null; }
     }
 }
 
@@ -154,17 +173,20 @@ export class MovementComponent extends NativeScriptComponent {
     constructor() {
         super();
         
-        this.Bind(Movement);
+        this.bind(Movement);
     }
 }
 
 // PHYSICS-RELATED COMPONENTS
-export class RigidBodyComponent extends Component {
+export class RigidBody2DComponent extends Component {
+
+    rigidBody2D: RigidBody2D;
+
     constructor() {
         super();
-        this.rigidBody = new RigidBody();
+        this.rigidBody2D = new RigidBody2D();
 
-        this.type = ComponentType.RigidBodyComponent;
+        this.type = ComponentType.RigidBody2DComponent;
     }
 }
 
@@ -175,4 +197,4 @@ ComponentCreator[ComponentType.SpriteRendererComponent] = SpriteRendererComponen
 ComponentCreator[ComponentType.CameraComponent] = CameraComponent;
 ComponentCreator[ComponentType.NativeScriptComponent] = NativeScriptComponent;
 ComponentCreator[ComponentType.MovementComponent] = MovementComponent;
-ComponentCreator[ComponentType.RigidBodyComponent] = RigidBodyComponent;
+ComponentCreator[ComponentType.RigidBody2DComponent] = RigidBody2DComponent;

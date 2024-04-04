@@ -1,5 +1,5 @@
 import { ComponentType, Log, Scene } from "../banana.js"
-import { ComponentCreator } from "./Component.js"
+import { ComponentCreator } from "./Component.ts"
 
 export class Entity {
 
@@ -11,7 +11,7 @@ export class Entity {
         this.scene = scene;
     }
 
-    addComponent(type: ComponentType) {
+    addComponent<T>(type: ComponentType): T {
         return this.scene.registry.emplace(this.entityHandle, new ComponentCreator[type]());
     }
 
@@ -19,7 +19,7 @@ export class Entity {
         return this.scene.registry.has(this.entityHandle, type);
     }
 
-    getComponent(type: ComponentType) {
+    getComponent<T>(type: ComponentType): T {
         if (!this.hasComponent(type)) {
             Log.Core_Warn('Entity does not have this component type');
             return null;

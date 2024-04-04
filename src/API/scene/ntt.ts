@@ -44,7 +44,7 @@ export class ntt {
 
     // component functions
 
-    emplace(entity: string, component: Component) {
+    emplace<T extends Component>(entity: string, component: T) {
         if (!this.valid(entity)) {
             return;
         }
@@ -72,7 +72,7 @@ export class ntt {
         this.component = {};
     }
 
-    has(entity: string, componentType: ComponentType) {
+    has(entity: string, componentType: ComponentType): boolean {
         if (typeof this.component[componentType] == 'undefined') {
             this.component[componentType] = {};
         }
@@ -80,7 +80,7 @@ export class ntt {
         return this.component[componentType][entity] != null;
     }
 
-    get(entity: string, componentType: ComponentType) {
+    get<T>(entity: string, componentType: ComponentType): T {
         if (!this.valid(entity) || !this.component[componentType]) {
             return;
         }
@@ -88,7 +88,7 @@ export class ntt {
         return this.component[componentType][entity] || null;
     }
 
-    get_all(componentType: ComponentType) {
+    get_all<T>(componentType: ComponentType): T[] {
         if (!this.component[componentType]) {
             return [];
         }
@@ -96,15 +96,15 @@ export class ntt {
         return Object.values(this.component[componentType]);
     }
 
-    get_all_with_entity(componentType: ComponentType) {
+    get_all_with_entity<T>(componentType: ComponentType): {[key: string]: T} {
         if (!this.component[componentType]) {
-            return {};
+            return null;
         }
 
         return this.component[componentType];
     }
 
-    group(...componentType: ComponentType[]) {
+    group(...componentType: ComponentType[]) : string[] {
         return this.list.filter(entity =>
             componentType.every(componentType =>
                 this.component[componentType] && this.component[componentType][entity]

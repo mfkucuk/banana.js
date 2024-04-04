@@ -9,7 +9,7 @@ export class Texture {
     height: number;
     image: HTMLImageElement;
 
-    constructor(src) {
+    constructor(src?: string) {
         this.textureId = gl.createTexture();
         this.loaded = false;
         this.bind();
@@ -74,22 +74,22 @@ export class Texture {
         this.unbind();
     }
 
-    GetImage() 
+    getImage() 
     {
         return this.image;
     }
 
-    IsLoaded() 
+    isLoaded() 
     {
         return this.loaded;
     }
 
-    GetWidth() 
+    getWidth() 
     {
         return this.width;
     }
 
-    GetHeight() 
+    getHeight() 
     {
         return this.height;
     }

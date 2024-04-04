@@ -1,33 +1,43 @@
 import { Log } from "../core/Log.ts"
 import { gl } from "./WebGLContext.ts"
 
-export function FramebufferSpecification() 
+export class FramebufferSpecification
 {
-    let Width, Height;
+    width: number;
+    height: number;
+    samples: number;
+    swapChainTarget: boolean;
 
-    let Samples = 1;
+    constructor() {
+        this.samples = 1;
 
-    let SwapChainTarget = false;
+        this.swapChainTarget = false;
+    }
 }
 
 export class Framebuffer 
 {
+    spec: FramebufferSpecification;
+
+    framebufferId: number;
+    colorAttachment: number;
+
     constructor(spec) 
     {
         this.spec = spec;
 
-        this.Invalidate();
+        this.invalidate();
     }
 
-    Invalidate() 
+    invalidate() 
     {
         this.framebufferId = gl.createFramebuffer();
 
-        this.Bind();
+        this.bind();
         
         this.colorAttachment = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, this.colorAttachment);
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.spec.Width, this.spec.Height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, this.spec.width, this.spec.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         
@@ -38,20 +48,20 @@ export class Framebuffer
             Log.Core_Error('Framebuffer is incomplete!');
         }
         
-        this.Unbind();
+        this.unbind();
     }
 
-    Bind() 
+    bind() 
     {
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.framebufferId);
     }
 
-    Unbind() 
+    unbind() 
     {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 
-    GetColorAttachmentId() 
+    getColorAttachmentId() 
     {
         return this.colorAttachment;
     }

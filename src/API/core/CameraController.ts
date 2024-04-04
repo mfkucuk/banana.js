@@ -1,5 +1,5 @@
 import { Input } from "./Input.ts"
-import { EditorCamera } from "../render/Camera.js"
+import { EditorCamera } from "../render/Camera.ts"
 import { MouseButton } from "./MouseButtonCode.ts"
 import * as weml from '../ext/weml.js/weml.js'
 import { Event, EventDispatcher, EventType } from "../event/Event.ts"
@@ -39,7 +39,7 @@ export class EditorCameraController
             direction.x = (this.previousMousePosition.x - Input.mousePosition.x) * this.zoomLevel / 1.5;
             direction.y = (this.previousMousePosition.y - Input.mousePosition.y) * this.zoomLevel / 1.5;
 
-            this.editorCamera.setPosition(this.editorCamera.getPosition()[0] + direction.x, this.editorCamera.getPosition()[1] + direction.y, 0.0);
+            this.editorCamera.setPosition(this.editorCamera.getPosition().x + direction.x, this.editorCamera.getPosition().y + direction.y, 0.0);
             
             this.previousMousePosition.x = Input.mousePosition.x;
             this.previousMousePosition.y = Input.mousePosition.y;

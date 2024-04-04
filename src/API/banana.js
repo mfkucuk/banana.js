@@ -67,21 +67,21 @@ export * from './event/MouseEvent.ts'
 export * from './event/ApplicationEvent.ts'
 
 // render
-export * from './render/Renderer2D.js'
+export * from './render/Renderer2D.ts'
 export * from './render/RenderCommand.ts'
-export * from './render/Framebuffer.js'
+export * from './render/Framebuffer.ts'
 export * from './render/Buffer.ts'
 export * from './render/Shader.ts'
-export * from './render/Camera.js'
-export * from './render/Color.js'
+export * from './render/Camera.ts'
+export * from './render/Color.ts'
 export * from './render/Texture.ts'
-export * from './render/SubTexture.js'
+export * from './render/SubTexture.ts'
 
 // scene
-export * from './scene/Scene.js'
-export * from './scene/Component.js'
+export * from './scene/Scene.ts'
+export * from './scene/Component.ts'
 export * from './scene/Entity.ts'
-export * from './scene/ScriptableEntity.js'
+export * from './scene/ScriptableEntity.ts'
 
 // math
-export * from './ext/weml.js/weml.js'
+export * from './math/MV.ts'

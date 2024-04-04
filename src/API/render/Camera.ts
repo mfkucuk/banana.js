@@ -1,16 +1,24 @@
 import { canvas } from '../core/Window.ts'
 import { Log } from '../core/Log.ts'
-import * as weml from '../ext/weml.js/weml.js'
 import { Event, EventType, EventDispatcher } from '../event/Event.ts'
+import { Utils, Vec3, Mat4 } from '../math/MV.ts';
 
-export const CameraType = {
-    Orthographic: 0, 
-    Perspective: 1,
+export enum CameraType {
+    Orthographic, 
+    Perspective,
 };
 
 class Camera {
+    projectionMatrix: Mat4;
+    cameraType: CameraType;
+    aspectRatio: number;
+
+    size: number;
+    near: number;
+    far: number;
+
     constructor() {
-        this.projectionMatrix = weml.Mat4();  
+        this.projectionMatrix = new Mat4();  
     
         this.cameraType = CameraType.Orthographic;      
         this.aspectRatio = parseFloat(canvas.width) / parseFloat(canvas.height)
@@ -29,7 +37,7 @@ class Camera {
     setPerspective(fovy, near, far) {
         this.cameraType = CameraType.Perspective;
 
-        this.projectionMatrix.setPerspective(weml.weml.toRadians(fovy), this.aspectRatio, near, far);
+        this.projectionMatrix.setPerspective(Utils.toRadians(fovy), this.aspectRatio, near, far);
         this.size = fovy;
         this.near = near;
         this.far = far;
@@ -77,13 +85,20 @@ export class SceneCamera extends Camera {
 }
 
 export class EditorCamera extends Camera {
+
+    viewMatrix: Mat4;
+    viewProjectionMatrix: Mat4;
+
+    cameraPosition: Vec3;
+    cameraRotation: number;
+
     constructor() {
         super();
 
-        this.viewMatrix = weml.Mat4();
-        this.viewProjectionMatrix = weml.Mat4();
+        this.viewMatrix = new Mat4();
+        this.viewProjectionMatrix = new Mat4();
         
-        this.cameraPosition = weml.Vec3(0, 0, 0);
+        this.cameraPosition = new Vec3(0, 0, 0);
         this.cameraRotation = 0;
 
         this.setView();
@@ -92,7 +107,7 @@ export class EditorCamera extends Camera {
     }
 
     setView() {
-        this.viewMatrix.setTranslationVec3(this.cameraPosition);
+        this.viewMatrix.setTranslation(this.cameraPosition);
 
         this.viewMatrix.applyRotationZ(this.cameraRotation);
 
@@ -104,19 +119,19 @@ export class EditorCamera extends Camera {
     }
 
     recalculateViewProjectionMatrix() {
-        this.viewProjectionMatrix = weml.Mat4();
+        this.viewProjectionMatrix = new Mat4();
         this.viewProjectionMatrix.mul(this.projectionMatrix);
         this.viewProjectionMatrix.mul(this.viewMatrix);
     }
 
     getPosition() {
-        return weml.Vec3(this.cameraPosition[0], this.cameraPosition[1], this.cameraPosition[2]);
+        return Vec3.copy(this.cameraPosition);
     }
 
     setPosition(x, y, z) {
-        this.cameraPosition[0] = x;
-        this.cameraPosition[1] = y;
-        this.cameraPosition[2] = z;
+        this.cameraPosition.x = x;
+        this.cameraPosition.y = y;
+        this.cameraPosition.z = z;
 
         this.setView();
         this.recalculateViewProjectionMatrix();
@@ -131,5 +146,7 @@ export class EditorCamera extends Camera {
 
         this.setView();
         this.recalculateViewProjectionMatrix();
+
+        
     }
 }

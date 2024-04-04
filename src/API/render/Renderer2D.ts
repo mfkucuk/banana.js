@@ -1,30 +1,34 @@
 import { IndexBuffer, VertexBuffer } from "./Buffer.ts"
-import { Color } from "./Color.js"
+import { Color } from "./Color.ts"
 import { Shader } from "./Shader.ts"
 import { Texture } from "./Texture.ts"
 import { gl } from "./WebGLContext.ts"
-import * as weml from '../ext/weml.js/weml.js'
+import { Mat4, Vec2, Vec4 } from "../math/MV.ts"
 
-function Render2DData()
+class Render2DData
 {
+    static MaxQuads = 10000;
+    static MaxVertices = Render2DData.MaxQuads * 4;
+    static MaxIndices = Render2DData.MaxQuads * 6; 
+    static QuadVertexPositions = [
+        new Vec4(-50, -50, 0, 1),
+        new Vec4(50, -50, 0, 1),
+        new Vec4(-50, 50, 0, 1),
+        new Vec4(50, 50, 0, 1)
+    ];
+    static QuadVertexCount = 0;
+    static QuadIndexCount = 0;
+    
+    static MaxTextureSlots = 16;
+    static TextureSlotIndex = 1;
+    static TextureSlots = [];
+
+    static BasicShader = null;
+    static QuadVertexBuffer = null;
+    static QuadIndexBuffer = null;
 };
-Render2DData.MaxQuads = 10000;
-Render2DData.MaxVertices = Render2DData.MaxQuads * 4;
-Render2DData.MaxIndices = Render2DData.MaxQuads * 6; 
 
-Render2DData.QuadVertexPositions = [
-    weml.Vec4(-50, -50, 0, 1),
-    weml.Vec4(50, -50, 0, 1),
-    weml.Vec4(-50, 50, 0, 1),
-    weml.Vec4(50, 50, 0, 1)
-];
 
-Render2DData.QuadVertexCount = 0;
-Render2DData.QuadIndexCount = 0;
-
-Render2DData.MaxTextureSlots = 16;
-Render2DData.TextureSlotIndex = 1;
-Render2DData.TextureSlots = [];
 
 function QuadVertex() 
 {
@@ -41,30 +45,30 @@ function QuadVertex()
     {
         let flatArray = [];
 
-        flatArray[0] = this.position[0];
-        flatArray[1] = this.position[1];
-        flatArray[2] = this.position[2];
-        flatArray[3] = this.position[3];
+        flatArray[0] = this.position.x;
+        flatArray[1] = this.position.y;
+        flatArray[2] = this.position.z;
+        flatArray[3] = this.position.w;
 
-        flatArray[4] = this.texCoord[0];
-        flatArray[5] = this.texCoord[1];
+        flatArray[4] = this.texCoord.x;
+        flatArray[5] = this.texCoord.y;
 
         flatArray[6] = this.texIndex;
 
-        flatArray[7] = this.color[0];
-        flatArray[8] = this.color[1];
-        flatArray[9] = this.color[2];
-        flatArray[10] = this.color[3];
+        flatArray[7] = this.color.x;
+        flatArray[8] = this.color.y;
+        flatArray[9] = this.color.z;
+        flatArray[10] = this.color.w;
 
-        flatArray[11] = this.translation[0];
-        flatArray[12] = this.translation[1];
-        flatArray[13] = this.translation[2];
+        flatArray[11] = this.translation.x;
+        flatArray[12] = this.translation.y;
+        flatArray[13] = this.translation.z;
 
-        flatArray[14] = this.rotation[2];
+        flatArray[14] = this.rotation.z;
 
-        flatArray[15] = this.scaling[0];
-        flatArray[16] = this.scaling[1];
-        flatArray[17] = this.scaling[2];
+        flatArray[15] = this.scaling.x;
+        flatArray[16] = this.scaling.y;
+        flatArray[17] = this.scaling.z;
 
         return flatArray;
     }
@@ -149,7 +153,7 @@ export class Renderer2D
         Render2DData.TextureSlots[0] = Renderer2D.White_Texture;
     }
 
-    static BeginScene(camera, transform) 
+    static BeginScene(camera, transform?: Mat4) 
     {
         Renderer2D.NewBatch();
         
@@ -157,12 +161,12 @@ export class Renderer2D
 
         if (typeof transform == 'undefined') 
         {
-            Render2DData.BasicShader.setUniformMatrix4fv('u_ViewProjectionMatrix', camera.getViewProjectionMatrix());
+            Render2DData.BasicShader.setUniformMatrix4fv('u_ViewProjectionMatrix', camera.getViewProjectionMatrix().data);
         }
         else 
         {
 
-            const viewProj = weml.Mat4();
+            const viewProj = new Mat4();
             viewProj.mul(camera.getViewProjectionMatrix());
             viewProj.mul(transform.invert());
             Render2DData.BasicShader.setUniformMatrix4fv('u_ViewProjectionMatrix', viewProj);
@@ -206,7 +210,7 @@ export class Renderer2D
 
         let v1 = new QuadVertex();
         v1.position = Render2DData.QuadVertexPositions[0];
-        v1.texCoord = weml.Vec2(0, 0);
+        v1.texCoord = new Vec2(0, 0);
         v1.texIndex = 0;
         v1.color = color;
         v1.translation = transform.getPosition();
@@ -216,7 +220,7 @@ export class Renderer2D
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[1];
-        v1.texCoord = weml.Vec2(1, 0);
+        v1.texCoord = new Vec2(1, 0);
         v1.texIndex = 0;
         v1.color = color;
         v1.translation = transform.getPosition();
@@ -226,7 +230,7 @@ export class Renderer2D
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[2];
-        v1.texCoord = weml.Vec2(0, 1);
+        v1.texCoord = new Vec2(0, 1);
         v1.texIndex = 0;
         v1.color = color;
         v1.translation = transform.getPosition();
@@ -236,7 +240,7 @@ export class Renderer2D
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[3];
-        v1.texCoord = weml.Vec2(1, 1);
+        v1.texCoord = new Vec2(1, 1);
         v1.texIndex = 0;
         v1.color = color;
         v1.translation = transform.getPosition();
@@ -283,7 +287,7 @@ export class Renderer2D
 
         let v1 = new QuadVertex();
         v1.position = Render2DData.QuadVertexPositions[0];
-        v1.texCoord = weml.Vec2(0, 0);
+        v1.texCoord = new Vec2(0, 0);
         v1.texIndex = useTextureSlot;
         v1.color = Color.TRANSPARENT;
         v1.translation = transform.getPosition();
@@ -293,7 +297,7 @@ export class Renderer2D
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[1];
-        v1.texCoord = weml.Vec2(1, 0);
+        v1.texCoord = new Vec2(1, 0);
         v1.texIndex = useTextureSlot;
         v1.color = Color.TRANSPARENT;
         v1.translation = transform.getPosition();
@@ -303,7 +307,7 @@ export class Renderer2D
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[2];
-        v1.texCoord = weml.Vec2(0, 1);
+        v1.texCoord = new Vec2(0, 1);
         v1.texIndex = useTextureSlot;
         v1.color = Color.TRANSPARENT;
         v1.translation = transform.getPosition();
@@ -313,7 +317,7 @@ export class Renderer2D
         Render2DData.QuadVertexCount++;
 
         v1.position = Render2DData.QuadVertexPositions[3];
-        v1.texCoord = weml.Vec2(1, 1);
+        v1.texCoord = new Vec2(1, 1);
         v1.texIndex = useTextureSlot;
         v1.color = Color.TRANSPARENT;
         v1.translation = transform.getPosition();

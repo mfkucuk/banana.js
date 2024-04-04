@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import * as banana from "../API/banana";
 import { EditorLayer } from "./EditorLayer";
 import SceneHierarchyPanel from "./panels/SceneHierarchyPanel";
-import hello from "../test.ts";
 
 class BananaEditor extends banana.Application 
 {
