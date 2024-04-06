@@ -4,8 +4,8 @@ import { Event, EventType, EventDispatcher } from '../event/Event.ts'
 import { Utils, Vec3, Mat4 } from '../math/MV.ts';
 
 export enum CameraType {
-    Orthographic, 
-    Perspective,
+    Orthographic = 0, 
+    Perspective = 1,
 };
 
 class Camera {
@@ -14,6 +14,7 @@ class Camera {
     aspectRatio: number;
 
     size: number;
+    fovy: number;
     near: number;
     far: number;
 
@@ -21,7 +22,7 @@ class Camera {
         this.projectionMatrix = new Mat4();  
     
         this.cameraType = CameraType.Orthographic;      
-        this.aspectRatio = parseFloat(canvas.width) / parseFloat(canvas.height)
+        this.aspectRatio = parseFloat(canvas.width) / parseFloat(canvas.height);
     }
 
     setOrthographic(size, near, far) {
@@ -38,7 +39,7 @@ class Camera {
         this.cameraType = CameraType.Perspective;
 
         this.projectionMatrix.setPerspective(Utils.toRadians(fovy), this.aspectRatio, near, far);
-        this.size = fovy;
+        this.fovy = fovy;
         this.near = near;
         this.far = far;
     }

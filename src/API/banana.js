@@ -79,6 +79,7 @@ export * from './render/SubTexture.ts'
 
 // scene
 export * from './scene/Scene.ts'
+export * from './scene/SceneSerializer.ts'
 export * from './scene/Component.ts'
 export * from './scene/Entity.ts'
 export * from './scene/ScriptableEntity.ts'

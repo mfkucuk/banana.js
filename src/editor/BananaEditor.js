@@ -32,18 +32,28 @@ banana.Application.createApplication = function()
     return new BananaEditor();
 }
 
+function Window({ handleBananaMainComplete }) {
+    
+
+    useEffect(() => {
+        banana.main();
+        handleBananaMainComplete();
+    }, [])
+
+    return <canvas className="item" id="gl-canvas" width={600} height={600} tabIndex={1}></canvas>;
+}
+
 
 function Editor() {
     const [bananaMainComplete, setBananaMainComplete] = useState(false);
     
-    useEffect(() => {
-        banana.main();
+    function handleBananaMainComplete() {
         setBananaMainComplete(true);
-    })
+    }
 
     return (
         <div className="container">
-            <canvas className="item" id="gl-canvas" width={600} height={600} tabIndex={1}></canvas>
+            <Window handleBananaMainComplete={handleBananaMainComplete}/>
             { bananaMainComplete && <SceneHierarchyPanel/> }
         </div>
     );

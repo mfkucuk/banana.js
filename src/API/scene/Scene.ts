@@ -9,13 +9,19 @@ import { Mat4 } from '../math/MV.ts'
 export class Scene 
 {
     registry: ntt;
+    private _name: string;
 
-    constructor() 
+    constructor(name: string) 
     {
         this.registry = new ntt();
+        this._name = name;
     }
 
-    createEntity(name) {
+    public get name(): string {
+        return this._name;
+    }
+
+    createEntity(name: string): Entity {
         const entity = new Entity(this.registry.create(), this);
         
         entity.addComponent(ComponentType.TransformComponent);

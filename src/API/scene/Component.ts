@@ -29,6 +29,10 @@ export class TagComponent extends Component {
     getName() {
         return this.name;
     }
+
+    toString() {
+        return `TagComponent:\n  Tag: ${this.name}\n`;
+    }
 }
 
 export class TransformComponent extends Component {
@@ -87,6 +91,15 @@ export class TransformComponent extends Component {
         this.scale.y = y;
         this.scale.z = z;
     }
+
+    toString() {
+
+        const position = `Position: ${this.getPosition()}`;
+        const rotation = `Rotation: ${this.getRotation()}`;
+        const scale = `Scale: ${this.getScale()}`;
+
+        return `TransformComponent:\n  ${position}\n  ${rotation}\n  ${scale}\n`;
+    }
 }
 
 export class SpriteRendererComponent extends Component {
@@ -106,6 +119,10 @@ export class SpriteRendererComponent extends Component {
 
     getColor(): Color {
         return this.color;
+    }
+
+    toString() {
+        return `SpriteRendererComponent:\n  Color: ${this.color}`
     }
 }
 
@@ -135,6 +152,14 @@ export class CameraComponent extends Component {
         return this.sceneCamera;
     }
 
+    getType() {
+        return this.sceneCamera.getCameraType();
+    }
+
+    getFovy() {
+        return this.sceneCamera.fovy;
+    }
+
     getSize(): number {
         return this.sceneCamera.size;
     }
@@ -145,6 +170,13 @@ export class CameraComponent extends Component {
 
     getFar(): number {
         return this.sceneCamera.far;
+    }
+
+    toString() {
+        const type = `ProjectionType: ${this.getType().valueOf()}`;
+        const fov = `ProjectionFOV: ${this.getFovy()}`;
+
+        return `CameraComponent:\n  Camera:\n   ${type}\n   ${fov}\n`;
     }
 }
 

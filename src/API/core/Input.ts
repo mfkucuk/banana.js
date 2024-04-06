@@ -1,4 +1,3 @@
-import * as weml from '../ext/weml.js/weml.js'
 import { Vec2 } from '../math/MV.ts';
 import { Gamepad } from './Gamepad.ts'
 import { Log } from './Log.ts'
@@ -47,7 +46,7 @@ export class Input {
         } 
 
         this._gamepadWarningFlag = true;
-        return Gamepad.Instance.currentGamepad.axes[axis].valueOf;
+        return Gamepad.Instance.currentGamepad.axes[axis].valueOf();
     }
 
     public static mousePosition = new Vec2(0, 0);

@@ -74,6 +74,10 @@ export class Vec3 {
     public set z(z) {
         this.data[2] = z;
     }
+
+    toString() {
+        return `[${this.x}, ${this.y}, ${this.z}]`;
+    }
 }
 
 export class Vec4 {
@@ -118,6 +122,10 @@ export class Vec4 {
 
     public set w(w) {
         this.data[3] = w;
+    }
+
+    toString() {
+        return `[${this.x}, ${this.y}, ${this.y}, ${this.w}]`;
     }
 }
 

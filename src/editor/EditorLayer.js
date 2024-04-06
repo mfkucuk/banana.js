@@ -14,7 +14,7 @@ export class EditorLayer extends banana.Layer
 
         banana.Renderer2D.Init();
     
-        this.activeScene = new banana.Scene();
+        this.activeScene = new banana.Scene('NewScene');
         
         this.cameraController = new banana.EditorCameraController();
         
@@ -34,6 +34,8 @@ export class EditorLayer extends banana.Layer
         //this.m_ViewportPanel = new ViewportPanel();
         SceneHierarchyPanel.setScene(this.activeScene);
         //this.m_ConsolePanel = new ConsolePanel();
+
+        banana.SceneSerializer.serialize(this.activeScene);
     }
 
     onAttach() 

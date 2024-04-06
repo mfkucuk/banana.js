@@ -42,6 +42,10 @@ export class ntt {
         return this.list.indexOf(entity) != -1;
     }
 
+    get_all_entities(): string[] {
+        return this.list;
+    }
+
     // component functions
 
     emplace<T extends Component>(entity: string, component: T) {
