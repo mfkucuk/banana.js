@@ -35,7 +35,9 @@ export class EditorLayer extends banana.Layer
         SceneHierarchyPanel.setScene(this.activeScene);
         //this.m_ConsolePanel = new ConsolePanel();
 
-        banana.SceneSerializer.serialize(this.activeScene);
+        this.sceneData = banana.SceneSerializer.serialize(this.activeScene);
+
+        banana.SceneSerializer.deserialize(this.sceneData);
     }
 
     onAttach() 

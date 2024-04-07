@@ -1,7 +1,6 @@
 import { Input } from "./Input.ts"
 import { EditorCamera } from "../render/Camera.ts"
 import { MouseButton } from "./MouseButtonCode.ts"
-import * as weml from '../ext/weml.js/weml.js'
 import { Event, EventDispatcher, EventType } from "../event/Event.ts"
 import { canvas } from "./Window.ts"
 import { KeyCode } from "./KeyCode.ts"
@@ -69,16 +68,16 @@ export class EditorCameraController
             this.zoomLevel = Math.min(2.0, this.zoomLevel);
             this.editorCamera.setOrthographic(
                 446 * this.zoomLevel,
-                this.editorCamera.near,
-                this.editorCamera.far);
+                this.editorCamera.orthographicNear,
+                this.editorCamera.orthographicFar);
         }
         else if (event.getOffsetY() < 0) {
             this.zoomLevel -= 0.25;
             this.zoomLevel = Math.max(0.25, this.zoomLevel);
             this.editorCamera.setOrthographic(
                 446 * this.zoomLevel,
-                this.editorCamera.near,
-                this.editorCamera.far);
+                this.editorCamera.orthographicNear,
+                this.editorCamera.orthographicFar);
         }
 
         this.editorCamera.recalculateViewProjectionMatrix();

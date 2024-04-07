@@ -20,6 +20,12 @@ export class ntt {
         return id;
     }
 
+    create_with_id(id: string) {
+        this.list[this.count++] = id;
+
+        return id;
+    }
+
     release(entity: string) {
         const index = this.list.indexOf(entity);
 
@@ -48,7 +54,7 @@ export class ntt {
 
     // component functions
 
-    emplace<T extends Component>(entity: string, component: T) {
+    emplace<T extends Component>(entity: string, component: T): T {
         if (!this.valid(entity)) {
             return;
         }

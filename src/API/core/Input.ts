@@ -36,17 +36,17 @@ export class Input {
         return Gamepad.Instance.currentGamepad.buttons[button].pressed;
     }
 
-    public static getJoystickStrength(axis) {
+    public static getJoystickStrength(axis: number): number {
         if (!Gamepad.Instance.isGamepadConnected) {
             if (this._gamepadWarningFlag) {
                 Log.Warn('No gamepad is connected!');
                 this._gamepadWarningFlag = false;
             }
-            return false;
+            return 0;
         } 
 
         this._gamepadWarningFlag = true;
-        return Gamepad.Instance.currentGamepad.axes[axis].valueOf();
+        return Gamepad.Instance.currentGamepad.axes[axis];
     }
 
     public static mousePosition = new Vec2(0, 0);

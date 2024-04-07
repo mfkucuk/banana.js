@@ -13,10 +13,8 @@ export class Color
     static WHITE = new Vec4(1.0, 1.0, 1.0, 1.0);
     static TRANSPARENT = new Vec4(0.0, 0.0, 0.0, 0.0);
 
-    constructor(r: number, g: number, b: number, a: number) {
-        const map = 255.0;
-    
-        return new Vec4(r/map, g/map, b/map, a/map);
+    constructor(r: number, g: number, b: number, a: number) {    
+        return new Vec4(r, g, b, a);
     }
     
 }

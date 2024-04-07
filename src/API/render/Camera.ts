@@ -13,10 +13,14 @@ class Camera {
     cameraType: CameraType;
     aspectRatio: number;
 
-    size: number;
-    fovy: number;
-    near: number;
-    far: number;
+    size: number = 466;
+    orthographicNear: number = -1;
+    orthographicFar: number = 1;
+    
+    fovy: number = 45;
+    perspectiveNear: number = 10;
+    perspectiveFar: number = 1000;
+
 
     constructor() {
         this.projectionMatrix = new Mat4();  
@@ -29,8 +33,8 @@ class Camera {
         this.cameraType = CameraType.Orthographic;
 
         this.size = size;
-        this.near = near;
-        this.far = far;
+        this.orthographicNear = near;
+        this.orthographicFar = far;
 
         this.setViewportSize();
     }
@@ -40,8 +44,8 @@ class Camera {
 
         this.projectionMatrix.setPerspective(Utils.toRadians(fovy), this.aspectRatio, near, far);
         this.fovy = fovy;
-        this.near = near;
-        this.far = far;
+        this.perspectiveNear = near;
+        this.perspectiveFar = far;
     }
 
     getViewProjectionMatrix() {
@@ -58,7 +62,7 @@ class Camera {
         let orthoBottom = this.size * 0.5;
         let orthoTop = -this.size * 0.5;
 
-        this.projectionMatrix.setOrtho(orthoLeft, orthoRight, orthoBottom, orthoTop, this.near, this.far);
+        this.projectionMatrix.setOrtho(orthoLeft, orthoRight, orthoBottom, orthoTop, this.orthographicNear, this.orthographicFar);
     }
 }
 

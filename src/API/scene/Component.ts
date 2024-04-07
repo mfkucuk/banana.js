@@ -156,27 +156,20 @@ export class CameraComponent extends Component {
         return this.sceneCamera.getCameraType();
     }
 
-    getFovy() {
-        return this.sceneCamera.fovy;
-    }
-
-    getSize(): number {
-        return this.sceneCamera.size;
-    }
-
-    getNear(): number {
-        return this.sceneCamera.near;
-    }
-
-    getFar(): number {
-        return this.sceneCamera.far;
-    }
-
     toString() {
         const type = `ProjectionType: ${this.getType().valueOf()}`;
-        const fov = `ProjectionFOV: ${this.getFovy()}`;
 
-        return `CameraComponent:\n  Camera:\n   ${type}\n   ${fov}\n`;
+        const fov = `ProjectionFOV: ${this.getCamera().fovy}`;
+        const pNear = `PerspectiveNear: ${this.getCamera().perspectiveNear}`;
+        const pFar = `PerspectiveFar: ${this.getCamera().perspectiveFar}`;
+
+        const size = `OrthographicSize: ${this.getCamera().size}`;
+        const oNear = `OrthographicNear: ${this.getCamera().orthographicNear}`;
+        const oFar = `OrthographicFar: ${this.getCamera().orthographicFar}`;
+        
+        const primary = `Primary: ${this.isPrimary()}`;
+
+        return `CameraComponent:\n  Camera:\n   ${type}\n   ${fov}\n   ${pNear}\n   ${pFar}\n   ${size}\n   ${oNear}\n   ${oFar}\n  ${primary}\n`;
     }
 }
 

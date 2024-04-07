@@ -129,7 +129,7 @@ export class Scene
 
     onEvent(event) 
     {
-        const cameraComponents: CameraComponent[] = this.registry.get_all(ComponentType.CameraComponent) as CameraComponent[];
+        const cameraComponents = this.registry.get_all<CameraComponent>(ComponentType.CameraComponent);
 
         cameraComponents.forEach(cc => {
             cc.getCamera().onEvent(event);
