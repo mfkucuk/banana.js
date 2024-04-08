@@ -4,9 +4,7 @@
 #include <emscripten.h>
 
 EMSCRIPTEN_KEEPALIVE
-float* mat4_multiply(const float* a, const float* b) {
-
-    float* out = (float*)malloc(16 * sizeof(float));
+void mat4_multiply(float* a, const float* b) {
 
     __m128 row1 = _mm_load_ps(&a[0]);
     __m128 row2 = _mm_load_ps(&a[4]);
@@ -25,14 +23,12 @@ float* mat4_multiply(const float* a, const float* b) {
             _mm_add_ps(
                 _mm_mul_ps(brod3, row3),
                 _mm_mul_ps(brod4, row4)));
-        _mm_store_ps(&out[i * 4], row);
+        _mm_store_ps(&a[i * 4], row);
     }
-
-    return out;
 }
 
-EMSCRIPTEN_KEEPALIVE
-float* mat4_invert(const float* a, const float* b) {
+// EMSCRIPTEN_KEEPALIVE
+// float* mat4_invert(const float* a, const float* b) {
 
-    
-}
+//     return nullptr;
+// }

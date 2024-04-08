@@ -131,13 +131,32 @@ export class Vec4 {
 
 export class Mat4 {
     data: Float32Array;
+    offset: number;
 
     static mat4_multiply: CallableFunction;
     static memory: WebAssembly.Memory;
+    static currentOffset: number = 0;
 
     constructor() {
-        this.data = new Float32Array(16);
 
+        console.log(Mat4.currentOffset);
+
+        if (Mat4.memory != null) {
+
+            if (Mat4.currentOffset > 50000) {
+                Mat4.currentOffset = 1024;
+            }
+
+            this.offset = Mat4.currentOffset;
+            this.data = new Float32Array(Mat4.memory.buffer, this.offset, 16);
+            this.identity();
+
+            Mat4.currentOffset += 16 * Float32Array.BYTES_PER_ELEMENT;
+            return;
+        }
+
+        this.data = new Float32Array(16);
+        this.offset = -1;
         this.identity();
     }
 
@@ -157,7 +176,7 @@ export class Mat4 {
             }
         }
 
-        WebAssembly.instantiateStreaming(fetch('./matrix_mult.wasm'), importObject).then(
+        WebAssembly.instantiateStreaming(fetch('./matrix.wasm'), importObject).then(
             (obj) => {
                 this.mat4_multiply = obj.instance.exports.mat4_multiply as CallableFunction;
                 this.memory = obj.instance.exports.memory as WebAssembly.Memory;
@@ -202,7 +221,8 @@ export class Mat4 {
     }
 
     mul(other: Mat4): Mat4 {
-        if (Mat4.mat4_multiply != null) {
+        if (Mat4.memory != null) {
+            //console.log(this.mulSIMD(other));
             return this.mulSIMD(other);
         }
 
@@ -239,25 +259,32 @@ export class Mat4 {
         this.data[14] = nm32;
         this.data[15] = nm33;
 
+        //console.log(this);
+
         return this;
     }
 
     mulSIMD(other: Mat4): Mat4 {
 
-        const aOffset = 0;
-        const bOffset = aOffset + 16 * Float32Array.BYTES_PER_ELEMENT;
+        // corner case
+        if (other.offset == -1) {
 
-        // Create Float32Array views for matrices a, b, and out
-        const a = new Float32Array(Mat4.memory.buffer, aOffset, 16); // 4x4 matrix
-        const b = new Float32Array(Mat4.memory.buffer, bOffset, 16); // 4x4 matrix
+            if (Mat4.currentOffset > 65536) {
+                Mat4.currentOffset = 0;
+            }
 
-        a.set(this.data);
-        b.set(other.data);
+            const a = new Float32Array(other.data);
 
-        let ptr = Mat4.mat4_multiply(aOffset, bOffset);
-        var bytes = new Float32Array(Mat4.memory.buffer, ptr, 16);
+            other.offset = Mat4.currentOffset;
+            other.data = new Float32Array(Mat4.memory.buffer, other.offset, 16);
+            other.data.set(a);
 
-        this.data.set(bytes);
+            console.log(other.offset);
+
+            Mat4.currentOffset += 16 * Float32Array.BYTES_PER_ELEMENT;
+        }
+
+        Mat4.mat4_multiply(this.offset, other.offset);
 
         return this;
     }
