@@ -80,6 +80,7 @@ QuadVertex.VertexSize = 18;
 export class Renderer2D 
 {
     static White_Texture;
+    static viewProj = new Mat4();
     static Stats = {
         BatchCount: 0,
         QuadCount: 0,
@@ -166,10 +167,10 @@ export class Renderer2D
         else 
         {
 
-            const viewProj = new Mat4();
-            viewProj.mul(camera.getViewProjectionMatrix());
-            viewProj.mul(transform.invert());
-            Render2DData.BasicShader.setUniformMatrix4fv('u_ViewProjectionMatrix', viewProj);
+            this.viewProj.identity();
+            this.viewProj.mul(camera.getViewProjectionMatrix());
+            this.viewProj.mul(transform.invert());
+            Render2DData.BasicShader.setUniformMatrix4fv('u_ViewProjectionMatrix', this.viewProj);
         }
 
     }

@@ -138,9 +138,6 @@ export class Mat4 {
     static currentOffset: number = 0;
 
     constructor() {
-
-        console.log(Mat4.currentOffset);
-
         if (Mat4.memory != null) {
 
             if (Mat4.currentOffset > 50000) {
@@ -267,6 +264,21 @@ export class Mat4 {
     mulSIMD(other: Mat4): Mat4 {
 
         // corner case
+        if (this.offset == -1) {
+
+            if (Mat4.currentOffset > 65536) {
+                Mat4.currentOffset = 0;
+            }
+
+            const a = new Float32Array(this.data);
+
+            this.offset = Mat4.currentOffset;
+            this.data = new Float32Array(Mat4.memory.buffer, this.offset, 16);
+            this.data.set(a);
+
+            Mat4.currentOffset += 16 * Float32Array.BYTES_PER_ELEMENT;
+        }
+
         if (other.offset == -1) {
 
             if (Mat4.currentOffset > 65536) {
@@ -278,8 +290,6 @@ export class Mat4 {
             other.offset = Mat4.currentOffset;
             other.data = new Float32Array(Mat4.memory.buffer, other.offset, 16);
             other.data.set(a);
-
-            console.log(other.offset);
 
             Mat4.currentOffset += 16 * Float32Array.BYTES_PER_ELEMENT;
         }

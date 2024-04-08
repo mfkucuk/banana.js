@@ -124,7 +124,7 @@ export class EditorCamera extends Camera {
     }
 
     recalculateViewProjectionMatrix() {
-        this.viewProjectionMatrix = new Mat4();
+        this.viewProjectionMatrix.identity();
         this.viewProjectionMatrix.mul(this.projectionMatrix);
         this.viewProjectionMatrix.mul(this.viewMatrix);
     }

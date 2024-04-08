@@ -10,11 +10,13 @@ export class Scene
 {
     registry: ntt;
     private _name: string;
+    private _view: Mat4;
 
     constructor(name: string) 
     {
         this.registry = new ntt();
         this._name = name;
+        this._view = new Mat4();
     }
 
     public get name(): string {
@@ -107,11 +109,11 @@ export class Scene
         }
 
 
-        let view = new Mat4();
-        view.setTranslation(mainCameraTransform.getPosition());
-        view.applyRotationZ(mainCameraTransform.getRotation().z);
+        this._view.identity();
+        this._view.setTranslation(mainCameraTransform.getPosition());
+        this._view.applyRotationZ(mainCameraTransform.getRotation().z);
 
-        Renderer2D.BeginScene(mainCamera, view);
+        Renderer2D.BeginScene(mainCamera, this._view);
 
         this.renderScene();
 
