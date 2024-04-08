@@ -1,9 +1,12 @@
+import { Mat4 } from "../banana.js";
 import { Application } from "./Application.ts"
 import { Log } from "./Log.ts"
 import { Profiler } from "./Profiler.ts";
 
-export function main() {
+export function  main() {
     Log.Core_Info('Engine initialized');
+
+    Mat4.init();
 
     // init profiling
     //Profiler.BeginProfile('Application Init');

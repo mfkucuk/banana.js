@@ -132,10 +132,59 @@ export class Vec4 {
 export class Mat4 {
     data: Float32Array;
 
+    static mat4_multiply: CallableFunction;
+    static memory: WebAssembly.Memory;
+
     constructor() {
         this.data = new Float32Array(16);
 
         this.identity();
+    }
+
+    static init() {
+        let memory = new WebAssembly.Memory({
+            initial: 256,
+            maximum: 512,
+        }); 
+
+        const importObject: WebAssembly.Imports = {
+            env: {
+                memory: memory,
+                emscripten_resize_heap: memory.grow,
+            },
+            js: {
+                mem: memory,
+            }
+        }
+
+        WebAssembly.instantiateStreaming(fetch('./matrix_mult.wasm'), importObject).then(
+            (obj) => {
+                this.mat4_multiply = obj.instance.exports.mat4_multiply as CallableFunction;
+                this.memory = obj.instance.exports.memory as WebAssembly.Memory;
+            },
+        );
+    }
+
+    static fromArray(array: Float32Array) {
+        const mat = new Mat4();
+
+        for (let i = 0; i < 16; i++) {
+            mat.data[i] = array[i];
+        }
+
+        return mat;
+    }
+
+    equal(other: Mat4): boolean {
+        let flag = true;
+
+        for (let i = 0; i < 16; i++) {
+            if (this.data != other.data) {
+                flag = false;
+            }
+        }
+
+        return flag;
     }
 
     zero(): Mat4 {
@@ -153,6 +202,10 @@ export class Mat4 {
     }
 
     mul(other: Mat4): Mat4 {
+        if (Mat4.mat4_multiply != null) {
+            return this.mulSIMD(other);
+        }
+
         var nm00 = this.data[ 0] * other.data[ 0] + this.data[ 4] * other.data[ 1] + this.data[ 8] * other.data[ 2] + this.data[12] * other.data[ 3];
         var nm01 = this.data[ 1] * other.data[ 0] + this.data[ 5] * other.data[ 1] + this.data[ 9] * other.data[ 2] + this.data[13] * other.data[ 3];
         var nm02 = this.data[ 2] * other.data[ 0] + this.data[ 6] * other.data[ 1] + this.data[10] * other.data[ 2] + this.data[14] * other.data[ 3];
@@ -185,6 +238,26 @@ export class Mat4 {
         this.data[13] = nm31;
         this.data[14] = nm32;
         this.data[15] = nm33;
+
+        return this;
+    }
+
+    mulSIMD(other: Mat4): Mat4 {
+
+        const aOffset = 0;
+        const bOffset = aOffset + 16 * Float32Array.BYTES_PER_ELEMENT;
+
+        // Create Float32Array views for matrices a, b, and out
+        const a = new Float32Array(Mat4.memory.buffer, aOffset, 16); // 4x4 matrix
+        const b = new Float32Array(Mat4.memory.buffer, bOffset, 16); // 4x4 matrix
+
+        a.set(this.data);
+        b.set(other.data);
+
+        let ptr = Mat4.mat4_multiply(aOffset, bOffset);
+        var bytes = new Float32Array(Mat4.memory.buffer, ptr, 16);
+
+        this.data.set(bytes);
 
         return this;
     }

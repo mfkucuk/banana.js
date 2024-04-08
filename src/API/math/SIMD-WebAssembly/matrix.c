@@ -4,12 +4,10 @@
 #include <emscripten.h>
 
 EMSCRIPTEN_KEEPALIVE
-float* allocate_memory(int size) {
-    return (float*)malloc(size * sizeof(float));
-}
+float* mat4_multiply(const float* a, const float* b) {
 
-EMSCRIPTEN_KEEPALIVE
-void mat4_multiply(float* out, const float* a, const float* b) {
+    float* out = (float*)malloc(16 * sizeof(float));
+
     __m128 row1 = _mm_load_ps(&a[0]);
     __m128 row2 = _mm_load_ps(&a[4]);
     __m128 row3 = _mm_load_ps(&a[8]);
@@ -29,4 +27,12 @@ void mat4_multiply(float* out, const float* a, const float* b) {
                 _mm_mul_ps(brod4, row4)));
         _mm_store_ps(&out[i * 4], row);
     }
+
+    return out;
+}
+
+EMSCRIPTEN_KEEPALIVE
+float* mat4_invert(const float* a, const float* b) {
+
+    
 }

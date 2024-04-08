@@ -36,8 +36,6 @@ export class SceneSerializer {
             }
         }
 
-        console.log(sceneData);
-
         return sceneData;
     }
 
@@ -48,8 +46,6 @@ export class SceneSerializer {
         let lines = sceneData.split('\n');
     
         for (let i = 0; i < lines.length; i++) {
-
-            console.log(lines[i]);
 
             if (lines[i].startsWith('Scene:')) {
                 const sceneName = lines[i].split(':')[1].trim();
