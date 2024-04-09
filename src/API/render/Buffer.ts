@@ -24,7 +24,7 @@ export class VertexBuffer {
     stride: number;
     attributes: VertexAttribute[];
     
-    constructor(data) {
+    constructor(data: number) {
         this.bufferId = gl.createBuffer();
         
         this.data = new Float32Array( data );
@@ -38,9 +38,7 @@ export class VertexBuffer {
         this.attributes = [];
     }
 
-
-    bind()
-    {
+    bind() {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.bufferId);
         gl.bufferData(gl.ARRAY_BUFFER, this.data, this.usage);
     }
@@ -56,55 +54,48 @@ export class VertexBuffer {
         }
     }
 
-    pushAttribute(attribLocation, count, normalized = false) 
-    {
+    pushAttribute(attribLocation, count, normalized = false) {
         this.attributes.push(new VertexAttribute(attribLocation, count, normalized));
 
         this.stride += 4 * count;
     }
 
-    linkAttributes() 
-    {
-        this.attributes.forEach(attribute => 
-        {   
+    linkAttributes() {
+        this.attributes.forEach(attribute => {   
             gl.enableVertexAttribArray(attribute.location);
             gl.vertexAttribPointer(attribute.location, attribute.count, gl.FLOAT, attribute.normalized, this.stride, this.offset);
 
             this.offset += 4 * attribute.count;
         });
+
+        this.offset = 0;
     }
 
-    getAttributeCount() 
-    {
+    getAttributeCount() {
         return this.attributes.length;
     }
 }
 
-export class IndexBuffer 
-{
+export class IndexBuffer {
     bufferId: number;
     data: Uint16Array;
 
-    constructor(data) 
-    {
+    constructor(data: Uint16Array) {
         this.bufferId = gl.createBuffer();
         this.data = data;
         this.bind();
     }
 
-    bind() 
-    {
+    bind() {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufferId);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, this.data, gl.STATIC_DRAW);
     }
 
-    unbind() 
-    {
+    unbind() {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
     }
 
-    getCount() 
-    {
+    getCount() {
         return this.data.length;
     }
 }

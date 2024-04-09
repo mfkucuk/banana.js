@@ -38,6 +38,10 @@ export class EditorCameraController
             direction.x = (this.previousMousePosition.x - Input.mousePosition.x) * this.zoomLevel / 1.5;
             direction.y = (this.previousMousePosition.y - Input.mousePosition.y) * this.zoomLevel / 1.5;
 
+            if (direction.equals(Vec2.ZERO)) {
+                return;
+            }
+
             this.editorCamera.setPosition(this.editorCamera.getPosition().x + direction.x, this.editorCamera.getPosition().y + direction.y, 0.0);
             
             this.previousMousePosition.x = Input.mousePosition.x;

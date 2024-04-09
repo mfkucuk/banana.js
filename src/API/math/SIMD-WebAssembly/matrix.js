@@ -1046,6 +1046,8 @@ var wasmImports = {
 var wasmExports = createWasm();
 var ___wasm_call_ctors = createExportWrapper('__wasm_call_ctors');
 var _mat4_multiply = Module['_mat4_multiply'] = createExportWrapper('mat4_multiply');
+var _mat4_apply_rotation_z = Module['_mat4_apply_rotation_z'] = createExportWrapper('mat4_apply_rotation_z');
+var _mat4_apply_scale = Module['_mat4_apply_scale'] = createExportWrapper('mat4_apply_scale');
 var _fflush = createExportWrapper('fflush');
 var _emscripten_stack_init = () => (_emscripten_stack_init = wasmExports['emscripten_stack_init'])();
 var _emscripten_stack_get_free = () => (_emscripten_stack_get_free = wasmExports['emscripten_stack_get_free'])();

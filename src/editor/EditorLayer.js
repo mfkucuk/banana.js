@@ -12,7 +12,7 @@ export class EditorLayer extends banana.Layer
     {
         super('Editor Layer');
 
-        banana.Renderer2D.Init();
+        banana.Renderer2D.init();
     
         this.activeScene = new banana.Scene('NewScene');
         
@@ -50,7 +50,7 @@ export class EditorLayer extends banana.Layer
 
     onUpdate(deltaTime) 
     {        
-        banana.Renderer2D.ResetStats();
+        banana.Renderer2D.resetStats();
         
         banana.RenderCommand.clear();
 

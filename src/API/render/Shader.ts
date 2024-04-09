@@ -2,12 +2,6 @@ import { initShadersFromHTML, initShadersFromFiles } from "./initShaders.ts"
 import { gl } from "./WebGLContext.ts"
 import { Log } from "../core/Log.ts"
 
-// export const ShaderSource = 
-// {
-//     html: 0,
-//     file: 1
-// }
-
 export class Shader {
     shaderId: number;
     uniformLookupTable: Object;
@@ -27,11 +21,12 @@ export class Shader {
         gl.useProgram(null);
     }
 
-    getAttributeLocation(attributeName) {
+    getAttributeLocation(attributeName: string) {
+        
         return gl.getAttribLocation(this.shaderId, attributeName);
     }
 
-    getUniformLocation(uniformName) {
+    getUniformLocation(uniformName: string) {
         if (typeof this.uniformLookupTable[uniformName] != 'undefined') {
             return this.uniformLookupTable[uniformName];
         }
@@ -50,21 +45,33 @@ export class Shader {
     }
 
     setUniform4f(uniformName, value) {
+        this.bind();
+
         const uniformLocation = this.getUniformLocation(uniformName);
 
         gl.uniform4f(uniformLocation, value[0], value[1], value[2], value[3]);
+
+        this.unbind();
     }
 
     setUniform1i(uniformName, value) {
+        this.bind();
+
         const uniformLocation = this.getUniformLocation(uniformName);
 
         gl.uniform1i(uniformLocation, value);
+
+        this.unbind();
     }
 
     setUniform1iv(uniformName, value) {
+        this.bind();
+
         const uniformLocation = this.getUniformLocation(uniformName);
 
         gl.uniform1iv(uniformLocation, value);
+
+        this.unbind();
     }
 
     UseTexture(unit) {

@@ -2,9 +2,9 @@ import { ntt } from './ntt.ts'
 import { ComponentType } from '../core/Type.ts'
 import { Renderer2D } from '../render/Renderer2D.ts'
 import { Entity } from './Entity.ts'
-import { CameraComponent, Log, NativeScriptComponent, RigidBody2DComponent, SceneCamera, SpriteRendererComponent, TagComponent, TransformComponent } from '../banana.js'
+import { CameraComponent, Color, Log, NativeScriptComponent, RigidBody2DComponent, SceneCamera, SpriteRendererComponent, TagComponent, TransformComponent } from '../banana.js'
 import PhysicsSystem from '../physics/PhysicsSystem.ts'
-import { Mat4 } from '../math/MV.ts'
+import { Mat4, Vec2, Vec3 } from '../math/MV.ts'
  
 export class Scene 
 {
@@ -54,7 +54,7 @@ export class Scene
             const transform = this.registry.get<TransformComponent>(entity, ComponentType.TransformComponent);
             const sprite = this.registry.get<SpriteRendererComponent>(entity, ComponentType.SpriteRendererComponent);
 
-            Renderer2D.DrawColorQuad(transform, sprite.getColor());
+            Renderer2D.drawColorQuad(transform, sprite.getColor());
         });
     }
 
@@ -113,20 +113,26 @@ export class Scene
         this._view.setTranslation(mainCameraTransform.getPosition());
         this._view.applyRotationZ(mainCameraTransform.getRotation().z);
 
-        Renderer2D.BeginScene(mainCamera, this._view);
+        Renderer2D.beginScene(mainCamera, this._view);
 
         this.renderScene();
 
-        Renderer2D.EndScene();
+        Renderer2D.endScene();
     }
 
     onUpdateEditor(deltaTime, editorCameraController) 
     {
-        Renderer2D.BeginScene(editorCameraController.getCamera());
+        Renderer2D.beginScene(editorCameraController.getCamera());
 
         this.renderScene();
 
-        Renderer2D.EndScene();
+        Renderer2D.drawLine(new Vec3(100, 100, 0), new Vec3(-100, 100, 0), Color.ORANGE);
+        Renderer2D.drawLine(new Vec3(100, 200, 0), new Vec3(-100, 200, 0), Color.ORANGE);
+
+        Renderer2D.drawRectangle(new Vec3(0, 0, 0), new Vec2(100, 100), Color.GREEN);
+        Renderer2D.drawRectangle(new Vec3(0, 0, 0), new Vec2(200, 200), Color.BLUE);
+
+        Renderer2D.endScene();
     }
 
     onEvent(event) 

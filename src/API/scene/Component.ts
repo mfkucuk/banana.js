@@ -3,7 +3,7 @@ import { ComponentType } from '../core/Type.ts'
 import { SceneCamera } from '../render/Camera.ts'
 import { Movement } from './Movement.ts'
 import RigidBody2D from '../physics/RigidBody2D.ts'
-import { Vec3 } from '../math/MV.ts'
+import { Mat4, Vec3 } from '../math/MV.ts'
 import { ScriptableEntity } from './ScriptableEntity.ts'
 
 export class Component {
@@ -37,17 +37,27 @@ export class TagComponent extends Component {
 
 export class TransformComponent extends Component {
 
+    transform: Mat4;
     position: Vec3;
     rotation: Vec3;
     scale: Vec3;
 
     constructor() {
         super();
+        this.transform = new Mat4();
         this.position = new Vec3(0, 0, 0);
         this.rotation = new Vec3(0, 0, 0);
         this.scale = new Vec3(1, 1, 1);
 
         this.type = ComponentType.TransformComponent;
+    }
+
+    getTransform(): Mat4 {
+        this.transform.setTranslation(this.position);
+        this.transform.applyRotationZ(this.rotation.z);
+        this.transform.applyScale(this.scale);
+
+        return this.transform;
     }
 
     getPosition(): Vec3 {

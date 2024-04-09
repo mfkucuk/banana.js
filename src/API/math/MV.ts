@@ -10,6 +10,13 @@ export class Utils {
 }
 
 export class Vec2 {
+
+    static readonly ZERO = new Vec2(0, 0);
+    static readonly UP = new Vec2(0, -1);
+    static readonly DOWN = new Vec2(0, 1);
+    static readonly RIGHT = new Vec2(1, 0);
+    static readonly LEFT = new Vec2(-1, 0);
+
     data: Float32Array;
 
     constructor(x: number, y: number) {
@@ -33,6 +40,14 @@ export class Vec2 {
 
     public set y(y) {
         this.data[1] = y;
+    }
+
+    public add(v: Vec2) {
+        return new Vec2(this.x + v.x, this.y + v.y);
+    }
+
+    public equals(other: Vec2): boolean {
+        return this.x == other.x && this.y == other.y;
     }
 }
 
@@ -73,6 +88,10 @@ export class Vec3 {
 
     public set z(z) {
         this.data[2] = z;
+    }
+
+    public equals(other: Vec3): boolean {
+        return this.x == other.x && this.y == other.y && this.z == other.z;
     }
 
     toString() {
@@ -124,6 +143,10 @@ export class Vec4 {
         this.data[3] = w;
     }
 
+    public equals(other: Vec4): boolean {
+        return this.x == other.x && this.y == other.y && this.z == other.z && this.w == other.w;
+    }
+
     toString() {
         return `[${this.x}, ${this.y}, ${this.y}, ${this.w}]`;
     }
@@ -134,6 +157,8 @@ export class Mat4 {
     offset: number;
 
     static mat4_multiply: CallableFunction;
+    static mat4_apply_rotation_z: CallableFunction;
+    static mat4_apply_scale: CallableFunction;
     static memory: WebAssembly.Memory;
     static currentOffset: number = 0;
 
@@ -176,6 +201,8 @@ export class Mat4 {
         WebAssembly.instantiateStreaming(fetch('./matrix.wasm'), importObject).then(
             (obj) => {
                 this.mat4_multiply = obj.instance.exports.mat4_multiply as CallableFunction;
+                this.mat4_apply_rotation_z = obj.instance.exports.mat4_apply_rotation_z as CallableFunction;
+                this.mat4_apply_scale = obj.instance.exports.mat4_apply_scale as CallableFunction;
                 this.memory = obj.instance.exports.memory as WebAssembly.Memory;
             },
         );
@@ -219,7 +246,6 @@ export class Mat4 {
 
     mul(other: Mat4): Mat4 {
         if (Mat4.memory != null) {
-            //console.log(this.mulSIMD(other));
             return this.mulSIMD(other);
         }
 
@@ -256,8 +282,6 @@ export class Mat4 {
         this.data[14] = nm32;
         this.data[15] = nm33;
 
-        //console.log(this);
-
         return this;
     }
 
@@ -267,7 +291,7 @@ export class Mat4 {
         if (this.offset == -1) {
 
             if (Mat4.currentOffset > 65536) {
-                Mat4.currentOffset = 0;
+                Mat4.currentOffset = 1024;
             }
 
             const a = new Float32Array(this.data);
@@ -282,7 +306,7 @@ export class Mat4 {
         if (other.offset == -1) {
 
             if (Mat4.currentOffset > 65536) {
-                Mat4.currentOffset = 0;
+                Mat4.currentOffset = 1024;
             }
 
             const a = new Float32Array(other.data);
@@ -297,6 +321,16 @@ export class Mat4 {
         Mat4.mat4_multiply(this.offset, other.offset);
 
         return this;
+    }
+
+    mulVec4(vec4: Vec4): Vec4 {
+        let result = new Vec4(0, 0, 0, 0);
+
+        for (let i = 0; i < 4; i++) {
+            result.data[i] = this.data[i * 4] * vec4.x + this.data[i * 4 + 1] * vec4.y + this.data[i * 4 + 2] * vec4.z + this.data[i * 4 + 3] * vec4.w;
+        }
+
+        return result;
     }
 
     invert(): Mat4 {
@@ -351,6 +385,11 @@ export class Mat4 {
         return this;
     }
 
+    invertSIMD(): Mat4 {
+
+        return null;
+    }
+
     setTranslation(vec3: Vec3): Mat4 {
         this.identity();
         this.data[12] = vec3.x;
@@ -364,7 +403,11 @@ export class Mat4 {
 
         const cos = Math.cos(ang);
         const sin = Math.sin(ang);
-    
+
+        if (Mat4.memory != null) {
+            return this.applyRotationZSIMD(cos, sin);
+        }
+
         const rm00 = cos;
         const rm01 = -sin;
         const rm10 = sin;
@@ -385,6 +428,74 @@ export class Mat4 {
         this.data[2] = nm02;
         this.data[3] = nm03;
     
+        return this;
+    }
+
+    applyRotationZSIMD(cos: number, sin: number) {
+
+        // corner case
+        if (this.offset == -1) {
+
+            if (Mat4.currentOffset > 65536) {
+                Mat4.currentOffset = 1024;
+            }
+
+            const a = new Float32Array(this.data);
+
+            this.offset = Mat4.currentOffset;
+            this.data = new Float32Array(Mat4.memory.buffer, this.offset, 16);
+            this.data.set(a);
+
+            Mat4.currentOffset += 16 * Float32Array.BYTES_PER_ELEMENT;
+        }
+
+        Mat4.mat4_apply_rotation_z(this.offset, cos, sin);
+
+        return this;
+    }
+
+    applyScale(vec3: Vec3): Mat4 {
+
+        if (Mat4.memory != null) {
+            return this.applyScaleSIMD(vec3.x, vec3.y, vec3.z);
+        }
+
+        this.data[ 0] = this.data[ 0] * vec3.x;
+        this.data[ 1] = this.data[ 1] * vec3.x;
+        this.data[ 2] = this.data[ 2] * vec3.x;
+        this.data[ 3] = this.data[ 3] * vec3.x;
+        this.data[ 4] = this.data[ 4] * vec3.y;
+        this.data[ 5] = this.data[ 5] * vec3.y;
+        this.data[ 6] = this.data[ 6] * vec3.y;
+        this.data[ 7] = this.data[ 7] * vec3.y;
+        this.data[ 8] = this.data[ 8] * vec3.z;
+        this.data[ 9] = this.data[ 9] * vec3.z;
+        this.data[10] = this.data[10] * vec3.z;
+        this.data[11] = this.data[11] * vec3.z;
+
+        return this;
+    }
+
+    applyScaleSIMD(x: number, y: number, z: number) {
+
+        // corner case
+        if (this.offset == -1) {
+
+            if (Mat4.currentOffset > 65536) {
+                Mat4.currentOffset = 1024;
+            }
+
+            const a = new Float32Array(this.data);
+
+            this.offset = Mat4.currentOffset;
+            this.data = new Float32Array(Mat4.memory.buffer, this.offset, 16);
+            this.data.set(a);
+
+            Mat4.currentOffset += 16 * Float32Array.BYTES_PER_ELEMENT;
+        }
+
+        Mat4.mat4_apply_scale(this.offset, x, y, z);
+
         return this;
     }
 
@@ -466,5 +577,9 @@ export class Mat4 {
         this.identity();
         this.applyOrtho(left, right, bottom, top, near, far);
         return this;
+    }
+
+    static translate(vec: Vec3) {
+
     }
 }
