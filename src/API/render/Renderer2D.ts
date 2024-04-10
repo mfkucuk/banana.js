@@ -21,23 +21,29 @@ class Render2DData
         new Vec4(-50, 50, 0, 1),
         new Vec4(50, 50, 0, 1)
     ];
-    static QuadVertexCount = 0;
-    static QuadIndexCount = 0;
-    
     static MaxTextureSlots = 16;
     static TextureSlotIndex = 1;
     static TextureSlots = [];
 
+    static QuadVertexCount = 0;
+    static QuadIndexCount = 0;
+    
     static QuadShader: Shader = null;
     static QuadVertexBuffer: VertexBuffer = null;
     static QuadIndexBuffer: IndexBuffer = null;
 
     // lines
-   static LineVertexCount = 0;
+    static LineVertexCount = 0;
 
-   static LineShader: Shader = null;
-   static LineVertexBuffer: VertexBuffer = null; 
-    
+    static LineShader: Shader = null;
+    static LineVertexBuffer: VertexBuffer = null; 
+
+    // circles
+    static CircleVertexCount = 0;
+    static CircleIndexCount = 0;
+
+    static CircleShader: Shader = null;
+    static CircleVertexBuffer: VertexBuffer = null;
 };
 
 function QuadVertex() {
@@ -93,6 +99,12 @@ function LineVertex() {
 }
 
 LineVertex.VertexSize = 8;
+
+function CircleVertex() {
+
+}
+
+CircleVertex.VertexSize = 10;
 
 export class Renderer2D {
     static White_Texture: Texture;
@@ -166,6 +178,9 @@ export class Renderer2D {
         Render2DData.LineVertexBuffer.pushAttribute(aLinePosition, 4);
         Render2DData.LineVertexBuffer.pushAttribute(aLineColor, 4);
 
+        Render2DData.CircleShader = new Shader('/shader/Renderer2D_Circle.glsl');
+
+        Render2DData.CircleVertexBuffer = new VertexBuffer(Render2DData.MaxVertices);
 
         Render2DData.TextureSlots[0] = Renderer2D.White_Texture;
     }

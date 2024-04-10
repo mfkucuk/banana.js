@@ -22,11 +22,26 @@ class SceneHierarchyPanel extends React.Component {
     }
 
     render() {
+
+        const components = [];
+        if (this.state.selectedEntity) {
+            let entityId = this.state.selectedEntity;
+    
+    
+            const tag = SceneHierarchyPanel.scene.registry.get(entityId, banana.ComponentType.TagComponent);
+    
+            if (SceneHierarchyPanel.scene.registry.has(entityId, banana.ComponentType.SpriteRendererComponent)) {
+                const spriteRenderer = SceneHierarchyPanel.scene.registry.get(entityId, banana.ComponentType.SpriteRendererComponent);
+            }
+    
+            components.push(<p key={tag.getName()}>Tag Component: {tag.getName()}</p>);
+        }
+
         return (
             <div className="item">
                 <Tree handleTreeItemClick={this.handleTreeItemClick}/>
-                <InspectorPanel/>
-                { this.state.selectedEntity && <InspectorContent id={this.state.selectedEntity}/>}
+                <h1 key={'Inspector'}>Inspector</h1>
+                { this.state.selectedEntity && components  }
             </div>
         );
     }
@@ -57,33 +72,6 @@ function TreeItem(props) {
 
     return (
         <a className="tree-item" href="#" onClick={handleItemClick}><div>{props.name}</div></a>
-    );
-}
-
-function InspectorPanel() {
-    return (
-        <div>
-            <h1 key={'Inspector'}>Inspector</h1>
-        </div>
-    );
-}
-
-function InspectorContent(props) {
-
-    const components = [];
-
-    const tag = SceneHierarchyPanel.scene.registry.get(props.id, banana.ComponentType.TagComponent);
-
-    if (SceneHierarchyPanel.scene.registry.has(props.id, banana.ComponentType.SpriteRendererComponent)) {
-        const spriteRenderer = SceneHierarchyPanel.scene.registry.get(props.id, banana.ComponentType.SpriteRendererComponent);
-    }
-
-    components.push(<p key={tag.getName()}>Tag Component: {tag.getName()}</p>);
-
-    return (
-        <div>
-            {components}
-        </div>
     );
 }
 

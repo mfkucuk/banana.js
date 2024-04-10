@@ -126,8 +126,7 @@ export class Scene
 
         this.renderScene();
 
-        Renderer2D.drawLine(new Vec3(100, 100, 0), new Vec3(-100, 100, 0), Color.ORANGE);
-        Renderer2D.drawLine(new Vec3(100, 200, 0), new Vec3(-100, 200, 0), Color.ORANGE);
+        Renderer2D.drawLine(new Vec3(100, 200, 0), new Vec3(-100, 200, 0), Color.RED);
 
         Renderer2D.drawRectangle(new Vec3(0, 0, 0), new Vec2(100, 100), Color.GREEN);
         Renderer2D.drawRectangle(new Vec3(0, 0, 0), new Vec2(200, 200), Color.BLUE);

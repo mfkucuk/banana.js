@@ -30,17 +30,7 @@ export class EditorLayer extends banana.Layer
 
         this.transform = this.squareEntity.getComponent(banana.ComponentType.TransformComponent);
 
-        //this.m_MenubarPanel = new MenubarPanel();
-        //this.m_ViewportPanel = new ViewportPanel();
-        //this.m_ConsolePanel = new ConsolePanel();
-        
-        this.sceneData = banana.SceneSerializer.serialize(this.activeScene);
-        
-        this.activeScene = banana.SceneSerializer.deserialize(this.sceneData);
-
         SceneHierarchyPanel.setScene(this.activeScene);
-        
-        this.sceneData = banana.SceneSerializer.serialize(this.activeScene);
     }
 
     onAttach() 
@@ -53,6 +43,8 @@ export class EditorLayer extends banana.Layer
         banana.Renderer2D.resetStats();
         
         banana.RenderCommand.clear();
+
+        //console.log(1 / deltaTime);
 
         //console.log(this.transform.GetPosition());
 
