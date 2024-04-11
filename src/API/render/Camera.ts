@@ -117,6 +117,8 @@ export class EditorCamera extends Camera {
         this.viewMatrix.applyRotationZ(this.cameraRotation);
 
         this.viewMatrix.invert();
+
+        this.viewMatrix.transpose();
     }
 
     getViewProjectionMatrix() {

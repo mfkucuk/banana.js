@@ -2,7 +2,16 @@ import { ntt } from './ntt.ts'
 import { ComponentType } from '../core/Type.ts'
 import { Renderer2D } from '../render/Renderer2D.ts'
 import { Entity } from './Entity.ts'
-import { CameraComponent, Color, Log, NativeScriptComponent, RigidBody2DComponent, SceneCamera, SpriteRendererComponent, TagComponent, TransformComponent } from '../banana.js'
+import { CameraComponent, 
+         CircleRendererComponent, 
+         Color, 
+         Log, 
+         NativeScriptComponent, 
+         RigidBody2DComponent, 
+         SceneCamera, 
+         SpriteRendererComponent, 
+         TagComponent, 
+         TransformComponent } from '../banana.js'
 import PhysicsSystem from '../physics/PhysicsSystem.ts'
 import { Mat4, Vec2, Vec3 } from '../math/MV.ts'
  
@@ -48,13 +57,23 @@ export class Scene
     }
 
     renderScene() {
-        const entities = this.registry.group(ComponentType.TransformComponent, ComponentType.SpriteRendererComponent);
-
-        entities.forEach(entity => {
+        
+        const sprites = this.registry.group(ComponentType.TransformComponent, ComponentType.SpriteRendererComponent);
+        
+        sprites.forEach(entity => {
             const transform = this.registry.get<TransformComponent>(entity, ComponentType.TransformComponent);
             const sprite = this.registry.get<SpriteRendererComponent>(entity, ComponentType.SpriteRendererComponent);
-
+            
             Renderer2D.drawColorQuad(transform, sprite.getColor());
+        });
+        
+        const circles = this.registry.group(ComponentType.TransformComponent, ComponentType.CircleRendererComponent);
+
+        circles.forEach(entity => {
+            const transform = this.registry.get<TransformComponent>(entity, ComponentType.TransformComponent);
+            const circle = this.registry.get<CircleRendererComponent>(entity, ComponentType.CircleRendererComponent);
+
+            Renderer2D.drawCircle(transform, circle.color, circle.thickness, circle.fade);
         });
     }
 

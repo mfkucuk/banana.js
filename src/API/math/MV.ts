@@ -330,7 +330,46 @@ export class Mat4 {
             result.data[i] = this.data[i * 4] * vec4.x + this.data[i * 4 + 1] * vec4.y + this.data[i * 4 + 2] * vec4.z + this.data[i * 4 + 3] * vec4.w;
         }
 
+        result.w = 1.0
+
         return result;
+    }
+
+    transpose(): Mat4 {
+        var nm00 = this.data[ 0];
+        var nm01 = this.data[ 4];
+        var nm02 = this.data[ 8];
+        var nm03 = this.data[12];
+        var nm10 = this.data[ 1];
+        var nm11 = this.data[ 5];
+        var nm12 = this.data[ 9];
+        var nm13 = this.data[13];
+        var nm20 = this.data[ 2];
+        var nm21 = this.data[ 6];
+        var nm22 = this.data[10];
+        var nm23 = this.data[14];
+        var nm30 = this.data[ 3];
+        var nm31 = this.data[ 7];
+        var nm32 = this.data[11];
+        var nm33 = this.data[15];
+        this.data[ 0] = nm00;
+        this.data[ 1] = nm01;
+        this.data[ 2] = nm02;
+        this.data[ 3] = nm03;
+        this.data[ 4] = nm10;
+        this.data[ 5] = nm11;
+        this.data[ 6] = nm12;
+        this.data[ 7] = nm13;
+        this.data[ 8] = nm20;
+        this.data[ 9] = nm21;
+        this.data[10] = nm22;
+        this.data[11] = nm23;
+        this.data[12] = nm30;
+        this.data[13] = nm31;
+        this.data[14] = nm32;
+        this.data[15] = nm33;
+
+        return this;
     }
 
     invert(): Mat4 {
@@ -392,9 +431,9 @@ export class Mat4 {
 
     setTranslation(vec3: Vec3): Mat4 {
         this.identity();
-        this.data[12] = vec3.x;
-        this.data[13] = vec3.y;
-        this.data[14] = vec3.z;
+        this.data[3] = vec3.x;
+        this.data[7] = vec3.y;
+        this.data[11] = vec3.z;
         return this;
     }
 

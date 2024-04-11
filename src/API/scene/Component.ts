@@ -136,6 +136,46 @@ export class SpriteRendererComponent extends Component {
     }
 }
 
+export class CircleRendererComponent extends Component {
+
+    private _color: Color;
+    private _thickness: number;
+    private _fade: number;
+
+    constructor() {
+        super();
+        this._color = Color.WHITE;
+        this._thickness = 1.0;
+        this._fade = 0.0;
+
+        this.type = ComponentType.CircleRendererComponent;
+    }
+
+    public get color() {
+        return this._color;
+    }
+
+    public set color(newColor) {
+        this._color = newColor;
+    }
+
+    public get thickness() {
+        return this._thickness;
+    }
+
+    public set thickness(newThickness) {
+        this._thickness = newThickness;
+    }
+
+    public get fade() {
+        return this._fade;
+    }
+
+    public set fade(newFade) {
+        this._fade = newFade;
+    }
+}
+
 export class CameraComponent extends Component {
 
     sceneCamera: SceneCamera;
@@ -229,6 +269,7 @@ export const ComponentCreator = {}
 ComponentCreator[ComponentType.TagComponent] = TagComponent;
 ComponentCreator[ComponentType.TransformComponent] = TransformComponent;
 ComponentCreator[ComponentType.SpriteRendererComponent] = SpriteRendererComponent;
+ComponentCreator[ComponentType.CircleRendererComponent] = CircleRendererComponent;
 ComponentCreator[ComponentType.CameraComponent] = CameraComponent;
 ComponentCreator[ComponentType.NativeScriptComponent] = NativeScriptComponent;
 ComponentCreator[ComponentType.MovementComponent] = MovementComponent;

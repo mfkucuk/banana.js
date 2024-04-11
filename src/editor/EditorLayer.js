@@ -22,17 +22,22 @@ export class EditorLayer extends banana.Layer
         
         this.cameraEntity = this.activeScene.createEntity('Camera');
         this.squareEntity = this.activeScene.createEntity('Square');
+        this.circleEntity = this.activeScene.createEntity('Circle');
      
         this.cameraEntity.addComponent(banana.ComponentType.CameraComponent);
         this.squareEntity.addComponent(banana.ComponentType.SpriteRendererComponent);
+        this.circleEntity.addComponent(banana.ComponentType.CircleRendererComponent);
         this.rigidBody = this.squareEntity.addComponent(banana.ComponentType.RigidBody2DComponent);
         this.rigidBody.rigidBody2D.velocity = new Vec3(0, 0, 0);
 
-        this.transform = this.squareEntity.getComponent(banana.ComponentType.TransformComponent);
+        this.transform = this.circleEntity.getComponent(banana.ComponentType.TransformComponent);
 
+        //this.transform.rotate(0, 0, 45);
+        this.transform.translate(110, 0, 0);
+        
         SceneHierarchyPanel.setScene(this.activeScene);
     }
-
+    
     onAttach() 
     {
         banana.RenderCommand.setClearColor( this.clearColor ); 
