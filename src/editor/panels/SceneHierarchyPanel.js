@@ -1,78 +1,60 @@
-import React, { useReducer, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { useEffect, useState } from "react";
 import * as banana from "../../API/banana";
+import { useBananaEditor } from "../BananaEditor";
 
 import '../editor.css';
 
-class SceneHierarchyPanel extends React.Component {
-    constructor(props) {
-        super(props);
+function SceneHierarchyPanel() {
+    const [selectedEntity, setSelectedEntity] = useState('');
+    const [scene, setScene] = useState(null);
 
-        this.state = {
-            selectedEntity: null,
-        };
+    const bananaEditor = useBananaEditor();
+
+    console.log(bananaEditor);
+
+    useEffect(() => {
+        if (bananaEditor) {
+            setScene(bananaEditor.getScene());
+        }
+    }, []);
+
+    const entities = [];
+
+    const handleTreeItemClick = (id) => {
+        setSelectedEntity(id);
     }
 
-    static setScene(scene) {
-        SceneHierarchyPanel.scene = scene;
+    if (scene) {
+        const entitiesWithTag = scene.registry.get_all_with_entity(banana.ComponentType.TagComponent);
+        for (const [id, tag] of Object.entries(entitiesWithTag)) {
+            entities.push(<TreeItem key={id} name={tag.getName()} id={id} handleTreeItemClick={handleTreeItemClick}/>);
+        }
     }
 
-    handleTreeItemClick = (id) => {
-        this.setState({ selectedEntity: id });
-    }
+    const components = [];
+    if (selectedEntity && scene) {
+        const tag = scene.registry.get(selectedEntity, banana.ComponentType.TagComponent);
 
-    render() {
-
-        const components = [];
-        if (this.state.selectedEntity) {
-            let entityId = this.state.selectedEntity;
-    
-    
-            const tag = SceneHierarchyPanel.scene.registry.get(entityId, banana.ComponentType.TagComponent);
-    
-            if (SceneHierarchyPanel.scene.registry.has(entityId, banana.ComponentType.SpriteRendererComponent)) {
-                const spriteRenderer = SceneHierarchyPanel.scene.registry.get(entityId, banana.ComponentType.SpriteRendererComponent);
-            }
-    
-            components.push(<p key={tag.getName()}>Tag Component: {tag.getName()}</p>);
+        if (scene.registry.has(selectedEntity, banana.ComponentType.SpriteRendererComponent)) {
+            const spriteRenderer = scene.registry.get(selectedEntity, banana.ComponentType.SpriteRendererComponent);
         }
 
-        return (
-            <div className="item">
-                <Tree handleTreeItemClick={this.handleTreeItemClick}/>
-                <h1 key={'Inspector'}>Inspector</h1>
-                { this.state.selectedEntity && components  }
-            </div>
-        );
+        components.push(<p key={tag.getName()}>Tag Component: {tag.getName()}</p>);
     }
-}
-
-function Tree(props) {
-
-    const names = [];
-
-    const entities = SceneHierarchyPanel.scene.registry.get_all_with_entity(banana.ComponentType.TagComponent);
-
-    for (const [id, tag] of Object.entries(entities)) {
-        names.push(<TreeItem key={id} name={tag.getName()} id={id} handleTreeItemClick={props.handleTreeItemClick}/>);
-    }
-
 
     return (
-        <div>{names}</div>
+        <div className="item">
+            { entities }
+            <h1 key={'Inspector'}>Inspector</h1>
+            { selectedEntity && components }
+        </div>
     );
 }
 
 function TreeItem(props) {
-
-    function handleItemClick(event) {
-        event.preventDefault();
-        props.handleTreeItemClick(props.id);
-    }
-
     return (
-        <a className="tree-item" href="#" onClick={handleItemClick}><div>{props.name}</div></a>
+        <a className="tree-item" href="#" onClick={props.handleTreeItemClick}><div>{props.name}</div></a>
     );
 }
 
-export default SceneHierarchyPanel
+export default SceneHierarchyPanel;

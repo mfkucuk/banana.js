@@ -1,10 +1,7 @@
 import * as banana from '../API/banana.js'
 import { Vec3 } from '../API/math/MV.ts';
 
-//import { MenubarPanel } from './panels/MenubarPanel.js'
-//import { ViewportPanel } from './panels/ViewportPanel.js';
 import SceneHierarchyPanel from './panels/SceneHierarchyPanel'
-//import { ConsolePanel } from './panels/ConsolePanel.js';
 
 export class EditorLayer extends banana.Layer 
 {
@@ -31,11 +28,7 @@ export class EditorLayer extends banana.Layer
         this.rigidBody.rigidBody2D.velocity = new Vec3(0, 0, 0);
 
         this.transform = this.circleEntity.getComponent(banana.ComponentType.TransformComponent);
-
-        //this.transform.rotate(0, 0, 45);
         this.transform.translate(110, 0, 0);
-        
-        SceneHierarchyPanel.setScene(this.activeScene);
     }
     
     onAttach() 
